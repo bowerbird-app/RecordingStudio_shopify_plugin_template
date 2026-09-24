@@ -75,6 +75,11 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
   end
 
   test "connect then disconnect keeps the install row" do
+    get shopify_plugin_demo_connect_path, params: {
+      shop: "demo.myshopify.com",
+      shopify_session_token: session_token_for(shop: "demo.myshopify.com")
+    }
+
     post shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
     follow_redirect!
 
@@ -93,13 +98,23 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT
   end
 
-  test "uninstall webhook removes the install without session" do
-    RecordingStudioShopifyPluginTemplate::ShopifyInstall.bind(
-      shop_domain: "gone.myshopify.com",
-      client: @client,
-      root_recording: RecordingStudio.root_recording_for(Workspace.find_by!(name: "Studio Workspace")),
-      connected_by: @user
+  test "bind without a prior install fails" do
+    post shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+    follow_redirect!
+
+    assert_includes response.body, "install required"
+    assert_nil RecordingStudioShopifyPluginTemplate::ShopifyInstall.find(
+      shop_domain: "demo.myshopify.com",
+      client: @client
     )
+  end
+
+  test "uninstall webhook removes the install without session" do
+    result = RecordingStudioShopifyPluginTemplate::ShopifyInstall.record_from_session_token(
+      token: session_token_for(shop: "gone.myshopify.com"),
+      client: @client
+    )
+    assert result.ok?
 
     post "/shopify_plugin_demo/uninstall", params: { shop: "gone.myshopify.com" }
 
@@ -107,6 +122,50 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     assert_nil RecordingStudioShopifyPluginTemplate::ShopifyInstall.find(
       shop_domain: "gone.myshopify.com",
       client: @client
+    )
+  end
+
+  test "remove without client does not delete an install" do
+    result = RecordingStudioShopifyPluginTemplate::ShopifyInstall.record_from_session_token(
+      token: session_token_for(shop: "keep.myshopify.com"),
+      client: @client
+    )
+    assert result.ok?
+
+    denied = RecordingStudioShopifyPluginTemplate::ShopifyInstall.remove(shop_domain: "keep.myshopify.com")
+
+    refute denied.ok?
+    assert_equal "client required", denied.error
+    assert RecordingStudioShopifyPluginTemplate::ShopifyInstall.find(
+      shop_domain: "keep.myshopify.com",
+      client: @client
+    )
+  end
+
+  test "remove with client only deletes that client's install" do
+    other = create_registered_app(name: "Other Shopify plugin", audience: "other-partner-app", secret: "other-secret")
+    RecordingStudioShopifyPluginTemplate::ShopifyInstall.record_from_session_token(
+      token: session_token_for(shop: "shared.myshopify.com"),
+      client: @client
+    )
+    RecordingStudioShopifyPluginTemplate::ShopifyInstall.record_from_session_token(
+      token: session_token_for(shop: "shared.myshopify.com", audience: "other-partner-app", secret: "other-secret"),
+      client: other
+    )
+
+    removed = RecordingStudioShopifyPluginTemplate::ShopifyInstall.remove(
+      shop_domain: "shared.myshopify.com",
+      client: @client
+    )
+
+    assert removed.ok?
+    assert_nil RecordingStudioShopifyPluginTemplate::ShopifyInstall.find(
+      shop_domain: "shared.myshopify.com",
+      client: @client
+    )
+    assert RecordingStudioShopifyPluginTemplate::ShopifyInstall.find(
+      shop_domain: "shared.myshopify.com",
+      client: other
     )
   end
 
@@ -130,31 +189,31 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
 
   private
 
-  def create_registered_app
+  def create_registered_app(name: "Shopify plugin", audience: PARTNER_APP_ID, secret: SESSION_SECRET)
     result = RecordingStudioOauth::Services::CreateOauthClient.call(
-      name: "Shopify plugin",
+      name: name,
       redirect_uris: ["https://example.com/callback"],
       confidential: false,
       session_token_provider: "shopify",
-      session_token_audience: PARTNER_APP_ID,
-      session_token_secret: SESSION_SECRET
+      session_token_audience: audience,
+      session_token_secret: secret
     )
     raise result.error unless result.success?
 
     result.value.fetch(:client)
   end
 
-  def session_token_for(shop:)
+  def session_token_for(shop:, audience: PARTNER_APP_ID, secret: SESSION_SECRET)
     now = Time.now.to_i
     RecordingStudioOauth::Hs256Jwt.encode(
       {
-        "aud" => PARTNER_APP_ID,
+        "aud" => audience,
         "dest" => "https://#{shop}",
         "iss" => "https://#{shop}/admin",
         "nbf" => now - 5,
         "exp" => now + 60
       },
-      SESSION_SECRET
+      secret
     )
   end
 end

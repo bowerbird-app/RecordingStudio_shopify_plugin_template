@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Create a Registered App (`rsoauth_oc_…`) for Connect. Turn on Token verification. Set Channel to `shopify`, Who the token is for to the Partner app client id (`aud`), and Session token secret to the Partner app secret.
 - Set `SHOPIFY_PLUGIN_REGISTERED_APP_CLIENT_ID` to that Registered App id.
 - Installed still is not Connected. A verified session token can write an install before anyone clicks Connect.
+- `ShopifyInstall.bind` only connects an install that `record_from_session_token` already wrote. `ShopifyInstall.remove` needs `client` or `client_id` and never deletes every app's row for a shop.
 
 ## [0.3.0] - 2026-09-24
 

@@ -37,7 +37,11 @@ module RecordingStudioShopifyPluginTemplate
       domain = ShopifySessionClaims.normalize_shop(shop_domain)
       return failure("shop domain required") if domain.blank? || client.blank?
 
-      upsert_install(client: client, shop_domain: domain, root_recording: root_recording, connected_by: connected_by)
+      install = find(shop_domain: domain, client: client)
+      return failure("install required — verify session token first") if install.blank?
+
+      install.update!(root_recording: root_recording, connected_by: connected_by)
+      Result.new(success: true, install: install, shop_domain: domain, client: client)
     end
 
     def self.unbind(shop_domain:, client: nil, client_id: nil)
@@ -49,17 +53,24 @@ module RecordingStudioShopifyPluginTemplate
     end
 
     def self.remove(shop_domain:, client: nil, client_id: nil)
-      domain = ShopifySessionClaims.normalize_shop(shop_domain)
-      return if domain.blank?
+      oauth_client = resolved_client(client: client, client_id: client_id)
+      return failure("client required") if oauth_client.blank?
 
-      scope = RecordingStudioOauth::ExternalInstall.where(provider: PROVIDER, external_id: domain)
-      scope = scope.where(oauth_client: client) if client
-      if client_id.present? && client.blank?
-        oauth_client = RecordingStudioOauth::OauthClient.find_by(client_id: client_id.to_s)
-        scope = scope.where(oauth_client: oauth_client) if oauth_client
-      end
-      scope.delete_all
+      domain = ShopifySessionClaims.normalize_shop(shop_domain)
+      return failure("shop domain required") if domain.blank?
+
+      RecordingStudioOauth::ExternalInstall.where(
+        oauth_client: oauth_client, provider: PROVIDER, external_id: domain
+      ).delete_all
+      Result.new(success: true, shop_domain: domain, client: oauth_client)
     end
+
+    def self.resolved_client(client:, client_id:)
+      return if client.blank? && client_id.to_s.strip.blank?
+
+      client || RecordingStudioOauth::OauthClient.find_by(client_id: client_id.to_s)
+    end
+    private_class_method :resolved_client
 
     def self.verified_claims(token:, client_id:, client:, secret:)
       verify = RecordingStudioOauth.verify_session_token(
