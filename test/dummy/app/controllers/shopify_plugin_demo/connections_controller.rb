@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ShopifyPluginDemo::ConnectionsController < ApplicationController
-  layout :connect_layout
-
   def show
     @shop_domain = resolved_shop_domain
     @connection = ShopifyPluginDemo::Connection.for_shop(@shop_domain)
@@ -30,9 +28,5 @@ class ShopifyPluginDemo::ConnectionsController < ApplicationController
 
   def resolved_shop_domain
     ShopifyPluginDemo::Connection.normalize_shop_domain(params[:shop].presence || params[:shop_domain])
-  end
-
-  def connect_layout
-    "recording_studio/default_layout"
   end
 end

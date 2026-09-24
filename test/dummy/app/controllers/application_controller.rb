@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
   private
 
   def application_layout
-    devise_controller? ? "application" : "recording_studio/default_layout"
+    devise_controller? ? "application" : "host"
   end
 
   def set_current_actor

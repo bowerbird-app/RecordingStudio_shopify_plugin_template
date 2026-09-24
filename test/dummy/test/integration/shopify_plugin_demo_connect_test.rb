@@ -20,6 +20,8 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::NAME
     assert_includes response.body, "Installed is not Connected"
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT
+    assert_select "body[data-dummy-host-layout='true']", count: 1
+    assert_includes response.body, "flat-pack--sidebar-layout"
   end
 
   test "connect then disconnect uses stub mapping table" do

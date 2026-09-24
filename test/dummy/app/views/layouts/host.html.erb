@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html class="h-full" data-theme="rounded">
+  <head>
+    <title><%= content_for(:title) || RecordingStudio.configuration.app_name || ShopifyPluginDemo::ProductConfig::NAME %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="<%= ShopifyPluginDemo::ProductConfig::NAME %>">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "flat_pack/application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="h-full bg-(--surface-page-background-color) text-(--surface-content-color)" data-dummy-host-layout="true">
+    <%= turbo_stream_from "recording_studio_toasts" if respond_to?(:turbo_stream_from) %>
+    <%= render FlatPack::SkipLink::Component.new(href: "#main") if defined?(FlatPack::SkipLink::Component) %>
+    <%= render FlatPack::SidebarLayout::Component.new(
+      side: :left,
+      storage_key: "shopify-plugin-demo-sidebar"
+    ) do |layout| %>
+      <% layout.sidebar do %>
+        <%= render "layouts/flat_pack/sidebar" %>
+      <% end %>
+
+      <% layout.top_nav do %>
+        <%= render "layouts/flat_pack/top_nav" %>
+      <% end %>
+
+      <% layout.main do %>
+        <main id="main" tabindex="-1" class="mx-auto w-full max-w-6xl p-6">
+          <% if flash[:notice].present? %>
+            <%= render FlatPack::Alert::Component.new(description: flash[:notice], style: :success, class: "mb-6") %>
+          <% end %>
+          <% if flash[:alert].present? %>
+            <%= render FlatPack::Alert::Component.new(description: flash[:alert], style: :danger, class: "mb-6") %>
+          <% end %>
+          <%= yield %>
+        </main>
+      <% end %>
+    <% end %>
+    <%= render FlatPack::Toasts::Region::Component.new(id: "toast-container", data: { turbo_permanent: true }) %>
+  </body>
+</html>
