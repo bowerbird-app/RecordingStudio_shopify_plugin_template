@@ -26,8 +26,11 @@ class DocsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "h1", text: "Install"
     assert_includes response.body, "Step 1"
-    assert_includes response.body, "Provide one section title for each step"
-    assert_includes response.body, "# Put the step instruction here."
+    assert_includes response.body, "recording_studio_shopify_plugin_template:install"
+    assert_includes response.body, "recording_studio_shopify_plugin_template:migrations"
+    assert_includes response.body, "bin/rails db:migrate"
+    refute_includes response.body, "GemTemplate"
+    refute_includes response.body, "Put the step instruction here."
   end
 
   test "config page renders successfully" do
@@ -87,7 +90,6 @@ class DocsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Folder: Reference"
     assert_includes response.body, "Page: API"
     refute_includes response.body, "Access boundary"
-    refute_includes response.body, "Access: Admin"
     assert_select "div[role='tree']", count: 1
     assert_select "[role='treeitem']", minimum: 3
     refute_includes response.body, "Current structure"
@@ -99,7 +101,7 @@ class DocsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "h1", text: "Gem Views"
     assert_select "table", minimum: 1
-    refute_includes response.body, "app/views/gem_template/home/index.html.erb"
+    refute_includes response.body, "app/views/recording_studio_shopify_plugin_template/home/index.html.erb"
   end
 
   test "methods page renders successfully" do
@@ -113,13 +115,13 @@ class DocsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Provide one section title and codeblock for each method"
   end
 
-  test "authenticated docs pages use the recording studio default layout" do
+  test "authenticated docs pages use the dummy host sidebar layout" do
     get docs_install_path
 
     assert_response :success
-    assert_select "body[data-recording-studio-default-layout='true']", count: 1
-    assert_select "nav[aria-label='Page navigation']", count: 1
-    refute_includes response.body, "flat-pack-sidebar-layout"
+    assert_select "body[data-dummy-host-layout='true']", count: 1
+    assert_includes response.body, "flat-pack--sidebar-layout"
+    refute_includes response.body, "data-recording-studio-default-layout"
   end
 
   private

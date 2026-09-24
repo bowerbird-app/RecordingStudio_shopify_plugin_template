@@ -1,0 +1,38 @@
+<%= render FlatPack::Sidebar::Component.new do |sidebar| %>
+  <% sidebar.header do %>
+    <%= render FlatPack::Sidebar::Header::Component.new(
+      brand_abbr: "SP",
+      title: ShopifyPluginDemo::ProductConfig::NAME
+    ) %>
+  <% end %>
+
+  <% sidebar.items do %>
+    <% dummy_host_nav_items.each do |item| %>
+      <%= render FlatPack::Sidebar::Item::Component.new(
+        text: item.fetch(:text),
+        href: item.fetch(:href),
+        icon: item.fetch(:icon),
+        active: item.fetch(:active)
+      ) %>
+    <% end %>
+  <% end %>
+
+  <% sidebar.footer do %>
+    <%= render FlatPack::Sidebar::Footer::Component.new do %>
+      <%= button_to main_app.destroy_user_session_path,
+            method: :delete,
+            form: { class: "w-full", data: { turbo: false } },
+            class: [
+              "w-full inline-flex items-center justify-center gap-2",
+              "rounded-[var(--button-border-radius)] font-medium cursor-pointer transition-colors duration-base",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-focus-ring-color)]",
+              "focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]",
+              FlatPack::Button::Component::SIZES.fetch(:md),
+              FlatPack::Button::Component::SCHEMES.fetch(:ghost)
+            ].join(" ") do %>
+        <%= render FlatPack::Shared::IconComponent.new(name: "arrow-left-on-rectangle", size: :md) %>
+        <span>Sign out</span>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

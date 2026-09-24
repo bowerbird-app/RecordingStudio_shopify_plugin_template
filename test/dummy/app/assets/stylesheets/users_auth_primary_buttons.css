@@ -1,0 +1,8 @@
+.fp-button[data-fp-style="primary"] {
+  background-color: oklch(0.3211 0 0);
+  color: #fff;
+  border-color: oklch(0.3211 0 0);
+  background-color: var(--button-primary-background-color, oklch(0.3211 0 0));
+  color: var(--button-primary-text-color, #fff);
+  border-color: var(--button-primary-border-color, oklch(0.3211 0 0));
+}

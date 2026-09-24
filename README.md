@@ -1,170 +1,75 @@
-# GemTemplate
+# Recording Studio Shopify plugin
 
-Internal template for building Rails engine addons on top of Recording Studio 4.x.
+This repo is the Recording Studio Shopify plugin channel. The dummy host in `test/dummy/` is a Rails 8.1 Recording Studio app. The Shopify CLI shell in `shopify/` is a thin Liquid and TOML app. They do not share a process.
 
-## What's Included
+Call it Shopify plugin in product copy.
 
-- **Recording Studio** 4.x gem pinned and configured
-- **Devise** authentication with a pre-seeded admin user
-- **Workspace**, **Folder**, and **Page** recordables seeded into the dummy host app
-- **FlatPack** UI component library for all views
-- **Dummy app** (`test/dummy/`) with a FlatPack sign-in screen, a home page on Recording Studio's default layout, mounted Recording Studio routes, and FlatPack's built-in rounded theme
+Merchants Install the Shopify plugin in Admin, then Connect on the dummy host. Installed is not Connected.
 
-Authenticated dummy pages use Recording Studio's shared default layout (`RecordingStudio::UsesDefaultLayout`) plus FlatPack CSS and JS. Devise keeps its own sign-in layout. Dummy `/docs/*` pages stay in the dummy app as a host-app sandbox; they are not the product README.
+## Dummy host
 
-## Quick Start
+From `test/dummy/`:
 
-### Cursor Cloud Agent (Recommended)
-
-A Cloud Agent boots this repo into a ready-to-use dev environment with no manual steps. The setup lives in `.cursor/`:
-
-- `install.sh` provisions Ruby (pinned by `.ruby-version`), PostgreSQL 16, all gems, the seeded dummy database, and compiled CSS at build time, then fetches Recording Studio skills.
-- `start.sh` starts PostgreSQL on every boot.
-- `environment.json` runs the `rails-server` and `tailwind-watch` terminals and exposes port 3000.
-
-Open port 3000 and sign in at `/users/sign_in`. No environment variables are required — the dummy app's `database.yml` defaults match the provisioned PostgreSQL cluster.
-
-### GitHub Codespaces
-
-1. Click **Code** → **Codespaces** → **Create codespace**
-2. Wait for setup to complete
-3. Run:
-   ```bash
-   cd test/dummy
-   bin/rails db:setup
-   bin/dev
-   ```
-4. Open port 3000 — you'll land on the dummy app home page and can sign in at `/users/sign_in`
-
-The dummy app is intended as a host-app validation surface for authentication, FlatPack rendering, Tailwind source scanning, and Recording Studio route wiring.
-
-### Login Credentials
-
-| Field    | Value             |
-|----------|-------------------|
-| Email    | admin@admin.com   |
-| Password | Password          |
-
-The login form is prefilled with these credentials for fast access.
-
-### Useful Routes
-
-- `/` — dummy app home page
-- `/users/sign_in` — Devise sign-in page
-- `/recording_studio` — redirect to `/` while the mounted Recording Studio engine remains data/API-focused
-- `/docs/install`, `/docs/config`, `/docs/recordable_types`, `/docs/recordings_tree`, `/docs/gem_views`, `/docs/methods` — dummy-only starter pages
-
-The home page in `test/dummy/app/views/home/index.html.erb` is a starting point for a minimal demo of the gem's primary behavior. Keep deeper explanations on the dummy docs pages, not in this README.
-
-## Architecture
-
-### Root Recording Pattern
-
-This template follows Recording Studio's root recording pattern:
-
-- **Workspace** is the top-level recordable
-- **Folder** and **Page** demonstrate nested recordables under the workspace root
-- Each configured recordable declares `recording_studio_recordable(...)`; strict declaration validation stays enabled
-- A root `RecordingStudio::Recording` wraps the Workspace
-- `Current.actor` is set from `current_user` (Devise) in `ApplicationController`
-
-### Extending Recording Studio
-
-To add new recordable types:
-
-1. Create your model (e.g., `Page`, `Comment`)
-2. Register it in `config/initializers/recording_studio.rb`:
-   ```ruby
-   RecordingStudio.configure do |config|
-     config.recordable_types = ["Workspace", "YourNewType"]
-   end
-   ```
-3. Declare whether the model can be a root and which parents may contain it:
-   ```ruby
-   class YourNewType < ApplicationRecord
-     recording_studio_recordable label: "Your new type",
-                                 root: false,
-                                 allowed_parent_types: ["Workspace", "Folder"]
-   end
-   ```
-4. Validate declarations and create recordings under the root:
-   ```ruby
-   RecordingStudio.validate_recordable_declarations!
-   root_recording = RecordingStudio.root_recording_for(workspace)
-   root_recording.record(YourNewType) do |record|
-     record.title = "Example"
-   end
-   ```
-
-### Recordable Declarations
-
-Every configured ActiveRecord recordable type must declare its hierarchy rules. Declarations are required; they are not version-specific.
-
-- `Workspace` declares `root: true`
-- `Folder` and `Page` declare `root: false, allowed_parent_types: ["Workspace", "Folder"]`
-- `config.require_recordable_declarations = true` remains enabled in the dummy app initializer
-
-Useful console checks:
-
-```ruby
-RecordingStudio.validate_recordable_declarations!
-RecordingStudio.root_recordable_types
-RecordingStudio.allowed_parent_types_for("Page")
+```bash
+bundle install
+bin/rails db:setup
+bin/dev
 ```
 
-### Capabilities
+Open http://localhost:3000 and sign in at `/users/sign_in`.
 
-Capability mixins are opt-in. Installing this gem does not enable mixins on host types.
+| Field | Value |
+| --- | --- |
+| Email | admin@admin.com |
+| Password | Password |
 
-The dummy Workspace enables Accessible because that addon is bundled:
+Useful routes:
 
-```ruby
-RecordingStudio.enable_capability(:accessible, on: Workspace)
+- `/` home
+- `/shopify_plugin_demo/connect` Connect and Connected (iframe target for App Home)
+- `/pages` page recording ids for the theme extension
+- `/recording_studio_api/apis/shopify_plugin_demo/v1/pages/:id/actions/embed` named API browser payload
+- `POST /shopify_plugin_demo/uninstall` Partner `app/uninstalled` stub
+
+Named API key is `shopify_plugin_demo`. Page enables Embeddable `:embed`. Storefront uses that payload. Do not iframe the host on the storefront.
+
+Connect on this host is a stub. It writes `shopify_plugin_demo_connections` (shop domain plus status). That table is temporary. Do not add `shopify_*` columns to `users` or `workspaces`. HS256 session token verify and the generic install mapping table land in RecordingStudio Oauth next.
+
+White-label strings live in `test/dummy/lib/shopify_plugin_demo/product_config.rb` (`Shopify plugin` / `Shopify Template Demo`).
+
+Dummy gem pins match the WordPress dummy where they apply: RecordingStudio `v4.2.0`, Accessible `v0.9.1`, API `v0.5.6`, Embeddable `v0.2.1`, Oauth `v0.5.2`, Admin `v2.0.2`, Users `v0.11.0`, FlatPack `v0.1.190`.
+
+## Shopify CLI
+
+BowerBird uses Shopify CLI. See `shopify/README.md`.
+
+1. Set `HOST_BASE_URL` to the dummy origin.
+2. Serve `shopify/app-home/` as the embedded App Home.
+3. App Home iframes `{HOST_BASE_URL}/shopify_plugin_demo/connect?shop=...`.
+4. App Bridge `idToken()` is appended as `shopify_session_token`. The host does not verify it yet.
+5. Theme app extension `shopify/extensions/recording-studio-theme` documents host URL and recording id.
+
+```bash
+cd shopify
+# shopify app dev  # after Partner app credentials
 ```
 
-The template also ships one example mixin that uses core 4.2.0's `include_for` factory:
+## Tests
 
-```ruby
-include RecordingStudio::Capabilities::Example.to(label: "dummy workspace")
+Gem suite:
+
+```bash
+bundle exec rake test
 ```
 
-`.to` wraps `RecordingStudio::Capabilities.include_for`. It does not add a fourth verb and it does not call `enable_capability` / `set_capability_options` itself. Folder and Page stay without the example mixin.
+Dummy suite (needs PostgreSQL):
 
-Use core `RecordingStudio::Hooks` and `RecordingStudio::Services::BaseService`. Do not copy those classes into a new addon.
+```bash
+bundle exec rake test:dummy
+```
 
-### FlatPack UI Components
+Both:
 
-All views use FlatPack ViewComponents. Available components include:
-
-- `FlatPack::Button::Component` — Buttons (`:primary`, `:secondary`, `:ghost`)
-- `FlatPack::Card::Component` — Cards (`:default`, `:elevated`, `:outlined`)
-- `FlatPack::Alert::Component` — Alerts (`:success`, `:error`, `:warning`, `:info`)
-- `FlatPack::Badge::Component` — Status badges
-- `FlatPack::Table::Component` — Data tables
-- `FlatPack::TextInput::Component`, `EmailInput`, `PasswordInput` — Form inputs
-- `FlatPack::PageNav::Component` — Default-layout page navigation
-- `FlatPack::PageTitle::Component` — Page titles
-
-Use the live FlatPack demo app at [flatpack.bowerbird.io](https://flatpack.bowerbird.io/) as the approved UI reference for current shared patterns. Its component table is the fastest way to discover available FlatPack components before introducing new custom UI.
-
-See the [FlatPack README](https://github.com/bowerbird-app/flatpack) for full documentation.
-
-## Tech Stack
-
-| Component       | Version |
-|-----------------|---------|
-| Ruby            | 3.3+    |
-| Rails           | 8.1+    |
-| PostgreSQL      | 16      |
-| TailwindCSS     | 4       |
-| RecordingStudio | 4.x (`~> 4.2` in the gemspec; dummy GitHub tag `v4.2.0`) |
-| Accessible      | dummy GitHub tag `v0.9.1` |
-| Root Switchable | dummy GitHub tag `v0.5.0` |
-| FlatPack        | dummy GitHub tag `v0.1.177` |
-| Devise          | latest  |
-
-The dummy Gemfile keeps `github:` sources so Bundler can fetch those gems. The gemspec still pins `recording_studio` to `~> 4.2` so copied addons declare the core dependency even when GitHub is the fetch source.
-
-## Documentation
-
-The original gem template documentation is preserved in `docs/gem_template/` as architectural reference material. Use it as background on the engine conventions; this README and the dummy app are the source of truth for the Recording Studio addon workflow.
+```bash
+bundle exec rake test:all
+```

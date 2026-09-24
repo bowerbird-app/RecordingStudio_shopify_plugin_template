@@ -1,0 +1,7 @@
+api_version = "2025-01"
+
+[[extensions]]
+name = "Recording Studio"
+handle = "recording-studio-theme"
+type = "theme"
+uid = "recording-studio-theme"

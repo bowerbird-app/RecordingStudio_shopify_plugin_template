@@ -1,0 +1,11 @@
+<%= render FlatPack::TopNav::Component.new do |nav| %>
+  <% nav.left do %>
+    <span class="text-sm font-medium text-(--surface-muted-content-color)">
+      <%= content_for?(:title) ? content_for(:title) : ShopifyPluginDemo::ProductConfig::NAME %>
+    </span>
+  <% end %>
+
+  <% nav.right do %>
+    <%= recording_studio_root_switch_dropdown(style: :ghost, size: :md) %>
+  <% end %>
+<% end %>

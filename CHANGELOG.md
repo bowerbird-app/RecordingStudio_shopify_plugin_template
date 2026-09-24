@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-09-24
+
+### Changed
+- Renamed the engine to `recording_studio_shopify_plugin_template`.
+- Dummy host is the Shopify plugin demo. Named API is `shopify_plugin_demo`.
+
+### Added
+- Dummy pins for API, Embeddable, Oauth, Admin, Users, and related boot gems, matching the WordPress dummy tags.
+- Connect / Connected / Disconnect FlatPack screen, iframe-able from Shopify Admin, plus CSP `frame-ancestors`.
+- Temporary `shopify_plugin_demo_connections` table for demo Connect. Replace with Oauth generic installs later.
+- `shopify/` CLI shell: App Home iframe, uninstall webhook stub, theme extension mount.
+
+### Upgrade notes
+- Point dummy Gemfile pins at the versions in `test/dummy/Gemfile`, then `bundle install` and `bin/rails db:prepare`.
+- Set `HOST_BASE_URL` when pointing Shopify App Home at the dummy Connect URL.
+
+
 ## [0.2.2] - 2026-09-11
 
 ### Changed
@@ -46,7 +63,7 @@ New addons copied from this template are born on Recording Studio 4.x.
 ### Added
 - Gemspec dependency `recording_studio`, `~> 4.1`
 - Dummy host wiring for Accessible (`enable_capability(:accessible, on: Workspace)`) and an opt-in `RecordingStudio::Capabilities::Example.to` mixin. `.to` wraps core 4.2.0 `include_for` (not a fourth verb, and not a raw `enable_capability` / `set_capability_options` path). Installing the gem does not enable the mixin globally; only dummy Workspace opts in.
-- `bin/rename_gem` leftover-identity rewrite/verification for README, homepage, and changelog URLs that still say `GemTemplate` or point at `bowerbird-app/gem_template`
+- `bin/rename_gem` leftover-identity rewrite/verification for README, homepage, and changelog URLs that still say `RecordingStudioShopifyPluginTemplate` or point at `bowerbird-app/recording_studio_shopify_plugin_template`
 
 ### Changed
 - Dummy GitHub tags: Recording Studio `v4.2.0`, Accessible `v0.6.0`, Root Switchable `v0.5.0`, FlatPack `v0.1.133`
@@ -55,7 +72,7 @@ New addons copied from this template are born on Recording Studio 4.x.
 - Require `RecordingStudio::Hooks` and `RecordingStudio::Services::BaseService` from core instead of shipping copies
 
 ### Removed
-- Copied `lib/gem_template/hooks.rb` and `lib/gem_template/services/base_service.rb`
+- Copied `lib/recording_studio_shopify_plugin_template/hooks.rb` and `lib/recording_studio_shopify_plugin_template/services/base_service.rb`
 - Product-shipped `ExampleService`
 - Custom `flat_pack_sidebar` authenticated shell
 
@@ -90,10 +107,11 @@ New addons copied from this template are born on Recording Studio 4.x.
 - Comprehensive README and documentation
 - Basic test suite with Minitest
 
-[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_gem_template/compare/v0.2.2...HEAD
-[0.2.2]: https://github.com/bowerbird-app/RecordingStudio_gem_template/releases/tag/v0.2.2
-[0.2.1]: https://github.com/bowerbird-app/RecordingStudio_gem_template/releases/tag/v0.2.1
-[0.2.0]: https://github.com/bowerbird-app/RecordingStudio_gem_template/releases/tag/v0.2.0
-[0.1.2]: https://github.com/bowerbird-app/RecordingStudio_gem_template/releases/tag/v0.1.2
-[0.1.1]: https://github.com/bowerbird-app/RecordingStudio_gem_template/releases/tag/v0.1.1
-[0.1.0]: https://github.com/bowerbird-app/RecordingStudio_gem_template/releases/tag/v0.1.0
+[Unreleased]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.0
+[0.2.2]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.2.2
+[0.2.1]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.2.1
+[0.2.0]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.2.0
+[0.1.2]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.1.2
+[0.1.1]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.1.1
+[0.1.0]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.1.0
