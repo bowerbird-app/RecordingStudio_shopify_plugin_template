@@ -25,6 +25,8 @@ class ShopifyCliScaffoldTest < ActiveSupport::TestCase
     assert_includes liquid, "shop.permanent_domain"
     assert_includes liquid, "embed.js"
     assert_includes liquid, "embed_token"
+    assert_includes liquid, "request.design_mode"
+    assert_includes liquid, "Nothing to show here yet."
     refute_includes liquid, "<iframe"
     refute_includes liquid, "iframe"
   end

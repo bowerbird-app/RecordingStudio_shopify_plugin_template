@@ -4,13 +4,18 @@
   data-rs-page-id="{{ block.settings.recording_id }}"
   data-rs-shop="{{ shop.permanent_domain }}"
 >
-  Set the host URL, page id, and storefront token in the theme editor.
+  {% if request.design_mode %}
+    {% if block.settings.host_base_url == blank or block.settings.recording_id == blank or block.settings.embed_token == blank %}
+      Set the host URL, page id, and storefront token here.
+    {% endif %}
+  {% endif %}
 </div>
 
 {% if block.settings.host_base_url != blank and block.settings.recording_id != blank and block.settings.embed_token != blank %}
   <script
     src="{{ block.settings.host_base_url }}/shopify_plugin_demo/storefront/embed.js?shop={{ shop.permanent_domain }}&page_id={{ block.settings.recording_id }}&token={{ block.settings.embed_token }}&mount=recording-studio-{{ block.id }}"
     async
+    onerror="var root = document.getElementById('recording-studio-{{ block.id }}'); if (root) root.textContent = '{% if request.design_mode %}Could not load this block. Check Connect and the token.{% else %}Nothing to show here yet.{% endif %}';"
   ></script>
 {% endif %}
 

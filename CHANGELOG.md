@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Scoped storefront embed URL. Theme Liquid loads Embeddable browser-payload HTML and JS. It does not iframe the host.
 - `ShopifyStorefrontEmbed` mints and checks an HMAC token for shop plus page. Entitlement still uses Oauth install plus Connect. Admin session cookies do not count on the storefront.
 - Dummy `GET /shopify_plugin_demo/storefront/embed.js` (and `.json`) returns the payload with public cache headers. Failed checks are 404 and are not cached.
+- Theme editor setup copy stays in `request.design_mode`. Shoppers see a short empty line if the mount fails.
 
 ### Upgrade notes
 - In the theme editor, set Host URL, Page id, and Storefront token. Shop is `shop.permanent_domain`.
