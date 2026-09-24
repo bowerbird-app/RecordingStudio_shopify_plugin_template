@@ -27,11 +27,12 @@ Useful routes:
 
 - `/` home
 - `/shopify_plugin_demo/connect` Connect and Connected (iframe target for App Home)
-- `/pages` page recording ids for the theme extension
-- `/recording_studio_api/apis/shopify_plugin_demo/v1/pages/:id/actions/embed` named API browser payload
+- `/pages` page ids for the theme extension
+- `/shopify_plugin_demo/storefront/embed.js` scoped storefront browser-payload mount (HTML/JS, not an iframe)
+- `/recording_studio_api/apis/shopify_plugin_demo/v1/pages/:id/actions/embed` named API browser payload (bearer token, not the storefront)
 - `POST /shopify_plugin_demo/uninstall` Partner `app/uninstalled` stub
 
-Named API key is `shopify_plugin_demo`. Page enables Embeddable `:embed`. Storefront uses that payload. Do not iframe the host on the storefront.
+Named API key is `shopify_plugin_demo`. Page enables Embeddable `:embed`. The storefront theme block loads `/shopify_plugin_demo/storefront/embed.js` with a scoped token. Do not iframe the host on the storefront. Do not send the Admin session token on the storefront.
 
 Connect on this host calls RecordingStudio Oauth `verify_session_token`, then the Shopify plugin parses `dest` / `iss` and upserts `recording_studio_oauth_external_installs`. Do not add `shopify_*` columns to `users` or `workspaces`. Installed is not Connected.
 
@@ -49,7 +50,7 @@ BowerBird uses Shopify CLI. See `shopify/README.md`.
 2. Serve `shopify/app-home/` as the embedded App Home.
 3. App Home iframes `{HOST_BASE_URL}/shopify_plugin_demo/connect?shop=...`.
 4. App Bridge `idToken()` is appended as `shopify_session_token`. The host verifies HS256 through Oauth, then parses Shopify claims.
-5. Theme app extension `shopify/extensions/recording-studio-theme` documents host URL and recording id.
+5. Theme app extension `shopify/extensions/recording-studio-theme` sets host URL, page id, and storefront token. Shop comes from the storefront.
 
 ```bash
 cd shopify

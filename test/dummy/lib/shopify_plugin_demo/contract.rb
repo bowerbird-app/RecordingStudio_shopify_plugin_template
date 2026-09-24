@@ -22,6 +22,7 @@ module ShopifyPluginDemo
     RELAY_CALLBACK_PATH = "/recording_studio_oauth/callback"
     CONNECT_TOKEN_PATH = TOKEN_PATH
     UNINSTALL_PATH = "/shopify_plugin_demo/uninstall"
+    STOREFRONT_EMBED_PATH = "/shopify_plugin_demo/storefront/embed"
 
     SCHEMA_VERSION = 1
     REQUIRED_TOP_KEYS = %w[schema_version html configuration sdk].freeze
@@ -65,6 +66,12 @@ module ShopifyPluginDemo
 
     def public_actions_embed_path(page_recording_id)
       "#{PUBLIC_RESOURCE_PREFIX}/#{RESOURCE}/#{page_recording_id}/#{ACTIONS_EMBED}"
+    end
+
+    def storefront_embed_path(format: nil)
+      return STOREFRONT_EMBED_PATH if format.blank?
+
+      "#{STOREFRONT_EMBED_PATH}.#{format}"
     end
 
     def parse_browser_payload!(body)

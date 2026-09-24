@@ -23,4 +23,20 @@ Serve `app-home/` as the embedded application URL, or copy those two files behin
 
 ## Theme extension
 
-`extensions/recording-studio-theme` is a Liquid block. Set host URL and page recording id. Storefront uses browser-payload plus SDK. Do not iframe the host there.
+`extensions/recording-studio-theme` is a Liquid block. Set Host URL, Page id, and Storefront token. Shop comes from `shop.permanent_domain`. The block loads `{host}/shopify_plugin_demo/storefront/embed.js` and mounts Embeddable HTML in the page. Do not iframe the host there.
+
+Mint a token on the dummy host after Connect:
+
+```ruby
+client = RecordingStudioOauth::OauthClient.find_by!(
+  client_id: ENV.fetch("SHOPIFY_PLUGIN_REGISTERED_APP_CLIENT_ID")
+)
+secret = RecordingStudioShopifyPluginTemplate::ShopifyStorefrontEmbed.secret_for(client)
+token = RecordingStudioShopifyPluginTemplate::ShopifyStorefrontEmbed.mint(
+  shop_domain: "demo.myshopify.com",
+  page_recording_id: "PAGE_ID",
+  secret: secret
+)
+```
+
+Paste `token` into the theme editor. A shop that is only Installed, or a token for another shop, returns 404.

@@ -1,7 +1,8 @@
 {
   "name": "Shopify plugin",
   "settings": {
-    "host_base_url": "Recording Studio host URL",
-    "recording_id": "Page recording id"
+    "host_base_url": "Host URL",
+    "recording_id": "Page id",
+    "embed_token": "Storefront token"
   }
 }
