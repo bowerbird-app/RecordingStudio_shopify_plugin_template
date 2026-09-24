@@ -11,13 +11,13 @@
     <%= render FlatPack::Alert::Component.new(style: :success, title: notice) %>
   <% end %>
   <% if alert.present? %>
-    <%= render FlatPack::Alert::Component.new(style: :error, title: alert) %>
+    <%= render FlatPack::Alert::Component.new(style: :danger, title: alert) %>
   <% end %>
 
   <%= render FlatPack::Alert::Component.new(
     style: :info,
     title: "Installed is not Connected",
-    description: "Shopify Partner install only means the Shopify plugin is on the shop. Connect here to link Recording Studio. Session token HS256 verify and the generic install table land in RecordingStudio Oauth next."
+    description: "Shopify Partner install only means the Shopify plugin is on the shop. Connect here to link Recording Studio."
   ) %>
 
   <%= form_with url: shopify_plugin_demo_connect_path, method: :get, local: true do %>

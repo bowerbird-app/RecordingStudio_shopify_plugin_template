@@ -8,7 +8,7 @@ BowerBird uses Shopify CLI for this channel. This folder is the thin app: TOML, 
 2. Set `HOST_BASE_URL` to that origin (for example `http://localhost:3000`).
 3. Put the same origin in `shopify.app.toml` `application_url` when you run `shopify app dev`.
 4. App Home (`app-home/index.html`) iframes `{HOST_BASE_URL}/shopify_plugin_demo/connect?shop=...`.
-5. App Bridge `idToken()` appends `shopify_session_token`. The host does not verify HS256 yet. That work lands in RecordingStudio Oauth.
+5. App Bridge `idToken()` appends `shopify_session_token`. The dummy host verifies HS256 through Oauth, then the Shopify plugin parses `dest` / `iss` and records the install.
 
 Serve `app-home/` as the embedded application URL, or copy those two files behind the CLI web target you already use.
 
@@ -19,7 +19,7 @@ Serve `app-home/` as the embedded application URL, or copy those two files behin
 3. Sign in on the dummy host if asked (`admin@admin.com` / `Password`).
 4. Click Connect.
 
-`app/uninstalled` posts to `{HOST_BASE_URL}/shopify_plugin_demo/uninstall` and clears the stub connection row.
+`app/uninstalled` posts to `{HOST_BASE_URL}/shopify_plugin_demo/uninstall` and deletes the Oauth external install row.
 
 ## Theme extension
 
