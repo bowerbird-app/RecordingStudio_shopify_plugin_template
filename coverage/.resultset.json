@@ -1,7 +1,7 @@
 {
   "Unit Tests": {
     "coverage": {
-      "/workspace/lib/recording_studio_shopify_plugin_template.rb": {
+      "/workspace/lib/gem_template.rb": {
         "lines": [
           null,
           null,
@@ -10,15 +10,11 @@
           1,
           1,
           1,
-          1,
-          1,
-          1,
-          1,
           null,
           1,
           1,
           1,
-          55,
+          200,
           null,
           null,
           1,
@@ -28,13 +24,13 @@
           null
         ],
         "branches": {
-          "[:if, 0, 20, 6, 20, 42]": {
-            "[:then, 1, 20, 6, 20, 26]": 0,
-            "[:else, 2, 20, 6, 20, 42]": 1
+          "[:if, 0, 16, 6, 16, 42]": {
+            "[:then, 1, 16, 6, 16, 26]": 0,
+            "[:else, 2, 16, 6, 16, 42]": 1
           }
         }
       },
-      "/workspace/lib/recording_studio_shopify_plugin_template/engine.rb": {
+      "/workspace/lib/gem_template/engine.rb": {
         "lines": [
           null,
           null,
@@ -54,20 +50,8 @@
           1,
           null,
           1,
-          3,
-          3,
-          4,
-          2,
-          null,
-          2,
-          null,
-          null,
-          null,
-          null,
-          1,
           5,
           null,
-          4,
           4,
           null,
           4,
@@ -90,13 +74,13 @@
           null,
           null,
           null,
-          1,
           null,
           1,
-          null,
+          1,
           null,
           null,
           1,
+          null,
           5,
           null,
           null,
@@ -106,7 +90,8 @@
           null,
           4,
           null,
-          1,
+          null,
+          null,
           null,
           null,
           null,
@@ -114,26 +99,26 @@
           4,
           4,
           2,
+          null,
           null,
           null,
           2,
           3,
           1,
           null,
-          1,
+          null,
+          null,
           null,
           null,
           null,
           null,
           5,
-          5,
-          5,
           null,
           null,
           null,
           1,
+          1,
           null,
-          2,
           null,
           null,
           1,
@@ -144,6 +129,7 @@
           2,
           null,
           1,
+          null,
           null,
           null,
           null,
@@ -161,85 +147,81 @@
           null
         ],
         "branches": {
-          "[:if, 0, 21, 10, 25, 13]": {
-            "[:then, 1, 22, 12, 22, 44]": 2,
-            "[:else, 2, 24, 12, 24, 49]": 2
+          "[:unless, 0, 19, 8, 19, 28]": {
+            "[:else, 1, 19, 8, 19, 28]": 4,
+            "[:then, 2, 19, 8, 19, 14]": 1
           },
-          "[:unless, 3, 30, 8, 30, 28]": {
-            "[:else, 4, 30, 8, 30, 28]": 4,
-            "[:then, 5, 30, 8, 30, 14]": 1
+          "[:if, 3, 24, 10, 24, 36]": {
+            "[:then, 4, 24, 10, 24, 14]": 2,
+            "[:else, 5, 24, 10, 24, 36]": 3
           },
-          "[:if, 6, 36, 10, 36, 36]": {
-            "[:then, 7, 36, 10, 36, 14]": 2,
-            "[:else, 8, 36, 10, 36, 36]": 3
+          "[:\"&.\", 6, 34, 30, 34, 53]": {
+            "[:then, 7, 34, 30, 34, 53]": 5,
+            "[:else, 8, 34, 30, 34, 53]": 0
           },
-          "[:\"&.\", 9, 46, 30, 46, 53]": {
-            "[:then, 10, 46, 30, 46, 53]": 5,
-            "[:else, 11, 46, 30, 46, 53]": 0
+          "[:if, 9, 50, 6, 61, 9]": {
+            "[:then, 10, 52, 10, 58, 34]": 4,
+            "[:else, 11, 50, 6, 61, 9]": 1
           },
-          "[:if, 12, 62, 6, 73, 9]": {
-            "[:then, 13, 64, 10, 71, 13]": 4,
-            "[:else, 14, 62, 6, 73, 9]": 1
+          "[:if, 12, 57, 10, 57, 75]": {
+            "[:then, 13, 57, 10, 57, 48]": 3,
+            "[:else, 14, 57, 10, 57, 75]": 1
           },
-          "[:if, 15, 69, 10, 69, 100]": {
-            "[:then, 16, 69, 10, 69, 73]": 3,
-            "[:else, 17, 69, 10, 69, 100]": 1
+          "[:if, 15, 64, 6, 78, 9]": {
+            "[:then, 16, 65, 8, 77, 11]": 4,
+            "[:else, 17, 64, 6, 78, 9]": 1
           },
-          "[:if, 18, 75, 6, 88, 9]": {
-            "[:then, 19, 76, 8, 87, 11]": 4,
-            "[:else, 20, 75, 6, 88, 9]": 1
+          "[:if, 18, 66, 8, 77, 11]": {
+            "[:then, 19, 67, 10, 67, 53]": 2,
+            "[:else, 20, 71, 12, 74, 36]": 2
           },
-          "[:if, 21, 77, 8, 87, 11]": {
-            "[:then, 22, 78, 10, 78, 78]": 2,
-            "[:else, 23, 81, 12, 85, 15]": 2
+          "[:if, 21, 72, 12, 72, 81]": {
+            "[:then, 22, 72, 12, 72, 49]": 2,
+            "[:else, 23, 72, 12, 72, 81]": 0
           },
-          "[:if, 24, 82, 12, 82, 81]": {
-            "[:then, 25, 82, 12, 82, 49]": 2,
-            "[:else, 26, 82, 12, 82, 81]": 0
+          "[:\"&.\", 24, 73, 54, 73, 64]": {
+            "[:then, 25, 73, 54, 73, 64]": 1,
+            "[:else, 26, 73, 54, 73, 64]": 0
           },
-          "[:\"&.\", 27, 83, 79, 83, 89]": {
-            "[:then, 28, 83, 79, 83, 89]": 1,
-            "[:else, 29, 83, 79, 83, 89]": 0
+          "[:if, 27, 73, 12, 73, 64]": {
+            "[:then, 28, 73, 12, 73, 50]": 1,
+            "[:else, 29, 73, 12, 73, 64]": 0
           },
-          "[:if, 30, 83, 12, 83, 89]": {
-            "[:then, 31, 83, 12, 83, 75]": 1,
-            "[:else, 32, 83, 12, 83, 89]": 0
+          "[:unless, 30, 92, 8, 92, 48]": {
+            "[:else, 31, 92, 8, 92, 48]": 1,
+            "[:then, 32, 92, 8, 92, 12]": 0
           },
-          "[:unless, 33, 103, 8, 103, 48]": {
-            "[:else, 34, 103, 8, 103, 48]": 1,
-            "[:then, 35, 103, 8, 103, 12]": 0
+          "[:if, 33, 95, 10, 95, 39]": {
+            "[:then, 34, 95, 10, 95, 14]": 1,
+            "[:else, 35, 95, 10, 95, 39]": 1
           },
-          "[:if, 36, 106, 10, 106, 39]": {
-            "[:then, 37, 106, 10, 106, 14]": 1,
-            "[:else, 38, 106, 10, 106, 39]": 1
-          },
-          "[:unless, 39, 115, 8, 115, 52]": {
-            "[:else, 40, 115, 8, 115, 52]": 1,
-            "[:then, 41, 115, 8, 115, 12]": 0
+          "[:unless, 36, 105, 8, 105, 52]": {
+            "[:else, 37, 105, 8, 105, 52]": 1,
+            "[:then, 38, 105, 8, 105, 12]": 0
           }
         }
       },
-      "/workspace/lib/recording_studio_shopify_plugin_template/configuration.rb": {
+      "/workspace/lib/gem_template/configuration.rb": {
         "lines": [
           null,
           null,
           1,
+          null,
+          1,
           1,
           1,
           1,
           null,
           1,
-          25,
-          25,
-          25,
-          25,
-          25,
+          24,
+          24,
+          24,
+          24,
           null,
           null,
           1,
           null,
           2,
-          null,
           null,
           null,
           null,
@@ -269,126 +251,540 @@
           }
         }
       },
-      "/workspace/lib/recording_studio_shopify_plugin_template/shopify_session_claims.rb": {
+      "/workspace/lib/gem_template/hooks.rb": {
         "lines": [
           null,
           null,
           1,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
           1,
+          null,
           1,
+          null,
+          null,
           1,
-          5,
+          null,
+          1,
+          null,
+          1,
+          106,
+          63,
+          61,
+          55,
+          55,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          4,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          20,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          2,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          6,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          3,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          6,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          3,
+          null,
+          null,
+          null,
           null,
           null,
           null,
           1,
+          8,
+          null,
+          7,
+          7,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
           5,
-          5,
+          null,
+          4,
+          4,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          7,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          4,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          97,
+          67,
+          null,
+          67,
+          30,
+          27,
           null,
           3,
+          null,
+          null,
+          66,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          10,
+          null,
+          5,
+          1,
+          null,
+          null,
+          4,
+          10,
+          null,
+          4,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          34,
+          null,
+          null,
+          null,
+          1,
+          53,
+          53,
+          53,
+          53,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          1,
+          1,
+          null,
+          null,
+          null,
+          1,
+          null,
+          1,
+          44,
+          44,
+          null,
+          43,
+          43,
+          null,
+          null,
+          43,
+          null,
+          null,
+          null,
+          null,
+          1,
+          25,
+          null,
+          null,
+          1,
+          35,
+          34,
+          1,
+          1,
+          null,
+          null,
+          null,
+          1,
           3,
           null,
           2,
           null,
           null,
           1,
-          20,
-          20,
+          2,
           null,
-          13,
-          13,
+          1,
+          1,
           null,
           null,
           1,
-          5,
-          5,
-          5,
-          4,
           null,
-          3,
+          null,
+          null,
+          null,
+          null,
+          1,
+          52,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          2,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          1,
+          null,
+          null,
+          null,
+          null
+        ],
+        "branches": {
+          "[:unless, 0, 104, 6, 104, 32]": {
+            "[:else, 1, 104, 6, 104, 32]": 7,
+            "[:then, 2, 104, 6, 104, 12]": 1
+          },
+          "[:unless, 3, 116, 6, 116, 32]": {
+            "[:else, 4, 116, 6, 116, 32]": 4,
+            "[:then, 5, 116, 6, 116, 12]": 1
+          },
+          "[:if, 6, 167, 6, 175, 9]": {
+            "[:then, 7, 168, 8, 168, 13]": 1,
+            "[:else, 8, 171, 8, 174, 18]": 4
+          },
+          "[:unless, 9, 208, 6, 208, 28]": {
+            "[:else, 10, 208, 6, 208, 28]": 43,
+            "[:then, 11, 208, 6, 208, 12]": 1
+          },
+          "[:if, 12, 214, 25, 214, 77]": {
+            "[:then, 13, 214, 54, 214, 66]": 0,
+            "[:else, 14, 214, 69, 214, 77]": 43
+          },
+          "[:if, 15, 224, 6, 228, 9]": {
+            "[:then, 16, 225, 8, 225, 23]": 34,
+            "[:else, 17, 226, 6, 227, 31]": 1
+          },
+          "[:if, 18, 226, 6, 227, 31]": {
+            "[:then, 19, 227, 8, 227, 31]": 1,
+            "[:else, 20, 226, 6, 227, 31]": 0
+          },
+          "[:if, 21, 232, 6, 232, 91]": {
+            "[:then, 22, 232, 6, 232, 72]": 1,
+            "[:else, 23, 232, 6, 232, 91]": 2
+          },
+          "[:unless, 24, 238, 6, 238, 81]": {
+            "[:else, 25, 238, 6, 238, 81]": 1,
+            "[:then, 26, 238, 6, 238, 12]": 1
+          },
+          "[:if, 27, 241, 6, 241, 79]": {
+            "[:then, 28, 241, 6, 241, 60]": 1,
+            "[:else, 29, 241, 6, 241, 79]": 0
+          }
+        }
+      },
+      "/workspace/lib/gem_template/services/base_service.rb": {
+        "lines": [
+          null,
+          null,
+          1,
+          1,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
           null,
           1,
           null,
           1,
-          5,
+          1,
+          null,
+          1,
+          23,
+          23,
+          23,
+          23,
           null,
           null,
           1,
-          5,
+          10,
           null,
           null,
           1,
-          5,
-          null,
           12,
           null,
-          1,
           null,
           1,
-          3,
+          5,
+          5,
+          null,
           null,
           1,
+          4,
+          4,
+          null,
+          null,
+          null,
+          1,
+          2,
+          null,
+          1,
+          null,
+          null,
+          null,
+          1,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          23,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          null,
+          23,
+          null,
+          null,
+          23,
+          null,
+          null,
+          22,
+          null,
+          22,
+          22,
+          null,
+          null,
+          1,
+          null,
+          null,
+          null,
+          null,
+          1,
+          1,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          13,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          9,
+          9,
+          null,
+          null,
+          null,
+          1,
+          23,
+          null,
+          22,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          22,
+          null,
+          21,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          23,
+          2,
+          null,
+          22,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          68,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          19,
+          null,
+          null,
           null,
           null
         ],
         "branches": {
-          "[:if, 0, 13, 6, 13, 53]": {
-            "[:then, 1, 13, 6, 13, 24]": 2,
-            "[:else, 2, 13, 6, 13, 53]": 3
+          "[:if, 0, 50, 10, 50, 50]": {
+            "[:then, 1, 50, 10, 50, 22]": 3,
+            "[:else, 2, 50, 10, 50, 50]": 2
           },
-          "[:if, 3, 16, 6, 16, 82]": {
-            "[:then, 4, 16, 6, 16, 43]": 1,
-            "[:else, 5, 16, 6, 16, 82]": 2
+          "[:if, 3, 55, 10, 55, 58]": {
+            "[:then, 4, 55, 10, 55, 30]": 1,
+            "[:else, 5, 55, 10, 55, 58]": 3
           },
-          "[:if, 6, 23, 6, 23, 27]": {
-            "[:then, 7, 23, 6, 23, 12]": 7,
-            "[:else, 8, 23, 6, 23, 27]": 13
+          "[:if, 6, 61, 10, 61, 33]": {
+            "[:then, 7, 61, 10, 61, 21]": 1,
+            "[:else, 8, 61, 10, 61, 33]": 1
           },
-          "[:if, 9, 32, 6, 32, 81]": {
-            "[:then, 10, 32, 6, 32, 42]": 1,
-            "[:else, 11, 32, 6, 32, 81]": 4
+          "[:if, 9, 92, 8, 92, 37]": {
+            "[:then, 10, 92, 8, 92, 21]": 5,
+            "[:else, 11, 92, 8, 92, 37]": 17
           },
-          "[:if, 12, 33, 6, 33, 98]": {
-            "[:then, 13, 33, 6, 33, 48]": 1,
-            "[:else, 14, 33, 6, 33, 98]": 3
+          "[:if, 12, 119, 24, 119, 70]": {
+            "[:then, 13, 119, 49, 119, 62]": 1,
+            "[:else, 14, 119, 65, 119, 70]": 8
           },
-          "[:unless, 15, 48, 6, 48, 53]": {
-            "[:else, 16, 48, 6, 48, 53]": 5,
-            "[:then, 17, 48, 6, 48, 15]": 0
+          "[:unless, 15, 125, 8, 125, 36]": {
+            "[:else, 16, 125, 8, 125, 36]": 22,
+            "[:then, 17, 125, 8, 125, 14]": 1
+          },
+          "[:unless, 18, 134, 8, 134, 36]": {
+            "[:else, 19, 134, 8, 134, 36]": 21,
+            "[:then, 20, 134, 8, 134, 14]": 1
+          },
+          "[:if, 21, 143, 8, 147, 11]": {
+            "[:then, 22, 144, 10, 144, 74]": 1,
+            "[:else, 23, 146, 10, 146, 17]": 22
           }
         }
       },
-      "/workspace/lib/recording_studio_shopify_plugin_template/shopify_install.rb": {
+      "/workspace/lib/gem_template/services/example_service.rb": {
         "lines": [
           null,
           null,
           1,
           1,
-          1,
-          1,
-          1,
-          1,
           null,
           null,
-          null,
-          1,
-          0,
-          0,
-          null,
-          0,
-          0,
-          null,
-          0,
-          0,
-          0,
-          null,
-          null,
-          1,
-          0,
-          0,
-          0,
-          null,
-          0,
           null,
           null,
           null,
@@ -396,329 +792,30 @@
           null,
           null,
           1,
-          0,
-          0,
-          null,
-          0,
-          0,
-          null,
-          0,
-          0,
-          null,
-          null,
           1,
-          0,
-          0,
+          5,
           null,
-          0,
-          0,
-          null,
-          null,
-          1,
-          1,
-          1,
-          null,
-          0,
-          0,
-          null,
-          0,
-          null,
-          null,
-          0,
-          null,
-          null,
-          1,
-          1,
-          null,
-          0,
           null,
           1,
           null,
           1,
-          0,
+          5,
+          null,
+          2,
+          2,
           null,
           null,
-          0,
-          null,
-          0,
-          null,
-          1,
-          null,
-          1,
-          0,
-          null,
-          null,
-          null,
-          0,
-          null,
-          0,
-          null,
-          1,
-          null,
-          1,
-          1,
-          null,
-          1,
           null,
           null
         ],
         "branches": {
-          "[:unless, 0, 14, 6, 14, 41]": {
-            "[:else, 1, 14, 6, 14, 41]": 0,
-            "[:then, 2, 14, 6, 14, 21]": 0
-          },
-          "[:unless, 3, 17, 6, 17, 52]": {
-            "[:else, 4, 17, 6, 17, 52]": 0,
-            "[:then, 5, 17, 6, 17, 34]": 0
-          },
-          "[:if, 6, 20, 6, 20, 55]": {
-            "[:then, 7, 20, 6, 20, 39]": 0,
-            "[:else, 8, 20, 6, 20, 55]": 0
-          },
-          "[:if, 9, 27, 6, 27, 52]": {
-            "[:then, 10, 27, 6, 27, 12]": 0,
-            "[:else, 11, 27, 6, 27, 52]": 0
-          },
-          "[:if, 12, 38, 6, 38, 78]": {
-            "[:then, 13, 38, 6, 38, 44]": 0,
-            "[:else, 14, 38, 6, 38, 78]": 0
-          },
-          "[:if, 15, 41, 6, 41, 89]": {
-            "[:then, 16, 41, 6, 41, 71]": 0,
-            "[:else, 17, 41, 6, 41, 89]": 0
-          },
-          "[:unless, 18, 49, 6, 49, 27]": {
-            "[:else, 19, 49, 6, 49, 27]": 0,
-            "[:then, 20, 49, 6, 49, 12]": 0
-          },
-          "[:if, 21, 57, 6, 57, 62]": {
-            "[:then, 22, 57, 6, 57, 39]": 1,
-            "[:else, 23, 57, 6, 57, 62]": 0
-          },
-          "[:if, 24, 60, 6, 60, 61]": {
-            "[:then, 25, 60, 6, 60, 44]": 0,
-            "[:else, 26, 60, 6, 60, 61]": 0
-          },
-          "[:if, 27, 69, 6, 69, 60]": {
-            "[:then, 28, 69, 6, 69, 12]": 1,
-            "[:else, 29, 69, 6, 69, 60]": 0
-          },
-          "[:unless, 30, 79, 6, 79, 57]": {
-            "[:else, 31, 79, 6, 79, 57]": 0,
-            "[:then, 32, 79, 6, 79, 34]": 0
-          },
-          "[:unless, 33, 90, 6, 90, 61]": {
-            "[:else, 34, 90, 6, 90, 61]": 0,
-            "[:then, 35, 90, 6, 90, 36]": 0
+          "[:if, 0, 21, 8, 21, 82]": {
+            "[:then, 1, 21, 8, 21, 46]": 3,
+            "[:else, 2, 21, 8, 21, 82]": 2
           }
         }
       },
-      "/workspace/lib/recording_studio_shopify_plugin_template/shopify_storefront_embed.rb": {
-        "lines": [
-          null,
-          null,
-          1,
-          1,
-          null,
-          1,
-          1,
-          1,
-          1,
-          null,
-          1,
-          1,
-          3,
-          null,
-          null,
-          null,
-          1,
-          3,
-          3,
-          null,
-          2,
-          null,
-          null,
-          1,
-          5,
-          5,
-          5,
-          null,
-          3,
-          3,
-          null,
-          null,
-          1,
-          0,
-          0,
-          null,
-          0,
-          null,
-          null,
-          1,
-          3,
-          2,
-          2,
-          2,
-          null,
-          1,
-          null,
-          1,
-          null,
-          null,
-          1,
-          0,
-          0,
-          null,
-          0,
-          0,
-          0,
-          null,
-          0,
-          null,
-          null,
-          1,
-          null,
-          1,
-          0,
-          0,
-          0,
-          null,
-          null,
-          null,
-          1,
-          null,
-          1,
-          0,
-          0,
-          null,
-          0,
-          null,
-          1,
-          null,
-          1,
-          3,
-          null,
-          3,
-          2,
-          2,
-          null,
-          1,
-          null,
-          1,
-          0,
-          null,
-          1,
-          null,
-          1,
-          0,
-          0,
-          null,
-          1,
-          null,
-          1,
-          5,
-          null,
-          1,
-          null,
-          1,
-          2,
-          null,
-          2,
-          null,
-          1,
-          null,
-          1,
-          2,
-          null,
-          1,
-          null,
-          null
-        ],
-        "branches": {
-          "[:\"&.\", 0, 18, 12, 18, 40]": {
-            "[:then, 1, 18, 12, 18, 40]": 3,
-            "[:else, 2, 18, 12, 18, 40]": 0
-          },
-          "[:if, 3, 19, 6, 19, 26]": {
-            "[:then, 4, 19, 6, 19, 12]": 1,
-            "[:else, 5, 19, 6, 19, 26]": 2
-          },
-          "[:if, 6, 27, 6, 27, 73]": {
-            "[:then, 7, 27, 6, 27, 12]": 2,
-            "[:else, 8, 27, 6, 27, 73]": 3
-          },
-          "[:unless, 9, 35, 6, 35, 37]": {
-            "[:else, 10, 35, 6, 35, 37]": 0,
-            "[:then, 11, 35, 6, 35, 19]": 0
-          },
-          "[:if, 12, 42, 6, 42, 66]": {
-            "[:then, 13, 42, 6, 42, 38]": 0,
-            "[:else, 14, 42, 6, 42, 66]": 2
-          },
-          "[:if, 15, 43, 6, 43, 84]": {
-            "[:then, 16, 43, 6, 43, 37]": 0,
-            "[:else, 17, 43, 6, 43, 84]": 2
-          },
-          "[:unless, 18, 44, 6, 44, 98]": {
-            "[:else, 19, 44, 6, 44, 98]": 1,
-            "[:then, 20, 44, 6, 44, 37]": 1
-          },
-          "[:if, 21, 53, 6, 53, 33]": {
-            "[:then, 22, 53, 6, 53, 21]": 0,
-            "[:else, 23, 53, 6, 53, 33]": 0
-          },
-          "[:unless, 24, 56, 6, 56, 52]": {
-            "[:else, 25, 56, 6, 56, 52]": 0,
-            "[:then, 26, 56, 6, 56, 37]": 0
-          },
-          "[:unless, 27, 57, 6, 57, 90]": {
-            "[:else, 28, 57, 6, 57, 90]": 0,
-            "[:then, 29, 57, 6, 57, 34]": 0
-          },
-          "[:if, 30, 66, 6, 66, 106]": {
-            "[:then, 31, 66, 6, 66, 43]": 0,
-            "[:else, 32, 66, 6, 66, 106]": 0
-          },
-          "[:unless, 33, 67, 6, 67, 94]": {
-            "[:else, 34, 67, 6, 67, 94]": 0,
-            "[:then, 35, 67, 6, 67, 43]": 0
-          },
-          "[:if, 36, 75, 6, 75, 53]": {
-            "[:then, 37, 75, 6, 75, 12]": 0,
-            "[:else, 38, 75, 6, 75, 53]": 0
-          },
-          "[:if, 39, 82, 6, 82, 55]": {
-            "[:then, 40, 82, 6, 82, 28]": 0,
-            "[:else, 41, 82, 6, 82, 55]": 3
-          },
-          "[:if, 42, 107, 6, 107, 53]": {
-            "[:then, 43, 107, 6, 107, 18]": 0,
-            "[:else, 44, 107, 6, 107, 53]": 2
-          }
-        }
-      },
-      "/workspace/lib/recording_studio_shopify_plugin_template/capabilities/example.rb": {
-        "lines": [
-          null,
-          null,
-          1,
-          1,
-          1,
-          1,
-          3,
-          null,
-          null,
-          null,
-          null,
-          null,
-          1,
-          null,
-          null,
-          null
-        ],
-        "branches": {}
-      },
-      "/workspace/lib/generators/recording_studio_shopify_plugin_template/install/install_generator.rb": {
+      "/workspace/lib/generators/gem_template/install/install_generator.rb": {
         "lines": [
           null,
           null,
@@ -746,14 +843,10 @@
           0,
           null,
           null,
-          null,
           1,
           0,
           null,
           0,
-          null,
-          0,
-          null,
           null,
           null,
           1,
@@ -765,7 +858,6 @@
           null,
           3,
           1,
-          null,
           1,
           null,
           null,
@@ -822,10 +914,7 @@
           null,
           1,
           4,
-          4,
           null,
-          null,
-          4,
           null,
           null,
           null,
@@ -836,29 +925,29 @@
           null
         ],
         "branches": {
-          "[:unless, 0, 31, 8, 31, 34]": {
-            "[:else, 1, 31, 8, 31, 34]": 0,
-            "[:then, 2, 31, 8, 31, 14]": 0
+          "[:unless, 0, 28, 8, 28, 118]": {
+            "[:else, 1, 28, 8, 28, 118]": 0,
+            "[:then, 2, 28, 8, 28, 14]": 0
           },
-          "[:unless, 3, 39, 8, 39, 81]": {
-            "[:else, 4, 39, 8, 39, 81]": 3,
-            "[:then, 5, 39, 8, 39, 43]": 1
+          "[:unless, 3, 35, 8, 35, 81]": {
+            "[:else, 4, 35, 8, 35, 81]": 3,
+            "[:then, 5, 35, 8, 35, 43]": 1
           },
-          "[:if, 6, 44, 8, 48, 11]": {
-            "[:then, 7, 45, 10, 47, 16]": 1,
-            "[:else, 8, 44, 8, 48, 11]": 2
+          "[:if, 6, 40, 8, 43, 11]": {
+            "[:then, 7, 41, 10, 42, 16]": 1,
+            "[:else, 8, 40, 8, 43, 11]": 2
           },
-          "[:if, 9, 50, 8, 53, 11]": {
-            "[:then, 10, 51, 10, 52, 16]": 1,
-            "[:else, 11, 50, 8, 53, 11]": 1
+          "[:if, 9, 45, 8, 48, 11]": {
+            "[:then, 10, 46, 10, 47, 16]": 1,
+            "[:else, 11, 45, 8, 48, 11]": 1
           },
-          "[:if, 12, 59, 8, 59, 50]": {
-            "[:then, 13, 59, 8, 59, 27]": 1,
-            "[:else, 14, 59, 8, 59, 50]": 0
+          "[:if, 12, 54, 8, 54, 50]": {
+            "[:then, 13, 54, 8, 54, 27]": 1,
+            "[:else, 14, 54, 8, 54, 50]": 0
           }
         }
       }
     },
-    "timestamp": 1790236128
+    "timestamp": 1781227497
   }
 }
