@@ -7,6 +7,7 @@ require "recording_studio_shopify_plugin_template/engine"
 require "recording_studio_shopify_plugin_template/configuration"
 require "recording_studio_shopify_plugin_template/shopify_session_claims"
 require "recording_studio_shopify_plugin_template/shopify_install"
+require "recording_studio_shopify_plugin_template/shopify_storefront_embed"
 require "recording_studio_shopify_plugin_template/capabilities/example"
 
 module RecordingStudioShopifyPluginTemplate

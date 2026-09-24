@@ -45,6 +45,7 @@ Rails.application.routes.draw do
   post "shopify_plugin_demo/connect", to: "shopify_plugin_demo/connections#create"
   delete "shopify_plugin_demo/connect", to: "shopify_plugin_demo/connections#destroy", as: :shopify_plugin_demo_disconnect
   post "shopify_plugin_demo/uninstall", to: "shopify_plugin_demo/uninstalls#create"
+  get "shopify_plugin_demo/storefront/embed", to: "shopify_plugin_demo/storefront_embeds#show"
 
   root "home#index"
 

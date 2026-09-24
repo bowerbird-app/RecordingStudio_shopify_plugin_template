@@ -1,22 +1,18 @@
 <div
   id="recording-studio-{{ block.id }}"
   data-rs-host="{{ block.settings.host_base_url }}"
-  data-rs-recording-id="{{ block.settings.recording_id }}"
+  data-rs-page-id="{{ block.settings.recording_id }}"
+  data-rs-shop="{{ shop.permanent_domain }}"
 >
+  Set the host URL, page id, and storefront token in the theme editor.
 </div>
 
-<script>
-  (function () {
-    var root = document.getElementById("recording-studio-{{ block.id }}");
-    var host = root.getAttribute("data-rs-host");
-    var recordingId = root.getAttribute("data-rs-recording-id");
-    if (!host || !recordingId) {
-      root.textContent = "Set host URL and page id in the theme editor.";
-      return;
-    }
-    root.textContent = "Shopify plugin mount. Host " + host + " page " + recordingId + ".";
-  })();
-</script>
+{% if block.settings.host_base_url != blank and block.settings.recording_id != blank and block.settings.embed_token != blank %}
+  <script
+    src="{{ block.settings.host_base_url }}/shopify_plugin_demo/storefront/embed.js?shop={{ shop.permanent_domain }}&page_id={{ block.settings.recording_id }}&token={{ block.settings.embed_token }}&mount=recording-studio-{{ block.id }}"
+    async
+  ></script>
+{% endif %}
 
 {% schema %}
 {
@@ -26,14 +22,20 @@
     {
       "type": "text",
       "id": "host_base_url",
-      "label": "Recording Studio host URL",
+      "label": "Host URL",
       "info": "Dummy host origin. Example: http://localhost:3000"
     },
     {
       "type": "text",
       "id": "recording_id",
-      "label": "Page recording id",
-      "info": "UUID from dummy Pages."
+      "label": "Page id",
+      "info": "Page id from dummy Pages."
+    },
+    {
+      "type": "text",
+      "id": "embed_token",
+      "label": "Storefront token",
+      "info": "Token for this shop and page after Connect. Shop comes from this store."
     }
   ]
 }

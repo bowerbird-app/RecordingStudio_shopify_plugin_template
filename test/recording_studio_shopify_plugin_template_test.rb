@@ -4,7 +4,7 @@ require "test_helper"
 
 class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
   def test_version_matches_release
-    assert_equal "0.3.1", ::RecordingStudioShopifyPluginTemplate::VERSION
+    assert_equal "0.3.2", ::RecordingStudioShopifyPluginTemplate::VERSION
   end
 
   def test_engine_exists

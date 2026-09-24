@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.2] - 2026-09-24
+
+### Added
+- Scoped storefront embed URL. Theme Liquid loads Embeddable browser-payload HTML and JS. It does not iframe the host.
+- `ShopifyStorefrontEmbed` mints and checks an HMAC token for shop plus page. Entitlement still uses Oauth install plus Connect. Admin session cookies do not count on the storefront.
+- Dummy `GET /shopify_plugin_demo/storefront/embed.js` (and `.json`) returns the payload with public cache headers. Failed checks are 404 and are not cached.
+
+### Upgrade notes
+- In the theme editor, set Host URL, Page id, and Storefront token. Shop is `shop.permanent_domain`.
+- Mint a token after Connect with `ShopifyStorefrontEmbed.mint` and `ShopifyStorefrontEmbed.secret_for` on the Registered App. Paste that token into the theme block.
+- Production CDN can sit in front of the scoped URL later. This release only sets `Cache-Control`.
+
 ## [0.3.1] - 2026-09-24
 
 ### Changed
@@ -123,7 +135,8 @@ New addons copied from this template are born on Recording Studio 4.x.
 - Comprehensive README and documentation
 - Basic test suite with Minitest
 
-[Unreleased]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/compare/v0.3.1...HEAD
+[Unreleased]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/compare/v0.3.2...HEAD
+[0.3.2]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.2
 [0.3.1]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.1
 [0.3.0]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.0
 [0.2.2]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.2.2
