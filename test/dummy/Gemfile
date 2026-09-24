@@ -11,7 +11,7 @@ gem "recording_studio_accessible", github: "bowerbird-app/RecordingStudio_access
 gem "recording_studio_api", github: "bowerbird-app/RecordingStudio_api", tag: "v0.5.6"
 gem "recording_studio_embeddable", github: "bowerbird-app/RecordingStudio_Embeddable", tag: "v0.2.1"
 gem "recording_studio_admin", github: "bowerbird-app/RecordingStudio_admin", tag: "v2.0.2"
-gem "recording_studio_oauth", github: "bowerbird-app/RecordingStudio_Oauth", tag: "v0.5.2"
+gem "recording_studio_oauth", github: "bowerbird-app/RecordingStudio_Oauth", tag: "v0.5.3"
 gem "recording_studio_site_settings", github: "bowerbird-app/RecordingStudio_site_settings", tag: "v0.1.0"
 # Publishable is Embeddable's hard dep. Attachable is required to boot Publishable's model.
 gem "recording_studio_publishable", github: "bowerbird-app/RecordingStudio_publishable", tag: "v0.2.0"

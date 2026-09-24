@@ -14,7 +14,6 @@
 
   iframe.src = connectUrl(null);
 
-  // TODO(Oauth): the host does not verify this HS256 session token yet.
   if (window.shopify && typeof window.shopify.idToken === "function") {
     window.shopify.idToken().then(function (token) {
       iframe.src = connectUrl(token);

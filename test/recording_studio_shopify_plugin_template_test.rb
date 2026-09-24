@@ -4,17 +4,18 @@ require "test_helper"
 
 class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
   def test_version_matches_release
-    assert_equal "0.3.0", ::RecordingStudioShopifyPluginTemplate::VERSION
+    assert_equal "0.3.1", ::RecordingStudioShopifyPluginTemplate::VERSION
   end
 
   def test_engine_exists
     assert_kind_of Class, ::RecordingStudioShopifyPluginTemplate::Engine
   end
 
-  def test_gemspec_pins_recording_studio_4_2
+  def test_gemspec_pins_recording_studio_and_oauth
     gemspec = File.read(File.expand_path("../recording_studio_shopify_plugin_template.gemspec", __dir__))
 
     assert_includes gemspec, 'spec.add_dependency "recording_studio", "~> 4.2"'
+    assert_includes gemspec, 'spec.add_dependency "recording_studio_oauth", "~> 0.5.3"'
   end
 
   def test_gemspec_excludes_cursor_config
@@ -51,7 +52,7 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
     refute_includes gemfile, "recording_studio/v3.0.0"
     refute_includes gemfile, 'tag: "v0.1.133"'
     refute_includes gemfile, 'tag: "v0.6.0"'
-    refute_includes gemfile, 'tag: "0.3.1"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_Oauth", tag: "v0.5.3"'
   end
 
   def test_dummy_schema_includes_accessible_depends_on_recording_id
@@ -158,6 +159,7 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
     assert_includes readme, "v4.2.0"
     assert_includes readme, "v0.1.190"
     assert_includes readme, "v0.9.1"
+    assert_includes readme, "v0.5.3"
     refute_includes readme, "v0.1.133"
     refute_includes readme, "v3 declarations"
     refute_includes readme, "RecordingStudio v3"
@@ -225,5 +227,17 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
     view_path = File.expand_path("../app/views/recording_studio_shopify_plugin_template/home/index.html.erb", __dir__)
 
     refute File.exist?(view_path)
+  end
+
+  def test_stub_connection_table_is_gone
+    refute File.exist?(File.expand_path("dummy/app/models/shopify_plugin_demo/connection.rb", __dir__))
+    schema = File.read(File.expand_path("dummy/db/schema.rb", __dir__))
+    refute_includes schema, "shopify_plugin_demo_connections"
+    assert_includes schema, "recording_studio_oauth_external_installs"
+    migrate_path = File.expand_path(
+      "dummy/db/migrate/20260924040000_add_oauth_session_token_verify_and_drop_stub_connections.rb",
+      __dir__
+    )
+    assert_includes File.read(migrate_path), "shopify_plugin_demo_connections"
   end
 end

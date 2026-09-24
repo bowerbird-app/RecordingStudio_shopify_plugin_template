@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-09-24
+
+### Changed
+- Dummy host pins RecordingStudio Oauth `v0.5.3`.
+- App Home session tokens are verified on the host. Oauth checks HS256, `aud`, `exp`, and `nbf`. The Shopify plugin parses `dest` and `iss`, then upserts `recording_studio_oauth_external_installs`.
+
+### Removed
+- Temporary `shopify_plugin_demo_connections` table. Shop mapping lives on Oauth external installs.
+
+### Upgrade notes
+- Point dummy Gemfile Oauth at tag `v0.5.3`, then `bundle install` and `bin/rails db:prepare` so Oauth's session-token and external-install migration can run.
+- Create a Registered App (`rsoauth_oc_…`) for Connect. Turn on Token verification. Set Channel to `shopify`, Who the token is for to the Partner app client id (`aud`), and Session token secret to the Partner app secret.
+- Set `SHOPIFY_PLUGIN_REGISTERED_APP_CLIENT_ID` to that Registered App id.
+- Installed still is not Connected. A verified session token can write an install before anyone clicks Connect.
+- `ShopifyInstall.bind` only connects an install that `record_from_session_token` already wrote. `ShopifyInstall.remove` needs `client` or `client_id` and never deletes every app's row for a shop.
+
 ## [0.3.0] - 2026-09-24
 
 ### Changed
@@ -107,7 +123,8 @@ New addons copied from this template are born on Recording Studio 4.x.
 - Comprehensive README and documentation
 - Basic test suite with Minitest
 
-[Unreleased]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.1
 [0.3.0]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.0
 [0.2.2]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.2.2
 [0.2.1]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.2.1

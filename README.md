@@ -33,11 +33,13 @@ Useful routes:
 
 Named API key is `shopify_plugin_demo`. Page enables Embeddable `:embed`. Storefront uses that payload. Do not iframe the host on the storefront.
 
-Connect on this host is a stub. It writes `shopify_plugin_demo_connections` (shop domain plus status). That table is temporary. Do not add `shopify_*` columns to `users` or `workspaces`. HS256 session token verify and the generic install mapping table land in RecordingStudio Oauth next.
+Connect on this host calls RecordingStudio Oauth `verify_session_token`, then the Shopify plugin parses `dest` / `iss` and upserts `recording_studio_oauth_external_installs`. Do not add `shopify_*` columns to `users` or `workspaces`. Installed is not Connected.
 
 White-label strings live in `test/dummy/lib/shopify_plugin_demo/product_config.rb` (`Shopify plugin` / `Shopify Template Demo`).
 
-Dummy gem pins match the WordPress dummy where they apply: RecordingStudio `v4.2.0`, Accessible `v0.9.1`, API `v0.5.6`, Embeddable `v0.2.1`, Oauth `v0.5.2`, Admin `v2.0.2`, Users `v0.11.0`, FlatPack `v0.1.190`.
+Dummy gem pins match the WordPress dummy where they apply: RecordingStudio `v4.2.0`, Accessible `v0.9.1`, API `v0.5.6`, Embeddable `v0.2.1`, Oauth `v0.5.3`, Admin `v2.0.2`, Users `v0.11.0`, FlatPack `v0.1.190`.
+
+Set `SHOPIFY_PLUGIN_REGISTERED_APP_CLIENT_ID` to the Connect Registered App id (`rsoauth_oc_…`). The Partner app client id is JWT `aud` on Token verification, not that id.
 
 ## Shopify CLI
 
@@ -46,7 +48,7 @@ BowerBird uses Shopify CLI. See `shopify/README.md`.
 1. Set `HOST_BASE_URL` to the dummy origin.
 2. Serve `shopify/app-home/` as the embedded App Home.
 3. App Home iframes `{HOST_BASE_URL}/shopify_plugin_demo/connect?shop=...`.
-4. App Bridge `idToken()` is appended as `shopify_session_token`. The host does not verify it yet.
+4. App Bridge `idToken()` is appended as `shopify_session_token`. The host verifies HS256 through Oauth, then parses Shopify claims.
 5. Theme app extension `shopify/extensions/recording-studio-theme` documents host URL and recording id.
 
 ```bash

@@ -20,10 +20,10 @@ GIT
 
 GIT
   remote: https://github.com/bowerbird-app/RecordingStudio_Oauth.git
-  revision: 5098473b04daf2cfb401a78d9e221076b814295f
-  tag: v0.5.2
+  revision: b25d6ca58c0d3a9bc7f2b101d971d5100fa526b5
+  tag: v0.5.3
   specs:
-    recording_studio_oauth (0.5.2)
+    recording_studio_oauth (0.5.3)
       flat_pack (~> 0.1.144)
       rails (~> 8.1.0)
       recording_studio (~> 4.2)
@@ -141,9 +141,10 @@ GIT
 PATH
   remote: ../..
   specs:
-    recording_studio_shopify_plugin_template (0.3.0)
+    recording_studio_shopify_plugin_template (0.3.1)
       rails (~> 8.1.0)
       recording_studio (~> 4.2)
+      recording_studio_oauth (~> 0.5.3)
 
 GEM
   remote: https://rubygems.org/
@@ -811,10 +812,10 @@ CHECKSUMS
   recording_studio_api (0.5.6)
   recording_studio_attachable (0.5.1)
   recording_studio_embeddable (0.2.1)
-  recording_studio_oauth (0.5.2)
+  recording_studio_oauth (0.5.3)
   recording_studio_publishable (0.2.0)
   recording_studio_root_switchable (0.5.0)
-  recording_studio_shopify_plugin_template (0.3.0)
+  recording_studio_shopify_plugin_template (0.3.1)
   recording_studio_site_settings (0.1.0)
   recording_studio_user (0.11.0)
   redis (5.4.1) sha256=b5e675b57ad22b15c9bcc765d5ac26f60b675408af916d31527af9bd5a81faae
