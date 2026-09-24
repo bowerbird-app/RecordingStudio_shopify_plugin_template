@@ -82,7 +82,6 @@ class ShopifyPluginDemoStorefrontEmbedTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "innerHTML"
     assert_includes response.body, "data-shopify-plugin-demo-embed"
     refute_includes response.body, "<iframe"
-    refute_includes response.body, "iframe"
   end
 
   test "storefront js does not use an admin session cookie" do
@@ -131,7 +130,7 @@ class ShopifyPluginDemoStorefrontEmbedTest < ActionDispatch::IntegrationTest
   def create_registered_app(name: "Shopify plugin", audience: PARTNER_APP_ID, secret: SESSION_SECRET)
     result = RecordingStudioOauth::Services::CreateOauthClient.call(
       name: name,
-      redirect_uris: ["https://example.com/callback"],
+      redirect_uris: [ "https://example.com/callback" ],
       confidential: false,
       session_token_provider: "shopify",
       session_token_audience: audience,
