@@ -1,0 +1,7 @@
+{
+  "name": "shopify-plugin",
+  "private": true,
+  "scripts": {
+    "info": "echo Set HOST_BASE_URL then open App Home. See README.md."
+  }
+}

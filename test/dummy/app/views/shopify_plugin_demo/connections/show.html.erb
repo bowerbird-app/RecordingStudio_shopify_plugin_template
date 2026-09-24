@@ -1,0 +1,66 @@
+<% dummy_page_nav(title: ShopifyPluginDemo::ProductConfig::NAME, back_url: root_path) %>
+
+<div class="flex w-full flex-col gap-6">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: ShopifyPluginDemo::ProductConfig::NAME,
+    subtitle: ShopifyPluginDemo::ProductConfig::DESCRIPTION,
+    variant: :h1
+  ) %>
+
+  <% if notice.present? %>
+    <%= render FlatPack::Alert::Component.new(style: :success, title: notice) %>
+  <% end %>
+  <% if alert.present? %>
+    <%= render FlatPack::Alert::Component.new(style: :error, title: alert) %>
+  <% end %>
+
+  <%= render FlatPack::Alert::Component.new(
+    style: :info,
+    title: "Installed is not Connected",
+    description: "Shopify Partner install only means the Shopify plugin is on the shop. Connect here to link Recording Studio. Session token HS256 verify and the generic install table land in RecordingStudio Oauth next."
+  ) %>
+
+  <%= form_with url: shopify_plugin_demo_connect_path, method: :get, local: true do %>
+    <div class="flex flex-col gap-3 max-w-md">
+      <%= render FlatPack::TextInput::Component.new(
+        name: "shop",
+        label: "Shop domain",
+        value: @shop_domain,
+        placeholder: "example.myshopify.com"
+      ) %>
+      <%= render FlatPack::Button::Component.new(
+        text: "Use this shop",
+        style: :secondary,
+        size: :md,
+        type: :submit
+      ) %>
+    </div>
+  <% end %>
+
+  <% if @connected %>
+    <p class="text-sm leading-6">This shop is Connected to Recording Studio.</p>
+    <%= button_to shopify_plugin_demo_disconnect_path(shop: @shop_domain), method: :delete do %>
+      <%= render FlatPack::Button::Component.new(
+        text: ShopifyPluginDemo::ProductConfig::DISCONNECT_BUTTON_TEXT,
+        style: :secondary,
+        size: :md
+      ) %>
+    <% end %>
+    <%= button_to shopify_plugin_demo_connect_path(shop: @shop_domain), method: :post do %>
+      <%= render FlatPack::Button::Component.new(
+        text: ShopifyPluginDemo::ProductConfig::CONNECT_AGAIN_BUTTON_TEXT,
+        style: :ghost,
+        size: :md
+      ) %>
+    <% end %>
+  <% else %>
+    <p class="text-sm leading-6">This shop is not Connected yet.</p>
+    <%= button_to shopify_plugin_demo_connect_path(shop: @shop_domain), method: :post, disabled: @shop_domain.blank? do %>
+      <%= render FlatPack::Button::Component.new(
+        text: ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT,
+        style: :primary,
+        size: :md
+      ) %>
+    <% end %>
+  <% end %>
+</div>

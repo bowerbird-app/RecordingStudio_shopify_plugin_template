@@ -1,0 +1,5 @@
+<% page = @page || @parent_recordable %>
+<article data-shopify-plugin-demo-embed="page" data-theme="rounded">
+  <h1><%= ERB::Util.html_escape(page&.title.presence || "Page") %></h1>
+  <p>Inline browser payload for the Shopify plugin theme extension. This is not an iframe embed.</p>
+</article>

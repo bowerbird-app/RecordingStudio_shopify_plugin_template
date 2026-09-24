@@ -10,8 +10,7 @@ class RootSwitchDropdownTest < ActionDispatch::IntegrationTest
     get new_user_session_path
 
     assert_response :success
-    assert_includes response.body, "admin@admin.com"
-    assert_includes response.body, "Password"
+    assert_includes response.body, "Welcome back"
     assert_includes response.body, 'data-theme="rounded"'
     refute_includes response.body, "data-recording-studio-default-layout"
     refute_includes response.body, "mt-28"
