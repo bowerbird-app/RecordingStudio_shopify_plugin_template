@@ -30,7 +30,7 @@ Useful routes:
 - `/pages` page ids for the theme extension
 - `/shopify_plugin_demo/storefront/embed.js` scoped storefront browser-payload mount (HTML/JS, not an iframe)
 - `/recording_studio_api/apis/shopify_plugin_demo/v1/pages/:id/actions/embed` named API browser payload (bearer token, not the storefront)
-- `POST /shopify_plugin_demo/uninstall` Partner `app/uninstalled` stub
+- `POST /shopify_plugin_demo/uninstall` Partner `app/uninstalled` webhook. HMAC required.
 
 Named API key is `shopify_plugin_demo`. Page enables Embeddable `:embed`. The storefront theme block loads `/shopify_plugin_demo/storefront/embed.js` with a scoped token. Do not iframe the host on the storefront. Do not send the Admin session token on the storefront.
 

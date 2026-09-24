@@ -19,7 +19,7 @@ Serve `app-home/` as the embedded application URL, or copy those two files behin
 3. Sign in on the dummy host if asked (`admin@admin.com` / `Password`).
 4. Click Connect.
 
-`app/uninstalled` posts to `{HOST_BASE_URL}/shopify_plugin_demo/uninstall` and deletes the Oauth external install row.
+`app/uninstalled` posts to `{HOST_BASE_URL}/shopify_plugin_demo/uninstall`. The dummy checks `X-Shopify-Hmac-Sha256` against the raw body with the Registered App session token secret (the Partner API secret). A valid stamp then calls `ShopifyInstall.remove`. A missing or forged stamp returns 401 and leaves the install row.
 
 ## Theme extension
 
@@ -40,3 +40,43 @@ token = RecordingStudioShopifyPluginTemplate::ShopifyStorefrontEmbed.mint(
 ```
 
 Paste `token` into the theme editor. A shop that is only Installed, or a token for another shop, returns 404.
+
+## Partner smoke on development-store-kwcwfmcz
+
+Marikit runs this on the Partner store tomorrow. Do not run `shopify app deploy` from a Cloud Agent.
+
+Set these on the dummy host before you start.
+
+- `HOST_BASE_URL` is the public dummy origin the CLI tunnel will call.
+- `SHOPIFY_PLUGIN_REGISTERED_APP_CLIENT_ID` is the Oauth Registered App id (`rsoauth_oc_…`).
+- That Registered App session token secret is the Partner app API secret. HMAC and session tokens share it.
+
+### Install and Connect
+
+1. Boot the dummy (`cd test/dummy && bin/dev`).
+2. From `shopify/`, run `shopify app dev` and install on `development-store-kwcwfmcz`.
+3. Open App Home. You should see the dummy Connect iframe for that shop. Installed is not Connected.
+4. Sign in if asked (`admin@admin.com` / `Password`). Click Connect.
+
+Pass. The Oauth external install row exists for that shop and Registered App, and Connect shows Connected.
+
+### Uninstall HMAC
+
+1. In Shopify Admin, uninstall the app from `development-store-kwcwfmcz`.
+2. Confirm the Oauth install row is gone for that shop and `SHOPIFY_PLUGIN_REGISTERED_APP_CLIENT_ID`.
+
+Pass. The row is gone after Shopify posts `app/uninstalled`.
+
+3. Reinstall and Connect again so a row exists.
+4. POST a forged body to `{HOST_BASE_URL}/shopify_plugin_demo/uninstall` with a junk `X-Shopify-Hmac-Sha256` header.
+
+```bash
+curl -i -X POST "$HOST_BASE_URL/shopify_plugin_demo/uninstall" \
+  -H "Content-Type: application/json" \
+  -H "X-Shopify-Hmac-Sha256: forged" \
+  -d '{"shop":"development-store-kwcwfmcz.myshopify.com"}'
+```
+
+Pass. HTTP 401. The install row is still there.
+
+Theme block is optional for this smoke. Skip it unless you are also checking storefront embed.
