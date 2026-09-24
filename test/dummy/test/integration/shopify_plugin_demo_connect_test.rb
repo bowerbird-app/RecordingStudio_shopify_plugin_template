@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "base64"
 require "devise/test/integration_helpers"
+require "openssl"
 
 class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
@@ -109,18 +111,55 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     )
   end
 
-  test "uninstall webhook removes the install without session" do
+  test "signed uninstall webhook removes the install without session" do
     result = RecordingStudioShopifyPluginTemplate::ShopifyInstall.record_from_session_token(
       token: session_token_for(shop: "gone.myshopify.com"),
       client: @client
     )
     assert result.ok?
 
-    post "/shopify_plugin_demo/uninstall", params: { shop: "gone.myshopify.com" }
+    post_uninstall_webhook(shop: "gone.myshopify.com")
 
     assert_response :ok
     assert_nil RecordingStudioShopifyPluginTemplate::ShopifyInstall.find(
       shop_domain: "gone.myshopify.com",
+      client: @client
+    )
+  end
+
+  test "forged uninstall webhook does not remove the install" do
+    result = RecordingStudioShopifyPluginTemplate::ShopifyInstall.record_from_session_token(
+      token: session_token_for(shop: "keep.myshopify.com"),
+      client: @client
+    )
+    assert result.ok?
+
+    post "/shopify_plugin_demo/uninstall",
+         params: { shop: "keep.myshopify.com" }.to_json,
+         headers: {
+           "CONTENT_TYPE" => "application/json",
+           "HTTP_X_SHOPIFY_HMAC_SHA256" => "forged"
+         }
+
+    assert_response :unauthorized
+    assert RecordingStudioShopifyPluginTemplate::ShopifyInstall.find(
+      shop_domain: "keep.myshopify.com",
+      client: @client
+    )
+  end
+
+  test "unsigned uninstall webhook does not remove the install" do
+    result = RecordingStudioShopifyPluginTemplate::ShopifyInstall.record_from_session_token(
+      token: session_token_for(shop: "unsigned.myshopify.com"),
+      client: @client
+    )
+    assert result.ok?
+
+    post "/shopify_plugin_demo/uninstall", params: { shop: "unsigned.myshopify.com" }
+
+    assert_response :unauthorized
+    assert RecordingStudioShopifyPluginTemplate::ShopifyInstall.find(
+      shop_domain: "unsigned.myshopify.com",
       client: @client
     )
   end
@@ -201,6 +240,17 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     raise result.error unless result.success?
 
     result.value.fetch(:client)
+  end
+
+  def post_uninstall_webhook(shop:, secret: SESSION_SECRET)
+    body = { shop: shop }.to_json
+    hmac = Base64.strict_encode64(OpenSSL::HMAC.digest("SHA256", secret, body))
+    post "/shopify_plugin_demo/uninstall",
+         params: body,
+         headers: {
+           "CONTENT_TYPE" => "application/json",
+           "HTTP_X_SHOPIFY_HMAC_SHA256" => hmac
+         }
   end
 
   def session_token_for(shop:, audience: PARTNER_APP_ID, secret: SESSION_SECRET)

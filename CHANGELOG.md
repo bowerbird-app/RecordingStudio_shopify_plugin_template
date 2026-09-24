@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.3] - 2026-09-24
+
+### Added
+- `ShopifyWebhookHmac` checks Shopify `X-Shopify-Hmac-Sha256` against the raw POST body.
+- Dummy `POST /shopify_plugin_demo/uninstall` rejects a missing or forged HMAC with 401, then runs `ShopifyInstall.remove` only when the stamp matches.
+- Partner smoke checklist in `shopify/README.md` for `development-store-kwcwfmcz`.
+
+### Upgrade notes
+- Point the dummy Registered App session token secret at the Partner app API secret. HMAC uses that secret. Do not add a second secret store.
+- Keep `SHOPIFY_PLUGIN_REGISTERED_APP_CLIENT_ID` set to that Registered App id so uninstall can look the secret up.
+
 ## [0.3.2] - 2026-09-24
 
 ### Added
@@ -136,7 +147,8 @@ New addons copied from this template are born on Recording Studio 4.x.
 - Comprehensive README and documentation
 - Basic test suite with Minitest
 
-[Unreleased]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/compare/v0.3.2...HEAD
+[Unreleased]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/compare/v0.3.3...HEAD
+[0.3.3]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.3
 [0.3.2]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.2
 [0.3.1]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.1
 [0.3.0]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.0
