@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Storefront metafields write on the app installation (what theme `app.metafields` reads). Connect checks GraphQL errors, rejects hollow `metafieldsSet`, and read-backs `host_base_url` and `storefront_token` before reporting sync ok. Connect does not call `metafieldDefinitionCreate` with `APP_INSTALLATION` (invalid on Admin API 2025-01).
 - Theme app block reads `$app:recording_studio` with bracket namespace and keys (`["host_base_url"]`, `["storefront_token"]`, `["pages"]`) on `app.metafields`, and renders `block.shopify_attributes` on its root element so design mode sees Connect values and the theme editor can target the block.
 - Storefront `embed.js` waits for the theme mount node before injecting FlatPack HTML and assets, so async theme editor script ordering no longer exits early when `#recording-studio-*` is not in the DOM yet.
+- Theme block loads FlatPack CSS and a classic `embed_boot.js` as Liquid tags. Shopify storefront CSP blocks dynamically injected importmaps and `type=module` scripts, which left tooltip and carousel dead after HTML paint.
 
 ### Changed
 - Dummy App Home iframe lands on `/plugin_settings`. Not Connected redirects to Connect. Connected shows Disconnect only (host soft disconnect).

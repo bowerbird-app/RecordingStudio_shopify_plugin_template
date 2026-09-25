@@ -22,6 +22,16 @@ module ShopifyPluginDemo
       end
     end
 
+    def stylesheet_css
+      STYLESHEETS.filter_map do |name|
+        logical = name.end_with?(".css") ? name : "#{name}.css"
+        asset = Rails.application.assets.load_path.find(logical)
+        File.read(asset.path) if asset
+      rescue StandardError
+        nil
+      end.join("\n")
+    end
+
     def importmap_json(resolver:, base_url:)
       parsed = JSON.parse(Rails.application.importmap.to_json(resolver: resolver))
       parsed.fetch("imports").transform_values! { |path| absolute_url(base_url, path) }

@@ -42,5 +42,7 @@ class ShopifyCliScaffoldTest < ActiveSupport::TestCase
     refute_includes liquid, "iframe"
     assert_includes liquid, " defer"
     refute_includes liquid, " async"
+    assert_includes liquid, "storefront/embed.css"
+    assert_includes liquid, "storefront/embed_boot.js"
   end
 end

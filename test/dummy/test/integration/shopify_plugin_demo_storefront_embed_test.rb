@@ -85,18 +85,27 @@ class ShopifyPluginDemoStorefrontEmbedTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "DOMContentLoaded"
     assert_includes response.body, "innerHTML"
     assert_includes response.body, "data-shopify-plugin-demo-embed"
-    assert_includes response.body, "stylesheet"
-    assert_includes response.body, "importmap"
-    assert_includes response.body, "embed_boot.js"
+    refute_includes response.body, "importmap"
+    refute_includes response.body, "embed_boot.js"
     refute_includes response.body, "<iframe"
   end
 
-  test "storefront boot registers flatpack controllers" do
+  test "storefront stylesheet serves concatenated flatpack css" do
+    get ShopifyPluginDemo::Contract.storefront_embed_css_path
+
+    assert_response :ok
+    assert_includes response.media_type, "text/css"
+    refute_equal "", response.body.strip
+  end
+
+  test "storefront boot is classic javascript for tooltip and carousel" do
     get ShopifyPluginDemo::Contract.storefront_embed_boot_path
 
     assert_response :ok
+    refute_includes response.body, "import "
     assert_includes response.body, "flat-pack--tooltip"
     assert_includes response.body, "flat-pack--carousel"
+    assert_includes response.body, "mouseenter"
   end
 
   test "storefront json for carousel page includes carousel markup" do

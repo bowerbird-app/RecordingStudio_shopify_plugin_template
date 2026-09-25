@@ -35,11 +35,17 @@ class ShopifyPluginDemo::StorefrontEmbedsController < ActionController::Base
     end
   end
 
+  def stylesheet
+    cors_asset_headers
+    send_data ShopifyPluginDemo::StorefrontFlatpackAssets.stylesheet_css,
+              type: "text/css; charset=utf-8",
+              disposition: "inline"
+  end
+
   def boot
-    response.set_header("Cache-Control", "public, max-age=#{CACHE_SECONDS}")
-    response.set_header("Access-Control-Allow-Origin", "*")
-    response.set_header("Cross-Origin-Resource-Policy", "cross-origin")
-    render js: boot_javascript, content_type: "text/javascript"
+    cors_asset_headers
+    render js: File.read(Rails.root.join("app/javascript/shopify_plugin_demo/storefront_classic_boot.js")),
+           content_type: "text/javascript"
   end
 
   private
@@ -66,58 +72,29 @@ class ShopifyPluginDemo::StorefrontEmbedsController < ActionController::Base
   end
 
   def cache_payload_headers(payload)
-    response.set_header("Cache-Control", "public, max-age=#{CACHE_SECONDS}")
-    response.set_header("Access-Control-Allow-Origin", "*")
-    response.set_header("Cross-Origin-Resource-Policy", "cross-origin")
+    cors_asset_headers
     last_modified = payload.metadata&.last_modified_at
     response.set_header("Last-Modified", last_modified.httpdate) if last_modified
   end
 
+  def cors_asset_headers
+    response.set_header("Cache-Control", "public, max-age=#{CACHE_SECONDS}")
+    response.set_header("Access-Control-Allow-Origin", "*")
+    response.set_header("Cross-Origin-Resource-Policy", "cross-origin")
+  end
+
   def mount_javascript(payload)
     mount_id = params[:mount].to_s
-    stylesheet_urls = ShopifyPluginDemo::StorefrontFlatpackAssets.stylesheet_urls(
-      resolver: view_context,
-      base_url: request.base_url
-    )
-    importmap = ShopifyPluginDemo::StorefrontFlatpackAssets.importmap_json(
-      resolver: view_context,
-      base_url: request.base_url
-    )
-    boot_src = "#{request.base_url}#{ShopifyPluginDemo::Contract.storefront_embed_boot_path}"
     <<~JS
       (function () {
         var mountId = #{mount_id.to_json};
         var html = #{payload.html.to_json};
-        var styles = #{stylesheet_urls.to_json};
-        var importmapText = #{importmap.to_json};
-        var bootSrc = #{boot_src.to_json};
 
         function paint() {
           var root = document.getElementById(mountId);
           if (!root) return false;
           root.setAttribute("data-theme", "rounded");
           root.innerHTML = html;
-          styles.forEach(function (href) {
-            if (document.querySelector('link[href="' + href + '"]')) return;
-            var link = document.createElement("link");
-            link.rel = "stylesheet";
-            link.href = href;
-            document.head.appendChild(link);
-          });
-          if (!document.querySelector("script[data-shopify-plugin-demo-importmap]")) {
-            var map = document.createElement("script");
-            map.type = "importmap";
-            map.setAttribute("data-shopify-plugin-demo-importmap", "true");
-            map.textContent = importmapText;
-            document.head.appendChild(map);
-          }
-          if (!document.querySelector("script[data-shopify-plugin-demo-boot]")) {
-            var boot = document.createElement("script");
-            boot.type = "module";
-            boot.src = bootSrc;
-            boot.setAttribute("data-shopify-plugin-demo-boot", "true");
-            document.head.appendChild(boot);
-          }
           return true;
         }
 
@@ -144,19 +121,6 @@ class ShopifyPluginDemo::StorefrontEmbedsController < ActionController::Base
 
         waitForMount();
       })();
-    JS
-  end
-
-  def boot_javascript
-    <<~JS
-      import { Application } from "@hotwired/stimulus"
-      import TooltipController from "controllers/flat_pack/tooltip_controller"
-      import CarouselController from "controllers/flat_pack/carousel_controller"
-
-      const started = window.ShopifyPluginDemoStimulus || Application.start()
-      window.ShopifyPluginDemoStimulus = started
-      started.register("flat-pack--tooltip", TooltipController)
-      started.register("flat-pack--carousel", CarouselController)
     JS
   end
 end
