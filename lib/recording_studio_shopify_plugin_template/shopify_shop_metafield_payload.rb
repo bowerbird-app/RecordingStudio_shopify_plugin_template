@@ -5,7 +5,7 @@ require "json"
 module RecordingStudioShopifyPluginTemplate
   module ShopifyShopMetafieldPayload
     NAMESPACE = "$app:recording_studio"
-    SET_METAFIELDS = <<~GRAPHQL.freeze
+    SET_METAFIELDS = <<~GRAPHQL
       mutation MetafieldsSet($metafields: [MetafieldsSetInput!]!) {
         metafieldsSet(metafields: $metafields) { userErrors { field message } }
       }

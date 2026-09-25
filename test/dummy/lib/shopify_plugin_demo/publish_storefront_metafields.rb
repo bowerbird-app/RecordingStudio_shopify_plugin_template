@@ -13,7 +13,7 @@ module ShopifyPluginDemo
       return if token.blank?
 
       RecordingStudioShopifyPluginTemplate::ShopifyShopMetafields.sync!(
-        request: RecordingStudioShopifyPluginTemplate::ShopifyShopMetafields::Request.new(
+        request: RecordingStudioShopifyPluginTemplate::ShopifyShopMetafieldRequest.new(
           shop_domain: shop_domain,
           client: client,
           session_token: session_token,
