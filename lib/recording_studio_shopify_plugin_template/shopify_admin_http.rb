@@ -31,9 +31,7 @@ module RecordingStudioShopifyPluginTemplate
     def parse_json_response(response)
       status = response.code.to_i
       raw_body = response.body.to_s
-      unless response.is_a?(Net::HTTPSuccess)
-        raise ShopifyAdminHttpError, response_error_message(status, raw_body)
-      end
+      raise ShopifyAdminHttpError, response_error_message(status, raw_body) unless response.is_a?(Net::HTTPSuccess)
       return {} if raw_body.blank?
 
       JSON.parse(raw_body)
@@ -45,7 +43,7 @@ module RecordingStudioShopifyPluginTemplate
     def response_error_message(status, raw_body)
       json = JSON.parse(raw_body)
       parts = [json["error"], json["error_description"]].compact
-      return "HTTP #{status}: #{parts.join(' - ')}" if parts.any?
+      "HTTP #{status}: #{parts.join(' - ')}" if parts.any?
     rescue JSON::ParserError
       title = raw_body[%r{<title>(.*?)</title>}im, 1]&.strip
       return "HTTP #{status}: #{title}" if title.present?

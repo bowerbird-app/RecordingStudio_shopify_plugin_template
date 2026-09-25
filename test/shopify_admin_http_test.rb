@@ -75,11 +75,11 @@ class ShopifyAdminHttpTest < Minitest::Test
     response
   end
 
-  def stub_post(response, &test)
-    Net::HTTP.stub :start, lambda { |*_args, &block|
+  def stub_post(response, &)
+    Net::HTTP.stub(:start, lambda { |*_args, &block|
       http = Object.new
       http.define_singleton_method(:request) { |_request| response }
       block.call(http)
-    }, &test
+    }, &)
   end
 end
