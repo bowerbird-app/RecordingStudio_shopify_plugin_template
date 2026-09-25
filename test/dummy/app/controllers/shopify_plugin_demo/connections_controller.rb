@@ -40,7 +40,9 @@ class ShopifyPluginDemo::ConnectionsController < ApplicationController
       return
     end
 
-    redirect_to shopify_plugin_demo_connect_path(shop: shop_domain), notice: "Connected. Installed is not the same as Connected."
+    query = plugin_settings_return_params(shop_domain).to_query
+    redirect_to "#{plugin_settings_path}?#{query}",
+                notice: "Connected. Installed is not the same as Connected."
   end
 
   def destroy
@@ -55,6 +57,11 @@ class ShopifyPluginDemo::ConnectionsController < ApplicationController
   end
 
   private
+
+  def plugin_settings_return_params(shop_domain)
+    permitted = params.permit(:host, :hmac, :id_token, :embedded, :shopify_session_token, :client_id)
+    permitted.to_h.symbolize_keys.merge(shop: shop_domain).compact_blank
+  end
 
   def current_workspace_root
     workspace = Workspace.find_by(name: "Studio Workspace") || Workspace.order(:name).first
