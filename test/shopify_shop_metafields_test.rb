@@ -27,8 +27,7 @@ class ShopifyShopMetafieldsTest < Minitest::Test
     def graphql_response(body)
       return top_level_error if mode == :graphql_error
       return verify_response if body.include?("VerifyRecordingStudioAppMetafields")
-      return installation_response if body.include?("currentAppInstallation")
-      return definition_response if body.include?("metafieldDefinitionCreate")
+      return installation_response if body.include?("currentAppInstallation") && body.include?("id")
       return metafields_set_response if body.include?("metafieldsSet")
 
       { "data" => {} }
@@ -40,10 +39,6 @@ class ShopifyShopMetafieldsTest < Minitest::Test
 
     def installation_response
       { "data" => { "currentAppInstallation" => { "id" => "gid://shopify/AppInstallation/1" } } }
-    end
-
-    def definition_response
-      { "data" => { "metafieldDefinitionCreate" => { "userErrors" => [] } } }
     end
 
     def metafields_set_response
@@ -96,6 +91,7 @@ class ShopifyShopMetafieldsTest < Minitest::Test
     )
 
     assert result.ok?
+    refute(http.calls.any? { |call| call.fetch(:body).include?("metafieldDefinitionCreate") })
     set_call = http.calls.find { |call| call.fetch(:body).include?("metafieldsSet") }
     assert_includes set_call.fetch(:body), "gid://shopify/AppInstallation/1"
     assert_includes set_call.fetch(:body), "host_base_url"

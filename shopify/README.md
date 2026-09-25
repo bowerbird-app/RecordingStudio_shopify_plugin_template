@@ -29,7 +29,7 @@ App Home loads the dummy host in a cross-site iframe (`admin.shopify.com` → yo
 
 `extensions/recording-studio-theme` is a Liquid block. Pick a page by title. Host URL and storefront token come from app metafields written on Connect. Shop comes from `shop.permanent_domain`. The block loads `{host}/shopify_plugin_demo/storefront/embed.js` and mounts Embeddable HTML plus FlatPack CSS and Stimulus. Do not iframe the host there.
 
-Connect writes those metafields on the **app installation** when the App Home session token is present on the Connect POST. Values must read back before the host shows “Storefront metafields synced.” If write or verify fails, Connect stays on the alert path with the Shopify error text.
+Connect writes those metafields on the **app installation** when the App Home session token is present on the Connect POST. Values must read back before the host shows “Storefront metafields synced.” Connect does not create metafield definitions with `APP_INSTALLATION` on Admin API 2025-01.
 
 ## Partner smoke on development-store-kwcwfmcz
 

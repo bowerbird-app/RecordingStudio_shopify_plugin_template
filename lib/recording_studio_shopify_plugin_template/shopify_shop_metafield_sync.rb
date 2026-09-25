@@ -8,16 +8,6 @@ module RecordingStudioShopifyPluginTemplate
 
     private
 
-    def ensure_definitions(access_token)
-      message = ShopifyShopMetafieldDefinitions.ensure!(
-        graphql_call: ->(body) { graphql(access_token, body) }
-      )
-      return message if message.is_a?(ShopifyShopMetafieldResult)
-      return fail_with(message) if message.present?
-
-      nil
-    end
-
     def write_metafields(access_token, owner_id)
       payload = graphql(access_token, metafield_payload(owner_id))
       return payload if payload.is_a?(ShopifyShopMetafieldResult)

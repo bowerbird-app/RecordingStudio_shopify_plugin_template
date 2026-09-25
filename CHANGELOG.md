@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Shopify token exchange uses the IETF `grant_type` URN. `ShopifyAdminHttp` sends `Accept: application/json` and turns OAuth HTML or JSON failures into readable errors instead of JSON parse errors on `<!DOCTYPE`.
-- Storefront metafields write on the app installation (what theme `app.metafields` reads). Connect verifies definitions, checks GraphQL errors, and read-backs `host_base_url` and `storefront_token` before reporting sync ok.
+- Storefront metafields write on the app installation (what theme `app.metafields` reads). Connect checks GraphQL errors, rejects hollow `metafieldsSet`, and read-backs `host_base_url` and `storefront_token` before reporting sync ok. Connect does not call `metafieldDefinitionCreate` with `APP_INSTALLATION` (invalid on Admin API 2025-01).
 
 ### Changed
 - Dummy App Home iframe lands on `/plugin_settings`. Not Connected redirects to Connect. Connected shows Disconnect only (host soft disconnect).

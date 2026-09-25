@@ -40,9 +40,6 @@ module RecordingStudioShopifyPluginTemplate
       owner_id = app_installation_id(access_token.error)
       return owner_id unless owner_id.ok?
 
-      definition_error = ensure_definitions(access_token.error)
-      return definition_error if definition_error
-
       write_metafields(access_token.error, owner_id.error)
     end
 
