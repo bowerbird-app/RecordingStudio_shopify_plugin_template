@@ -12,10 +12,12 @@ module RecordingStudioShopifyPluginTemplate
   end
 
   class ShopifyShopMetafields
-    API_VERSION = "2025-01"
+    include ShopifyShopMetafieldSync
+
     TOKEN_GRANT = "urn:ietf:params:oauth:grant-type:token-exchange"
     SUBJECT_TOKEN_TYPE = "urn:ietf:params:oauth:token-type:id_token"
     REQUESTED_TOKEN_TYPE = "urn:shopify:params:oauth:token-type:offline-access-token"
+    APP_INSTALLATION_QUERY = "{ currentAppInstallation { id } }"
 
     def self.sync!(request:, http: nil)
       new(request: request, http: http).sync!
@@ -35,10 +37,13 @@ module RecordingStudioShopifyPluginTemplate
       access_token = exchange_access_token
       return access_token unless access_token.ok?
 
-      shop_id = shop_gid(access_token.error)
-      return shop_id unless shop_id.ok?
+      owner_id = app_installation_id(access_token.error)
+      return owner_id unless owner_id.ok?
 
-      write_metafields(access_token.error, shop_id.error)
+      definition_error = ensure_definitions(access_token.error)
+      return definition_error if definition_error
+
+      write_metafields(access_token.error, owner_id.error)
     end
 
     private
@@ -76,41 +81,14 @@ module RecordingStudioShopifyPluginTemplate
       )
     end
 
-    def shop_gid(access_token)
-      gid = graphql(access_token, { query: "{ shop { id } }" }).dig("data", "shop", "id").to_s
-      gid.blank? ? fail_with("shop id missing") : ShopifyShopMetafieldResult.new(success: true, error: gid)
+    def app_installation_id(access_token)
+      payload = graphql(access_token, { query: APP_INSTALLATION_QUERY })
+      return payload if payload.is_a?(ShopifyShopMetafieldResult)
+
+      gid = payload.dig("data", "currentAppInstallation", "id").to_s
+      gid.blank? ? fail_with("app installation missing") : ShopifyShopMetafieldResult.new(success: true, error: gid)
     rescue StandardError => e
       fail_with(e.message)
-    end
-
-    def write_metafields(access_token, shop_gid)
-      errors = Array(graphql(access_token, metafield_payload(shop_gid)).dig("data", "metafieldsSet", "userErrors"))
-      return fail_with(errors.map { |row| row["message"] }.join(", ")) if errors.any?
-
-      ShopifyShopMetafieldResult.new(success: true, error: nil)
-    rescue StandardError => e
-      fail_with(e.message)
-    end
-
-    def metafield_payload(shop_gid)
-      ShopifyShopMetafieldPayload.set_payload(
-        shop_gid,
-        host_base_url: @host_base_url,
-        storefront_token: @request.storefront_token.to_s,
-        pages: @request.pages
-      )
-    end
-
-    def graphql(access_token, body)
-      @http.post(
-        "https://#{@shop_domain}/admin/api/#{API_VERSION}/graphql.json",
-        body: JSON.generate(body),
-        headers: { "Content-Type" => "application/json", "X-Shopify-Access-Token" => access_token }
-      )
-    end
-
-    def fail_with(message)
-      ShopifyShopMetafieldResult.new(success: false, error: message)
     end
   end
 end
