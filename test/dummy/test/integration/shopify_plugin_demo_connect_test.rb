@@ -46,6 +46,56 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "connect form keeps id_token as a hidden session token" do
+    token = session_token_for(shop: "demo.myshopify.com")
+
+    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", id_token: token }
+
+    assert_response :success
+    assert_select "input[type=hidden][name=shopify_session_token][value=?]", token
+    assert_select "form[action=?] button[type=submit]", shopify_plugin_demo_connect_path(shop: "demo.myshopify.com")
+  end
+
+  test "connect post with id_token publishes storefront metafields" do
+    token = session_token_for(shop: "demo.myshopify.com")
+    captured = nil
+    publisher = ShopifyPluginDemo::PublishStorefrontMetafields
+    singleton = publisher.singleton_class
+    singleton.alias_method :__orig_call, :call
+    singleton.define_method(:call) do |**kwargs|
+      captured = kwargs
+      nil
+    end
+
+    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", id_token: token }
+    post shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", id_token: token }
+
+    assert captured
+    assert_equal token, captured.fetch(:session_token)
+    assert_equal "demo.myshopify.com", captured.fetch(:shop_domain)
+  ensure
+    if defined?(singleton) && singleton.method_defined?(:__orig_call)
+      singleton.alias_method :call, :__orig_call
+      singleton.remove_method :__orig_call
+    end
+  end
+
+  test "connected connect screen hides installed is not connected" do
+    token = session_token_for(shop: "demo.myshopify.com")
+    get shopify_plugin_demo_connect_path, params: {
+      shop: "demo.myshopify.com",
+      shopify_session_token: token
+    }
+    post shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+    follow_redirect!
+
+    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+
+    assert_response :success
+    refute_includes response.body, "Installed is not Connected"
+    assert_includes response.body, "This shop is Connected to Recording Studio."
+  end
+
   test "verified session token records install without connecting" do
     token = session_token_for(shop: "demo.myshopify.com")
 

@@ -28,6 +28,18 @@ module ApplicationHelper
     content_for :title, title
   end
 
+  def shopify_embed_query
+    ShopifyPluginDemo::EmbedQuery.from_params(params)
+  end
+
+  def shopify_session_token
+    ShopifyPluginDemo::EmbedQuery.session_token(params)
+  end
+
+  def shopify_plugin_demo_connect_url
+    main_app.shopify_plugin_demo_connect_path(shopify_embed_query)
+  end
+
   private
 
   def dummy_host_nav_href(key)
@@ -41,7 +53,7 @@ module ApplicationHelper
     when :pages
       main_app.pages_path
     when :connect
-      main_app.shopify_plugin_demo_connect_path
+      main_app.shopify_plugin_demo_connect_path(shopify_embed_query)
     when :api_keys
       recording_studio_api.api_clients_path
     when :registered_apps

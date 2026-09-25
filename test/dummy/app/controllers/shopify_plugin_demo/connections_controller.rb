@@ -13,19 +13,21 @@ class ShopifyPluginDemo::ConnectionsController < ApplicationController
   def create
     shop_domain = resolved_shop_domain
     unless shop_domain
-      redirect_to shopify_plugin_demo_connect_path, alert: "Add a shop domain to Connect."
+      redirect_to shopify_plugin_demo_connect_path(shopify_embed_query), alert: "Add a shop domain to Connect."
       return
     end
 
     client = registered_app
     unless client
-      redirect_to shopify_plugin_demo_connect_path(shop: shop_domain), alert: "Add a Registered App before Connect."
+      redirect_to shopify_plugin_demo_connect_path(shopify_embed_query.merge(shop: shop_domain)),
+                  alert: "Add a Registered App before Connect."
       return
     end
 
     root_recording = current_workspace_root
     unless root_recording
-      redirect_to shopify_plugin_demo_connect_path(shop: shop_domain), alert: "Pick a workspace before Connect."
+      redirect_to shopify_plugin_demo_connect_path(shopify_embed_query.merge(shop: shop_domain)),
+                  alert: "Pick a workspace before Connect."
       return
     end
 
@@ -36,7 +38,7 @@ class ShopifyPluginDemo::ConnectionsController < ApplicationController
       connected_by: current_user
     )
     unless result.ok?
-      redirect_to shopify_plugin_demo_connect_path(shop: shop_domain), alert: result.error
+      redirect_to shopify_plugin_demo_connect_path(shopify_embed_query.merge(shop: shop_domain)), alert: result.error
       return
     end
 
@@ -45,7 +47,7 @@ class ShopifyPluginDemo::ConnectionsController < ApplicationController
       shop_domain: shop_domain,
       client: client,
       root_recording: root_recording,
-      session_token: params[:shopify_session_token],
+      session_token: shopify_session_token,
       host_base_url: host_base_url
     )
 
@@ -62,14 +64,14 @@ class ShopifyPluginDemo::ConnectionsController < ApplicationController
         client: registered_app
       )
     end
-    redirect_to shopify_plugin_demo_connect_path(shop: shop_domain), notice: "Disconnected. The Shopify plugin can still be installed."
+    redirect_to shopify_plugin_demo_connect_path(shopify_embed_query.merge(shop: shop_domain)),
+                notice: "Disconnected. The Shopify plugin can still be installed."
   end
 
   private
 
   def plugin_settings_return_params(shop_domain)
-    permitted = params.permit(:host, :hmac, :id_token, :embedded, :shopify_session_token, :client_id)
-    permitted.to_h.symbolize_keys.merge(shop: shop_domain).compact_blank
+    shopify_embed_query.merge(shop: shop_domain).compact
   end
 
   def current_workspace_root

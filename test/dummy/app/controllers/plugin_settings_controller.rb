@@ -18,10 +18,6 @@ class PluginSettingsController < ApplicationController
   private
 
   def connect_redirect_params
-    {
-      shop: @shop_domain,
-      shopify_session_token: params[:shopify_session_token].presence,
-      client_id: params[:client_id].presence
-    }.compact
+    shopify_embed_query.merge(shop: @shop_domain).compact
   end
 end
