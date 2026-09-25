@@ -24,6 +24,44 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
     RecordingStudioShopifyPluginTemplate.configuration.registered_app_client_id = nil
   end
 
+  test "connect success lands on plugin settings" do
+    token = session_token_for(shop: "demo.myshopify.com")
+    get shopify_plugin_demo_connect_path, params: {
+      shop: "demo.myshopify.com",
+      shopify_session_token: token
+    }
+
+    post shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+
+    assert_redirected_to plugin_settings_path(shop: "demo.myshopify.com")
+    follow_redirect!
+    assert_response :success
+    assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
+  end
+
+  test "home with embedded redirects to plugin settings" do
+    get root_path, params: {
+      embedded: "1",
+      shop: "demo.myshopify.com",
+      host: "abc",
+      hmac: "sig"
+    }
+
+    assert_redirected_to plugin_settings_path(
+      embedded: "1",
+      shop: "demo.myshopify.com",
+      host: "abc",
+      hmac: "sig"
+    )
+  end
+
+  test "home without embedded stays on home" do
+    get root_path
+
+    assert_response :success
+    assert_includes response.body, ShopifyPluginDemo::ProductConfig::CHANNEL_NAME
+  end
+
   test "not connected redirects to connect" do
     get plugin_settings_path, params: { shop: "demo.myshopify.com" }
 

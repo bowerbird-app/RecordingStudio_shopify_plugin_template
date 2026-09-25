@@ -6,7 +6,7 @@ BowerBird uses Shopify CLI for this channel. This folder is the thin app: TOML, 
 
 1. Boot the dummy host (`cd test/dummy && bin/dev`).
 2. Set `HOST_BASE_URL` to that origin (for example `http://localhost:3000`).
-3. Put `https://<HOST>/plugin_settings` in Partner Dev Dashboard App URL and in `shopify.app.toml` `application_url` when you run `shopify app dev`. The TOML in this repo uses the placeholder `https://example.com/plugin_settings`. Do not commit a live ngrok hostname.
+3. Put `https://<HOST>/plugin_settings` in Partner Dev Dashboard App URL and in `shopify.app.toml` `application_url` when you run `shopify app dev`. The TOML in this repo uses the placeholder `https://example.com/plugin_settings`. Do not commit a live ngrok hostname. The Partner **active version** App URL must include `/plugin_settings`. Configuration alone is not enough if the active version still points at `/`.
 4. App Home (`app-home/index.html`) iframes `{HOST_BASE_URL}/plugin_settings?shop=...`. If the shop is not Connected, the dummy redirects to Connect. If it is Connected, App Home shows Shopify plugin settings with Disconnect only.
 5. App Bridge `idToken()` appends `shopify_session_token`. The dummy host verifies HS256 through Oauth, then the Shopify plugin parses `dest` / `iss` and records the install.
 
@@ -60,7 +60,7 @@ Set these on the dummy host before you start.
 1. Boot the dummy (`cd test/dummy && bin/dev`).
 2. From `shopify/`, run `shopify app dev` and install on `development-store-kwcwfmcz`.
 3. Open App Home. You should see Connect after the `/plugin_settings` redirect. Installed is not Connected.
-4. Sign in if asked (`admin@admin.com` / `Password`). Click Connect. Open App Home again. You should see Shopify plugin settings and Disconnect.
+4. Sign in if asked (`admin@admin.com` / `Password`). Click Connect. After Connect, the dummy returns to `/plugin_settings` for that shop. You should see Shopify plugin settings and Disconnect.
 
 Pass. The Oauth external install row exists for that shop and Registered App, and Connect shows Connected.
 
