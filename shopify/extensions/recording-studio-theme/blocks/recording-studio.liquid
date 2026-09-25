@@ -4,9 +4,9 @@
   {{ block.shopify_attributes }}
 >
   {% assign rs = app.metafields["$app:recording_studio"] %}
-  {% assign host = rs.host_base_url.value %}
-  {% assign token = rs.storefront_token.value %}
-  {% assign pages = rs.pages.value %}
+  {% assign host = rs["host_base_url"].value %}
+  {% assign token = rs["storefront_token"].value %}
+  {% assign pages = rs["pages"].value %}
   {% assign page_id = "" %}
   {% if pages %}
     {% for page in pages %}
