@@ -7,17 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Fixed
-- Shopify token exchange uses the IETF `grant_type` URN. `ShopifyAdminHttp` sends `Accept: application/json` and turns OAuth HTML or JSON failures into readable errors instead of JSON parse errors on `<!DOCTYPE`.
-- Storefront metafields write on the app installation (what theme `app.metafields` reads). Connect checks GraphQL errors, rejects hollow `metafieldsSet`, and read-backs `host_base_url` and `storefront_token` before reporting sync ok. Connect does not call `metafieldDefinitionCreate` with `APP_INSTALLATION` (invalid on Admin API 2025-01).
-- Theme app block reads `$app:recording_studio` with bracket namespace and keys (`["host_base_url"]`, `["storefront_token"]`, `["pages"]`) on `app.metafields`, and renders `block.shopify_attributes` on its root element so design mode sees Connect values and the theme editor can target the block.
-- Storefront `embed.js` waits for the theme mount node before injecting FlatPack HTML and assets, so async theme editor script ordering no longer exits early when `#recording-studio-*` is not in the DOM yet.
-- Theme block loads FlatPack CSS and a classic `embed_boot.js` as Liquid tags. Shopify storefront CSP blocks dynamically injected importmaps and `type=module` scripts, which left tooltip and carousel dead after HTML paint.
-
-### Changed
-- Dummy App Home iframe lands on `/plugin_settings`. Not Connected redirects to Connect. Connected shows Disconnect only (host soft disconnect).
-- `shopify.app.toml` `application_url` documents `https://example.com/plugin_settings`. Partner Dev Dashboard App URL should use `https://<HOST>/plugin_settings`.
-
 ## [0.3.4] - 2026-09-25
 
 ### Added
@@ -26,9 +15,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - After Connect, the host mints a shop-scoped storefront token and writes app metafields for host URL, token, and `{id, title}` pages.
 - Connect flash names a storefront metafield failure. Bind can succeed while metafields do not. Open Connect from App Home when the session token is missing.
 
+### Fixed
+- Shopify token exchange uses the IETF `grant_type` URN. `ShopifyAdminHttp` sends `Accept: application/json` and turns OAuth HTML or JSON failures into readable errors instead of JSON parse errors on `<!DOCTYPE`.
+- Storefront metafields write on the app installation (what theme `app.metafields` reads). Connect checks GraphQL errors, rejects hollow `metafieldsSet`, and read-backs `host_base_url` and `storefront_token` before reporting sync ok. Connect does not call `metafieldDefinitionCreate` with `APP_INSTALLATION` (invalid on Admin API 2025-01).
+- Theme app block reads `$app:recording_studio` with bracket namespace and keys (`["host_base_url"]`, `["storefront_token"]`, `["pages"]`) on `app.metafields`, and renders `block.shopify_attributes` on its root element so design mode sees Connect values and the theme editor can target the block.
+- Storefront `embed.js` waits for the theme mount node before injecting FlatPack HTML and assets, so async theme editor script ordering no longer exits early when `#recording-studio-*` is not in the DOM yet.
+- Theme block loads FlatPack CSS and a classic `embed_boot.js` as Liquid tags. Shopify storefront CSP blocks dynamically injected importmaps and `type=module` scripts, which left tooltip and carousel dead after HTML paint.
+
 ### Changed
 - Theme block settings are Page titles only. Host URL and storefront token come from app metafields. Shop still comes from the store.
 - `ShopifyStorefrontEmbed.mint` is shop-scoped. Page is chosen in the theme block and sent as `page_id`.
+- Dummy App Home iframe lands on `/plugin_settings`. Not Connected redirects to Connect. Connected shows Disconnect only (host soft disconnect).
+- `shopify.app.toml` `application_url` documents `https://example.com/plugin_settings`. Partner Dev Dashboard App URL should use `https://<HOST>/plugin_settings`.
 
 ### Upgrade notes
 - Connect on the dummy host while App Home still has a session token so metafields can write. Merchants pick a page title in the theme editor. They do not paste host or token.
@@ -176,7 +174,8 @@ New addons copied from this template are born on Recording Studio 4.x.
 - Comprehensive README and documentation
 - Basic test suite with Minitest
 
-[Unreleased]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/compare/v0.3.3...HEAD
+[Unreleased]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/compare/v0.3.4...HEAD
+[0.3.4]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.4
 [0.3.3]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.3
 [0.3.2]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.2
 [0.3.1]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.1
