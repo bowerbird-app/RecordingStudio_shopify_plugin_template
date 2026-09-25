@@ -15,10 +15,12 @@ class ShopifyCliScaffoldTest < ActiveSupport::TestCase
     home = File.read(root.join("app-home/index.html"))
     bridge = File.read(root.join("app-home/app-bridge.js"))
 
+    assert_includes toml, "application_url = \"https://example.com/plugin_settings\""
     assert_includes toml, "app/uninstalled"
     assert_includes toml, "/shopify_plugin_demo/uninstall"
     assert_includes toml, "embedded = true"
-    assert_includes home, "iframe"
+    assert_includes home, "Shopify plugin settings"
+    assert_includes bridge, "/plugin_settings"
     assert_includes bridge, "shopify_session_token"
     assert_includes bridge, "HOST_BASE_URL"
     assert_includes liquid, "data-rs-page-id"

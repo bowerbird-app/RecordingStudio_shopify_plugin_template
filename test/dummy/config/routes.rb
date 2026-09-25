@@ -41,6 +41,7 @@ Rails.application.routes.draw do
     end
   end
 
+  get "plugin_settings", to: "plugin_settings#show", as: :plugin_settings
   get "shopify_plugin_demo/connect", to: "shopify_plugin_demo/connections#show", as: :shopify_plugin_demo_connect
   post "shopify_plugin_demo/connect", to: "shopify_plugin_demo/connections#create"
   delete "shopify_plugin_demo/connect", to: "shopify_plugin_demo/connections#destroy", as: :shopify_plugin_demo_disconnect

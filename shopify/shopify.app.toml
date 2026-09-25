@@ -1,6 +1,6 @@
 client_id = "replace-me"
 name = "Shopify plugin"
-application_url = "https://example.com"
+application_url = "https://example.com/plugin_settings"
 embedded = true
 
 [access_scopes]

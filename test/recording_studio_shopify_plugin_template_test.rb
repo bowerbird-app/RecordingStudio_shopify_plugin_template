@@ -102,6 +102,26 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
     assert File.exist?(File.expand_path("dummy/app/views/layouts/host.html.erb", __dir__))
   end
 
+  def test_dummy_importmap_wires_turbo_and_admin_controllers_for_admin_screens
+    importmap_source = File.read(File.expand_path("dummy/config/importmap.rb", __dir__))
+    application_js = File.read(File.expand_path("dummy/app/javascript/application.js", __dir__))
+
+    assert_includes importmap_source, 'pin "@hotwired/turbo-rails", to: "turbo.min.js"'
+    assert_includes importmap_source, "RecordingStudioAdmin::Engine.root.join"
+    assert_includes importmap_source, "controllers/recording_studio_admin"
+    assert_includes application_js, 'import "@hotwired/turbo-rails"'
+  end
+
+  def test_dummy_propshaft_shims_flat_pack_stylesheet_import_paths
+    shim_dir = File.expand_path("dummy/app/assets/stylesheets/flat_pack/flat_pack", __dir__)
+
+    %w[variables rich_text content_editor].each do |name|
+      shim_path = File.join(shim_dir, "#{name}.css")
+      assert File.exist?(shim_path), "expected Propshaft shim at #{shim_path}"
+      assert_includes File.read(shim_path), %(@import "../#{name}.css")
+    end
+  end
+
   def test_dummy_login_layout_keeps_flatpack_assets_without_tight_main_offset
     application_layout = File.read(File.expand_path("dummy/app/views/layouts/application.html.erb", __dir__))
 

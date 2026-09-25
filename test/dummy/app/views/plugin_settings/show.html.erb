@@ -1,0 +1,24 @@
+<% dummy_page_nav(title: ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE, back_url: root_path) %>
+
+<div class="flex w-full flex-col gap-6">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE,
+    subtitle: ShopifyPluginDemo::ProductConfig::SETTINGS_CONNECTED_STATUS,
+    variant: :h1
+  ) %>
+
+  <% if notice.present? %>
+    <%= render FlatPack::Alert::Component.new(style: :success, title: notice) %>
+  <% end %>
+  <% if alert.present? %>
+    <%= render FlatPack::Alert::Component.new(style: :danger, title: alert) %>
+  <% end %>
+
+  <%= button_to shopify_plugin_demo_disconnect_path(shop: @shop_domain), method: :delete do %>
+    <%= render FlatPack::Button::Component.new(
+      text: ShopifyPluginDemo::ProductConfig::DISCONNECT_BUTTON_TEXT,
+      style: :secondary,
+      size: :md
+    ) %>
+  <% end %>
+</div>
