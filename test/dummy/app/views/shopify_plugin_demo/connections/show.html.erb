@@ -44,7 +44,8 @@
       <%= render FlatPack::Button::Component.new(
         text: ShopifyPluginDemo::ProductConfig::DISCONNECT_BUTTON_TEXT,
         style: :secondary,
-        size: :md
+        size: :md,
+        type: :submit
       ) %>
     <% end %>
     <%= button_to shopify_plugin_demo_connect_path(shop: @shop_domain), method: :post do %>
@@ -52,7 +53,8 @@
       <%= render FlatPack::Button::Component.new(
         text: ShopifyPluginDemo::ProductConfig::CONNECT_AGAIN_BUTTON_TEXT,
         style: :ghost,
-        size: :md
+        size: :md,
+        type: :submit
       ) %>
     <% end %>
   <% else %>
@@ -62,7 +64,8 @@
       <%= render FlatPack::Button::Component.new(
         text: ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT,
         style: :primary,
-        size: :md
+        size: :md,
+        type: :submit
       ) %>
     <% end %>
   <% end %>

@@ -37,6 +37,15 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "flat-pack--sidebar-layout"
   end
 
+  test "connect post form uses a submit button for app home" do
+    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+
+    assert_response :success
+    assert_select "form[action=?] button[type=submit]", shopify_plugin_demo_connect_path(shop: "demo.myshopify.com") do
+      assert_select "button", text: ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT
+    end
+  end
+
   test "verified session token records install without connecting" do
     token = session_token_for(shop: "demo.myshopify.com")
 
