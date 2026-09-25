@@ -41,6 +41,31 @@ class RootSwitchDropdownTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "flat_pack/application"
   end
 
+  test "all_workspaces scope includes Admin among available roots for a signed-in user" do
+    user = User.find_or_create_by!(email: "root-switch-admin-test@example.com") do |record|
+      record.password = "Password123!"
+      record.password_confirmation = "Password123!"
+    end
+
+    sign_in user
+
+    workspace = Workspace.create!(name: "Admin Switch Workspace")
+    workspace_root = RecordingStudio.root_recording_for(workspace)
+    admin_root = AdminRoot.find_or_create_by!(name: "Admin")
+    admin_root_recording = RecordingStudio.root_recording_for(admin_root)
+
+    scope = RecordingStudioRootSwitchable.configuration.scopes.fetch("all_workspaces")
+    available = scope.available_roots_for(actor: user)
+
+    assert_includes available.map(&:id), admin_root_recording.id
+    assert_includes available.map(&:id), workspace_root.id
+
+    get "/recording_studio_root_switchable/v1/root_switch?scope=all_workspaces"
+
+    assert_response :success
+    assert_includes response.body, "Admin"
+  end
+
   test "root switch page renders with the dummy host sidebar layout" do
     user = User.find_or_create_by!(email: "root-switch-page-test@example.com") do |record|
       record.password = "Password123!"
