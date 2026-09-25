@@ -91,6 +91,43 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     restore_shopify_shop_metafields
   end
 
+  test "connect post without HOST_BASE_URL uses request base url not configuration" do
+    previous_host = ENV["HOST_BASE_URL"]
+    ENV.delete("HOST_BASE_URL")
+    configuration_called = false
+    RecordingStudioShopifyPluginTemplate.configuration.define_singleton_method(:host_base_url) do
+      configuration_called = true
+      raise NoMethodError, "configuration.host_base_url should not be called"
+    end
+    captured = nil
+    publisher = ShopifyPluginDemo::PublishStorefrontMetafields
+    singleton = publisher.singleton_class
+    singleton.alias_method :__orig_call_host, :call unless singleton.method_defined?(:__orig_call_host)
+    singleton.define_method(:call) do |**kwargs|
+      captured = kwargs
+      RecordingStudioShopifyPluginTemplate::ShopifyShopMetafieldResult.new(
+        success: false,
+        error: "session token required"
+      )
+    end
+    token = session_token_for(shop: "demo.myshopify.com")
+    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", shopify_session_token: token }
+    post shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+
+    assert_response :redirect
+    refute configuration_called
+    assert_equal "http://www.example.com", captured.fetch(:host_base_url)
+  ensure
+    ENV["HOST_BASE_URL"] = previous_host if previous_host
+    config = RecordingStudioShopifyPluginTemplate.configuration
+    config.singleton_class.remove_method(:host_base_url) if config.singleton_methods.include?(:host_base_url)
+    pub_singleton = ShopifyPluginDemo::PublishStorefrontMetafields.singleton_class
+    if pub_singleton.method_defined?(:__orig_call_host)
+      pub_singleton.alias_method :call, :__orig_call_host
+      pub_singleton.remove_method :__orig_call_host
+    end
+  end
+
   test "connect post with id_token publishes storefront metafields" do
     token = session_token_for(shop: "demo.myshopify.com")
     captured = nil

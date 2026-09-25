@@ -42,7 +42,7 @@ class ShopifyPluginDemo::ConnectionsController < ApplicationController
       return
     end
 
-    host_base_url = RecordingStudioShopifyPluginTemplate.configuration.host_base_url.presence || request.base_url
+    host_base_url = ENV["HOST_BASE_URL"].presence || request.base_url
     published = ShopifyPluginDemo::PublishStorefrontMetafields.call(
       shop_domain: shop_domain,
       client: client,
