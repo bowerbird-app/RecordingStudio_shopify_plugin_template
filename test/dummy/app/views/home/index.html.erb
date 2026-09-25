@@ -12,18 +12,22 @@
       <% card.header do %>
         <%= render FlatPack::PageTitle::Component.new(
           title: "Connect the shop",
-          subtitle: "Install in Shopify Admin, then Connect here.",
+          subtitle: @connected ? ShopifyPluginDemo::ProductConfig::SETTINGS_CONNECTED_STATUS : "Install in Shopify Admin, then Connect here.",
           variant: :h3,
           class: "mb-0 pb-0"
         ) %>
       <% end %>
       <% card.body do %>
         <p class="text-sm leading-6">
-          Partner install is not Connected. Open Connect from App Home.
+          <% if @connected %>
+            This shop is Connected. Open Connect to disconnect or pick pages.
+          <% else %>
+            Partner install is not Connected. Open Connect from App Home.
+          <% end %>
         </p>
       <% end %>
       <% card.footer do %>
-        <%= link_to shopify_plugin_demo_connect_path, class: "inline-flex" do %>
+        <%= link_to shopify_plugin_demo_connect_url, class: "inline-flex" do %>
           <%= render FlatPack::Button::Component.new(
             text: "Open Connect",
             style: :primary,
@@ -37,7 +41,7 @@
       <% card.header do %>
         <%= render FlatPack::PageTitle::Component.new(
           title: "Pages",
-          subtitle: "Theme extension uses a page recording id.",
+          subtitle: "Open a page to preview the storefront widget.",
           variant: :h3,
           class: "mb-0 pb-0"
         ) %>

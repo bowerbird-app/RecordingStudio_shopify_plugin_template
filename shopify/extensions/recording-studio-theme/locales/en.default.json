@@ -1,8 +1,6 @@
 {
   "name": "Shopify plugin",
   "settings": {
-    "host_base_url": "Host URL",
-    "recording_id": "Page id",
-    "embed_token": "Storefront token"
+    "page": "Page"
   }
 }

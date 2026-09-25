@@ -26,17 +26,25 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
 
   test "connect success lands on plugin settings" do
     token = session_token_for(shop: "demo.myshopify.com")
+    stub_shopify_shop_metafields_ok
     get shopify_plugin_demo_connect_path, params: {
       shop: "demo.myshopify.com",
       shopify_session_token: token
     }
 
-    post shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+    post shopify_plugin_demo_connect_path, params: {
+      shop: "demo.myshopify.com",
+      shopify_session_token: token
+    }
 
-    assert_redirected_to plugin_settings_path(shop: "demo.myshopify.com")
+    assert_response :redirect
+    assert_includes response.redirect_url, plugin_settings_path
     follow_redirect!
     assert_response :success
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
+    assert_includes response.body, ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_SYNCED
+  ensure
+    restore_shopify_shop_metafields
   end
 
   test "not connected redirects to connect" do
@@ -85,6 +93,26 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
       shopify_session_token: token
     }
     post shopify_plugin_demo_connect_path, params: { shop: shop }
+  end
+
+  def stub_shopify_shop_metafields_ok
+    klass = RecordingStudioShopifyPluginTemplate::ShopifyShopMetafields
+    singleton = klass.singleton_class
+    return if singleton.method_defined?(:__orig_sync!)
+
+    singleton.alias_method :__orig_sync!, :sync!
+    singleton.define_method(:sync!) do |**|
+      RecordingStudioShopifyPluginTemplate::ShopifyShopMetafieldResult.new(success: true, error: nil)
+    end
+  end
+
+  def restore_shopify_shop_metafields
+    klass = RecordingStudioShopifyPluginTemplate::ShopifyShopMetafields
+    singleton = klass.singleton_class
+    return unless singleton.method_defined?(:__orig_sync!)
+
+    singleton.alias_method :sync!, :__orig_sync!
+    singleton.remove_method :__orig_sync!
   end
 
   def create_registered_app

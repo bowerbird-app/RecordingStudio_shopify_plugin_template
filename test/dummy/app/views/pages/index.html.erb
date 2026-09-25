@@ -7,12 +7,8 @@
     variant: :h1
   ) %>
 
-  <ul class="space-y-3 text-sm leading-6">
-    <% @page_recordings.each do |recording| %>
-      <li>
-        <%= link_to recording.recordable.title, page_path(recording) %>
-        <code><%= recording.id %></code>
-      </li>
-    <% end %>
-  </ul>
+  <%= render FlatPack::Table::Component.new(data: @page_recordings, class: "text-sm") do |table| %>
+    <% table.column(title: "Title", html: ->(recording) { link_to(recording.recordable.title, page_path(recording)) }) %>
+    <% table.column(title: "Page id", html: ->(recording) { tag.code(recording.id) }) %>
+  <% end %>
 </div>

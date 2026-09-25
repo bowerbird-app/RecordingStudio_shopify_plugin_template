@@ -28,12 +28,12 @@ Useful routes:
 - `/` home
 - `/plugin_settings` App Home iframe target. Redirects to Connect when the shop is not Connected. Shows Disconnect when it is.
 - `/shopify_plugin_demo/connect` Connect and Connected
-- `/pages` page ids for the theme extension
-- `/shopify_plugin_demo/storefront/embed.js` scoped storefront browser-payload mount (HTML/JS, not an iframe)
+- `/pages` lists pages in a FlatPack table. Open a row to preview the storefront widget and copy a page id.
+- `/shopify_plugin_demo/storefront/embed.js` scoped storefront mount. Injects FlatPack CSS and Stimulus for Card, Tooltip, and Carousel. Not an iframe.
 - `/recording_studio_api/apis/shopify_plugin_demo/v1/pages/:id/actions/embed` named API browser payload (bearer token, not the storefront)
 - `POST /shopify_plugin_demo/uninstall` Partner `app/uninstalled` webhook. HMAC required.
 
-Named API key is `shopify_plugin_demo`. Page enables Embeddable `:embed`. The storefront theme block loads `/shopify_plugin_demo/storefront/embed.js` with a scoped token. Do not iframe the host on the storefront. Do not send the Admin session token on the storefront.
+Named API key is `shopify_plugin_demo`. Page enables Embeddable `:embed`. The storefront theme block loads `/shopify_plugin_demo/storefront/embed.js` with a shop-scoped token from app metafields. Merchants pick a page by title. Do not iframe the host on the storefront. Do not send the Admin session token on the storefront.
 
 Connect on this host calls RecordingStudio Oauth `verify_session_token`, then the Shopify plugin parses `dest` / `iss` and upserts `recording_studio_oauth_external_installs`. Do not add `shopify_*` columns to `users` or `workspaces`. Installed is not Connected.
 
@@ -51,7 +51,7 @@ BowerBird uses Shopify CLI. See `shopify/README.md`.
 2. Serve `shopify/app-home/` as the embedded App Home, or set Partner Dev Dashboard App URL and `shopify.app.toml` `application_url` to `https://<HOST>/plugin_settings`.
 3. App Home iframes `{HOST_BASE_URL}/plugin_settings?shop=...`. Not Connected redirects to Connect.
 4. App Bridge `idToken()` is appended as `shopify_session_token`. The host verifies HS256 through Oauth, then parses Shopify claims.
-5. Theme app extension `shopify/extensions/recording-studio-theme` sets host URL, page id, and storefront token. Shop comes from the storefront.
+5. Theme app extension `shopify/extensions/recording-studio-theme` picks a page by title. Host URL and storefront token are written to app metafields on Connect when the App Home session token is on that POST. Shop comes from the storefront.
 
 ```bash
 cd shopify

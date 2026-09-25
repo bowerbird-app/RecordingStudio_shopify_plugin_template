@@ -2,6 +2,7 @@
 
 require "test_helper"
 require "base64"
+require "cgi"
 require "devise/test/integration_helpers"
 require "openssl"
 
@@ -35,6 +36,139 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT
     assert_select "body[data-dummy-host-layout='true']", count: 1
     assert_includes response.body, "flat-pack--sidebar-layout"
+  end
+
+  test "connect post form uses a submit button for app home" do
+    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+
+    assert_response :success
+    assert_select "form[action=?] button[type=submit]", shopify_plugin_demo_connect_path(shop: "demo.myshopify.com") do
+      assert_select "button", text: ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT
+    end
+  end
+
+  test "connect form keeps id_token as a hidden session token" do
+    token = session_token_for(shop: "demo.myshopify.com")
+
+    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", id_token: token }
+
+    assert_response :success
+    assert_select "input[type=hidden][name=shopify_session_token][value=?]", token
+    assert_select "form[action=?] button[type=submit]", shopify_plugin_demo_connect_path(shop: "demo.myshopify.com")
+  end
+
+  test "connect post without session token binds and alerts that metafields did not sync" do
+    token = session_token_for(shop: "demo.myshopify.com")
+    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", shopify_session_token: token }
+
+    post shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+
+    assert_redirected_to shopify_plugin_demo_connect_path(shop: "demo.myshopify.com")
+    follow_redirect!
+    assert_includes response.body, ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_FAILED
+    assert_includes response.body, "session token required"
+    install = RecordingStudioShopifyPluginTemplate::ShopifyInstall.find(
+      shop_domain: "demo.myshopify.com",
+      client: @client
+    )
+    assert install.connected?
+  end
+
+  test "connect post with session token and stubbed metafield sync notices settings" do
+    token = session_token_for(shop: "demo.myshopify.com")
+    stub_shopify_shop_metafields_ok
+
+    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", id_token: token }
+    post shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", id_token: token }
+
+    assert_response :redirect
+    assert_includes response.redirect_url, plugin_settings_path
+    follow_redirect!
+    assert_response :success
+    assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
+    assert_includes response.body, ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_SYNCED
+  ensure
+    restore_shopify_shop_metafields
+  end
+
+  test "connect post without HOST_BASE_URL uses request base url not configuration" do
+    previous_host = ENV["HOST_BASE_URL"]
+    ENV.delete("HOST_BASE_URL")
+    configuration_called = false
+    RecordingStudioShopifyPluginTemplate.configuration.define_singleton_method(:host_base_url) do
+      configuration_called = true
+      raise NoMethodError, "configuration.host_base_url should not be called"
+    end
+    captured = nil
+    publisher = ShopifyPluginDemo::PublishStorefrontMetafields
+    singleton = publisher.singleton_class
+    singleton.alias_method :__orig_call_host, :call unless singleton.method_defined?(:__orig_call_host)
+    singleton.define_method(:call) do |**kwargs|
+      captured = kwargs
+      RecordingStudioShopifyPluginTemplate::ShopifyShopMetafieldResult.new(
+        success: false,
+        error: "session token required"
+      )
+    end
+    token = session_token_for(shop: "demo.myshopify.com")
+    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", shopify_session_token: token }
+    post shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+
+    assert_response :redirect
+    refute configuration_called
+    assert_equal "http://www.example.com", captured.fetch(:host_base_url)
+  ensure
+    ENV["HOST_BASE_URL"] = previous_host if previous_host
+    config = RecordingStudioShopifyPluginTemplate.configuration
+    config.singleton_class.remove_method(:host_base_url) if config.singleton_methods.include?(:host_base_url)
+    pub_singleton = ShopifyPluginDemo::PublishStorefrontMetafields.singleton_class
+    if pub_singleton.method_defined?(:__orig_call_host)
+      pub_singleton.alias_method :call, :__orig_call_host
+      pub_singleton.remove_method :__orig_call_host
+    end
+  end
+
+  test "connect post with id_token publishes storefront metafields" do
+    token = session_token_for(shop: "demo.myshopify.com")
+    captured = nil
+    publisher = ShopifyPluginDemo::PublishStorefrontMetafields
+    singleton = publisher.singleton_class
+    singleton.alias_method :__orig_call, :call
+    singleton.define_method(:call) do |**kwargs|
+      captured = kwargs
+      RecordingStudioShopifyPluginTemplate::ShopifyShopMetafieldResult.new(success: true, error: nil)
+    end
+
+    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", id_token: token }
+    post shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", id_token: token }
+
+    assert captured
+    assert_equal token, captured.fetch(:session_token)
+    assert_equal "demo.myshopify.com", captured.fetch(:shop_domain)
+    assert_response :redirect
+    assert_includes response.redirect_url, plugin_settings_path
+  ensure
+    if defined?(singleton) && singleton.method_defined?(:__orig_call)
+      singleton.alias_method :call, :__orig_call
+      singleton.remove_method :__orig_call
+    end
+  end
+
+  test "connected connect screen hides installed is not connected" do
+    token = session_token_for(shop: "demo.myshopify.com")
+    get shopify_plugin_demo_connect_path, params: {
+      shop: "demo.myshopify.com",
+      shopify_session_token: token
+    }
+    post shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+    follow_redirect!
+
+    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+
+    assert_response :success
+    refute_includes response.body, "Installed is not Connected"
+    assert_includes response.body, "This shop is Connected to Recording Studio."
+    assert_includes CGI.unescapeHTML(response.body), ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_MISSING_TOKEN
   end
 
   test "verified session token records install without connecting" do
@@ -227,6 +361,26 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
   end
 
   private
+
+  def stub_shopify_shop_metafields_ok
+    klass = RecordingStudioShopifyPluginTemplate::ShopifyShopMetafields
+    singleton = klass.singleton_class
+    return if singleton.method_defined?(:__orig_sync!)
+
+    singleton.alias_method :__orig_sync!, :sync!
+    singleton.define_method(:sync!) do |**|
+      RecordingStudioShopifyPluginTemplate::ShopifyShopMetafieldResult.new(success: true, error: nil)
+    end
+  end
+
+  def restore_shopify_shop_metafields
+    klass = RecordingStudioShopifyPluginTemplate::ShopifyShopMetafields
+    singleton = klass.singleton_class
+    return unless singleton.method_defined?(:__orig_sync!)
+
+    singleton.alias_method :sync!, :__orig_sync!
+    singleton.remove_method :__orig_sync!
+  end
 
   def create_registered_app(name: "Shopify plugin", audience: PARTNER_APP_ID, secret: SESSION_SECRET)
     result = RecordingStudioOauth::Services::CreateOauthClient.call(

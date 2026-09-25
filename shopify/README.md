@@ -27,23 +27,13 @@ App Home loads the dummy host in a cross-site iframe (`admin.shopify.com` → yo
 
 ## Theme extension
 
-`extensions/recording-studio-theme` is a Liquid block. Set Host URL, Page id, and Storefront token. Shop comes from `shop.permanent_domain`. The block loads `{host}/shopify_plugin_demo/storefront/embed.js` and mounts Embeddable HTML in the page. Do not iframe the host there.
+`extensions/recording-studio-theme` is a Liquid block. Pick a page by title. Host URL and storefront token come from app metafields written on Connect. Shop comes from `shop.permanent_domain`. The block loads `{host}/shopify_plugin_demo/storefront/embed.js` and mounts Embeddable HTML plus FlatPack CSS and Stimulus. Do not iframe the host there.
 
-Mint a token on the dummy host after Connect:
+Connect writes those metafields on the **app installation** when the App Home session token is present on the Connect POST. Values must read back before the host shows “Storefront metafields synced.” Connect does not create metafield definitions with `APP_INSTALLATION` on Admin API 2025-01.
 
-```ruby
-client = RecordingStudioOauth::OauthClient.find_by!(
-  client_id: ENV.fetch("SHOPIFY_PLUGIN_REGISTERED_APP_CLIENT_ID")
-)
-secret = RecordingStudioShopifyPluginTemplate::ShopifyStorefrontEmbed.secret_for(client)
-token = RecordingStudioShopifyPluginTemplate::ShopifyStorefrontEmbed.mint(
-  shop_domain: "demo.myshopify.com",
-  page_recording_id: "PAGE_ID",
-  secret: secret
-)
-```
+The theme block reads installation values with reserved-namespace Liquid syntax, for example `app.metafields["$app:recording_studio"]["host_base_url"].value`. Use bracket notation for both the `$app:recording_studio` namespace and the writer keys (`host_base_url`, `storefront_token`, `pages`). Dot notation on `recording_studio` or on the keys alone does not match what Connect writes. The block root includes `block.shopify_attributes` so the theme editor can select the app block.
 
-Paste `token` into the theme editor. A shop that is only Installed, or a token for another shop, returns 404.
+The block loads `embed.js` with `defer`. The host mount script polls for `#recording-studio-<block id>` before injecting HTML. FlatPack CSS and a classic `embed_boot.js` load as Liquid `<link>` and `<script>` tags on the public host, not as dynamically created importmap or module tags. Shopify storefront CSP blocked those injections after HTML paint.
 
 ## Partner smoke on development-store-kwcwfmcz
 

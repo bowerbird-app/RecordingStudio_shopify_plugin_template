@@ -1,0 +1,24 @@
+<% page = local_assigns.fetch(:page) %>
+<article data-shopify-plugin-demo-embed="page" data-theme="rounded">
+  <% if page&.title == "Carousel" %>
+    <%= render FlatPack::Carousel::Component.new(
+      slides: [
+        { type: :html, html: "<div><p>Slide one</p></div>", caption: "One" },
+        { type: :html, html: "<div><p>Slide two</p></div>", caption: "Two" },
+        { type: :html, html: "<div><p>Slide three</p></div>", caption: "Three" }
+      ],
+      aria_label: "Carousel"
+    ) %>
+  <% else %>
+    <%= render FlatPack::Tooltip::Component.new(text: "Hover this card on the shop to peek at the widget.") do %>
+      <%= render FlatPack::Card::Component.new(style: :interactive) do |card| %>
+        <% card.header do %>
+          <%= render FlatPack::PageTitle::Component.new(title: "test widget", variant: :h3, class: "mb-0 pb-0") %>
+        <% end %>
+        <% card.body do %>
+          <p class="text-sm leading-6">A small storefront card. Drop it on a Shopify page and see how it sits.</p>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+</article>

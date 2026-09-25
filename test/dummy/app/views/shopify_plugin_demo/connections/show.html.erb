@@ -14,13 +14,18 @@
     <%= render FlatPack::Alert::Component.new(style: :danger, title: alert) %>
   <% end %>
 
-  <%= render FlatPack::Alert::Component.new(
-    style: :info,
-    title: "Installed is not Connected",
-    description: "Shopify Partner install only means the Shopify plugin is on the shop. Connect here to link Recording Studio."
-  ) %>
+  <% unless @connected %>
+    <%= render FlatPack::Alert::Component.new(
+      style: :info,
+      title: "Installed is not Connected",
+      description: "Shopify Partner install only means the Shopify plugin is on the shop. Connect here to link Recording Studio."
+    ) %>
+  <% end %>
 
   <%= form_with url: shopify_plugin_demo_connect_path, method: :get, local: true do %>
+    <% shopify_embed_query.except(:shop).each do |name, value| %>
+      <%= hidden_field_tag name, value %>
+    <% end %>
     <div class="flex flex-col gap-3 max-w-md">
       <%= render FlatPack::TextInput::Component.new(
         name: "shop",
@@ -39,27 +44,39 @@
 
   <% if @connected %>
     <p class="text-sm leading-6">This shop is Connected to Recording Studio.</p>
+    <% if shopify_session_token.blank? %>
+      <%= render FlatPack::Alert::Component.new(
+        style: :warning,
+        title: ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_MISSING_TOKEN
+      ) %>
+    <% end %>
     <%= button_to shopify_plugin_demo_disconnect_path(shop: @shop_domain), method: :delete do %>
+      <%= hidden_field_tag :shopify_session_token, shopify_session_token if shopify_session_token.present? %>
       <%= render FlatPack::Button::Component.new(
         text: ShopifyPluginDemo::ProductConfig::DISCONNECT_BUTTON_TEXT,
         style: :secondary,
-        size: :md
+        size: :md,
+        type: :submit
       ) %>
     <% end %>
     <%= button_to shopify_plugin_demo_connect_path(shop: @shop_domain), method: :post do %>
+      <%= hidden_field_tag :shopify_session_token, shopify_session_token if shopify_session_token.present? %>
       <%= render FlatPack::Button::Component.new(
         text: ShopifyPluginDemo::ProductConfig::CONNECT_AGAIN_BUTTON_TEXT,
         style: :ghost,
-        size: :md
+        size: :md,
+        type: :submit
       ) %>
     <% end %>
   <% else %>
     <p class="text-sm leading-6">This shop is not Connected yet.</p>
     <%= button_to shopify_plugin_demo_connect_path(shop: @shop_domain), method: :post, disabled: @shop_domain.blank? do %>
+      <%= hidden_field_tag :shopify_session_token, shopify_session_token if shopify_session_token.present? %>
       <%= render FlatPack::Button::Component.new(
         text: ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT,
         style: :primary,
-        size: :md
+        size: :md,
+        type: :submit
       ) %>
     <% end %>
   <% end %>

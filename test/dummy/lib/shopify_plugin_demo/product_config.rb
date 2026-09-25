@@ -11,5 +11,9 @@ module ShopifyPluginDemo
     SETTINGS_TITLE = "Shopify plugin settings"
     SETTINGS_CONNECTED_STATUS = "This shop is Connected."
     LOGIN_BUTTON_TEXT = "Sign in"
+    STOREFRONT_METAFIELDS_MISSING_TOKEN =
+      "Open Connect from App Home so Shopify's session token is present. Needed to publish storefront metafields."
+    STOREFRONT_METAFIELDS_SYNCED = "Connected. Storefront metafields synced."
+    STOREFRONT_METAFIELDS_FAILED = "Connected, but storefront metafields did not sync: "
   end
 end

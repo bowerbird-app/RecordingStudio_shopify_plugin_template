@@ -5,7 +5,7 @@ module ShopifyPluginDemo
     private
 
     def record_install_from_session_token
-      token = params[:shopify_session_token].presence
+      token = shopify_session_token
       return if token.blank?
 
       client = registered_app
@@ -44,6 +44,14 @@ module ShopifyPluginDemo
       RecordingStudioShopifyPluginTemplate::ShopifySessionClaims.normalize_shop(
         params[:shop].presence || params[:shop_domain]
       )
+    end
+
+    def shopify_session_token
+      ShopifyPluginDemo::EmbedQuery.session_token(params)
+    end
+
+    def shopify_embed_query
+      ShopifyPluginDemo::EmbedQuery.from_params(params)
     end
   end
 end

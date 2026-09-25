@@ -28,6 +28,7 @@ accessible_workspace = Workspace.find_or_create_by!(name: "Client Workspace")
 private_workspace = Workspace.find_or_create_by!(name: "Private Workspace")
 folder = Folder.find_or_create_by!(name: "Product Docs")
 page = Page.find_or_create_by!(title: "Getting Started")
+carousel_page = Page.find_or_create_by!(title: "Carousel")
 
 previous_actor = Current.actor
 Current.actor = user
@@ -41,6 +42,7 @@ begin
   folder_recording = find_or_record_child.call(folder, root_recording, root_recording)
 
   find_or_record_child.call(page, root_recording, folder_recording)
+  find_or_record_child.call(carousel_page, root_recording, folder_recording)
 
   admin_root = AdminRoot.find_or_create_by!(name: "Admin")
   admin_root_recording = RecordingStudio.root_recording_for(admin_root)
@@ -48,6 +50,10 @@ begin
   ShopifyPluginDemo::Tree.grant_admin!(root_recording: root_recording, actor: user)
   ShopifyPluginDemo::Tree.ensure_embed_on!(
     RecordingStudio::Recording.find_by!(recordable: page),
+    actor: user
+  )
+  ShopifyPluginDemo::Tree.ensure_embed_on!(
+    RecordingStudio::Recording.find_by!(recordable: carousel_page),
     actor: user
   )
 ensure
@@ -58,4 +64,4 @@ puts "Seeded: admin@admin.com / Password"
 puts "Seeded: Workspace '#{workspace.name}' with root recording ##{root_recording.id}"
 puts "Seeded: Workspace '#{accessible_workspace.name}' with root recording ##{accessible_root_recording.id}"
 puts "Seeded: Workspace '#{private_workspace.name}' with root recording ##{private_root_recording.id}"
-puts "Seeded: Folder '#{folder.name}' and page '#{page.title}'"
+puts "Seeded: Folder '#{folder.name}' and pages '#{page.title}', '#{carousel_page.title}'"

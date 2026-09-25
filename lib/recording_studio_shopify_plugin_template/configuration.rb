@@ -2,7 +2,7 @@
 
 module RecordingStudioShopifyPluginTemplate
   class Configuration
-    attr_accessor :api_key, :enable_feature_x, :timeout, :registered_app_client_id
+    attr_accessor :api_key, :enable_feature_x, :timeout, :registered_app_client_id, :host_base_url
     attr_reader :hooks
 
     def initialize
@@ -10,6 +10,7 @@ module RecordingStudioShopifyPluginTemplate
       @enable_feature_x = false
       @timeout = 5
       @registered_app_client_id = ENV.fetch("SHOPIFY_PLUGIN_REGISTERED_APP_CLIENT_ID", nil)
+      @host_base_url = ENV.fetch("HOST_BASE_URL", nil)
       @hooks = RecordingStudio::Hooks.new
     end
 
@@ -19,6 +20,7 @@ module RecordingStudioShopifyPluginTemplate
         enable_feature_x: enable_feature_x,
         timeout: timeout,
         registered_app_client_id: registered_app_client_id,
+        host_base_url: host_base_url,
         hooks_registered: hooks.instance_variable_get(:@registry).transform_values(&:size)
       }
     end

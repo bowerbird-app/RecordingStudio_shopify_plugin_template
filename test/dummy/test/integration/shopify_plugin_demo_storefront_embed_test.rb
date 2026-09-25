@@ -69,6 +69,8 @@ class ShopifyPluginDemoStorefrontEmbedTest < ActionDispatch::IntegrationTest
     assert_equal 1, payload.schema_version
     assert_includes payload.html, "data-shopify-plugin-demo-embed"
     refute_includes payload.html, "<iframe"
+    refute_includes payload.html, "Getting Started"
+    assert_includes payload.html, "test widget"
     assert_includes response.headers["Cache-Control"], "public"
     assert_includes response.headers["Cache-Control"], "max-age=60"
   end
@@ -78,10 +80,50 @@ class ShopifyPluginDemoStorefrontEmbedTest < ActionDispatch::IntegrationTest
         params: scoped_params.merge(mount: "recording-studio-block")
 
     assert_response :ok
-    assert_includes response.body, "getElementById(\"recording-studio-block\")"
+    assert_includes response.body, "getElementById(mountId)"
+    assert_includes response.body, "waitForMount"
+    assert_includes response.body, "DOMContentLoaded"
     assert_includes response.body, "innerHTML"
     assert_includes response.body, "data-shopify-plugin-demo-embed"
+    refute_includes response.body, "importmap"
+    refute_includes response.body, "embed_boot.js"
     refute_includes response.body, "<iframe"
+  end
+
+  test "storefront stylesheet serves concatenated flatpack css" do
+    get ShopifyPluginDemo::Contract.storefront_embed_css_path
+
+    assert_response :ok
+    assert_includes response.media_type, "text/css"
+    refute_equal "", response.body.strip
+  end
+
+  test "storefront boot is classic javascript for tooltip and carousel" do
+    get ShopifyPluginDemo::Contract.storefront_embed_boot_path
+
+    assert_response :ok
+    refute_includes response.body, "import "
+    assert_includes response.body, "flat-pack--tooltip"
+    assert_includes response.body, "flat-pack--carousel"
+    assert_includes response.body, "mouseenter"
+  end
+
+  test "storefront json for carousel page includes carousel markup" do
+    carousel = ShopifyPluginDemo::Tree.record_page!(
+      root_recording: @page_recording.root_recording,
+      title: "Carousel",
+      actor: @user
+    )
+    ShopifyPluginDemo::Tree.ensure_embed_on!(carousel, actor: @user)
+
+    get ShopifyPluginDemo::Contract.storefront_embed_path(format: :json),
+        params: scoped_params(page_id: carousel.id),
+        headers: { "Accept" => "application/json" }
+
+    assert_response :ok
+    payload = ShopifyPluginDemo::Contract.parse_browser_payload!(JSON.parse(response.body))
+    assert_includes payload.html, "flat-pack--carousel"
+    assert_includes payload.html, "Slide one"
   end
 
   test "storefront js does not use an admin session cookie" do
@@ -106,7 +148,6 @@ class ShopifyPluginDemoStorefrontEmbedTest < ActionDispatch::IntegrationTest
   def mint_token(shop:, page_id:)
     RecordingStudioShopifyPluginTemplate::ShopifyStorefrontEmbed.mint(
       shop_domain: shop,
-      page_recording_id: page_id,
       secret: RecordingStudioShopifyPluginTemplate::ShopifyStorefrontEmbed.secret_for(@client)
     )
   end

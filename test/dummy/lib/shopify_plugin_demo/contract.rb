@@ -24,6 +24,8 @@ module ShopifyPluginDemo
     CONNECT_TOKEN_PATH = TOKEN_PATH
     UNINSTALL_PATH = "/shopify_plugin_demo/uninstall"
     STOREFRONT_EMBED_PATH = "/shopify_plugin_demo/storefront/embed"
+    STOREFRONT_EMBED_BOOT_PATH = "/shopify_plugin_demo/storefront/embed_boot.js"
+    STOREFRONT_EMBED_CSS_PATH = "/shopify_plugin_demo/storefront/embed.css"
 
     SCHEMA_VERSION = 1
     REQUIRED_TOP_KEYS = %w[schema_version html configuration sdk].freeze
@@ -67,6 +69,14 @@ module ShopifyPluginDemo
 
     def public_actions_embed_path(page_recording_id)
       "#{PUBLIC_RESOURCE_PREFIX}/#{RESOURCE}/#{page_recording_id}/#{ACTIONS_EMBED}"
+    end
+
+    def storefront_embed_boot_path
+      STOREFRONT_EMBED_BOOT_PATH
+    end
+
+    def storefront_embed_css_path
+      STOREFRONT_EMBED_CSS_PATH
     end
 
     def storefront_embed_path(format: nil)

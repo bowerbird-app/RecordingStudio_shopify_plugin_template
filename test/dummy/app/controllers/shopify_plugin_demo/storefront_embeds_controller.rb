@@ -35,6 +35,19 @@ class ShopifyPluginDemo::StorefrontEmbedsController < ActionController::Base
     end
   end
 
+  def stylesheet
+    cors_asset_headers
+    send_data ShopifyPluginDemo::StorefrontFlatpackAssets.stylesheet_css,
+              type: "text/css; charset=utf-8",
+              disposition: "inline"
+  end
+
+  def boot
+    cors_asset_headers
+    render js: File.read(Rails.root.join("app/javascript/shopify_plugin_demo/storefront_classic_boot.js")),
+           content_type: "text/javascript"
+  end
+
   private
 
   def find_page_recording(page_id)
@@ -59,20 +72,54 @@ class ShopifyPluginDemo::StorefrontEmbedsController < ActionController::Base
   end
 
   def cache_payload_headers(payload)
+    cors_asset_headers
+    last_modified = payload.metadata&.last_modified_at
+    response.set_header("Last-Modified", last_modified.httpdate) if last_modified
+  end
+
+  def cors_asset_headers
     response.set_header("Cache-Control", "public, max-age=#{CACHE_SECONDS}")
     response.set_header("Access-Control-Allow-Origin", "*")
     response.set_header("Cross-Origin-Resource-Policy", "cross-origin")
-    last_modified = payload.metadata&.last_modified_at
-    response.set_header("Last-Modified", last_modified.httpdate) if last_modified
   end
 
   def mount_javascript(payload)
     mount_id = params[:mount].to_s
     <<~JS
       (function () {
-        var root = document.getElementById(#{mount_id.to_json});
-        if (!root) return;
-        root.innerHTML = #{payload.html.to_json};
+        var mountId = #{mount_id.to_json};
+        var html = #{payload.html.to_json};
+
+        function paint() {
+          var root = document.getElementById(mountId);
+          if (!root) return false;
+          root.setAttribute("data-theme", "rounded");
+          root.innerHTML = html;
+          return true;
+        }
+
+        function waitForMount() {
+          if (paint()) return;
+          var attempts = 0;
+          var maxAttempts = 120;
+          function tick() {
+            if (paint()) return;
+            attempts += 1;
+            if (attempts >= maxAttempts) return;
+            if (typeof requestAnimationFrame === "function") {
+              requestAnimationFrame(tick);
+            } else {
+              setTimeout(tick, 16);
+            }
+          }
+          if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", tick, { once: true });
+          } else {
+            tick();
+          }
+        }
+
+        waitForMount();
       })();
     JS
   end
