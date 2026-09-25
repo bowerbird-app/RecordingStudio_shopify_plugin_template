@@ -31,6 +31,8 @@ App Home loads the dummy host in a cross-site iframe (`admin.shopify.com` → yo
 
 Connect writes those metafields on the **app installation** when the App Home session token is present on the Connect POST. Values must read back before the host shows “Storefront metafields synced.” Connect does not create metafield definitions with `APP_INSTALLATION` on Admin API 2025-01.
 
+The theme block reads installation values with reserved-namespace Liquid syntax, for example `app.metafields["$app:recording_studio"].host_base_url.value`. Dot notation on `recording_studio` alone does not match the `$app:recording_studio` namespace Connect writes. The block root includes `block.shopify_attributes` so the theme editor can select the app block.
+
 ## Partner smoke on development-store-kwcwfmcz
 
 Marikit runs this on the Partner store tomorrow. Do not run `shopify app deploy` from a Cloud Agent.

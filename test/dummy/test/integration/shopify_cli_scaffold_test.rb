@@ -28,7 +28,8 @@ class ShopifyCliScaffoldTest < ActiveSupport::TestCase
     assert_includes liquid, "block.settings.page"
     assert_includes liquid, "Getting Started"
     assert_includes liquid, "Carousel"
-    assert_includes liquid, "app.metafields.recording_studio"
+    assert_includes liquid, 'app.metafields["$app:recording_studio"]'
+    assert_includes liquid, "block.shopify_attributes"
     refute_includes liquid, "block.settings.host_base_url"
     refute_includes liquid, "block.settings.embed_token"
     refute_includes liquid, "block.settings.recording_id"
