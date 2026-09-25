@@ -12,6 +12,10 @@ BowerBird uses Shopify CLI for this channel. This folder is the thin app: TOML, 
 
 Serve `app-home/` as the embedded application URL, or copy those two files behind the CLI web target you already use.
 
+### Session cookies in the Connect iframe
+
+App Home loads the dummy host in a cross-site iframe (`admin.shopify.com` → your tunnel or production origin). The dummy sets the Rails session cookie to `SameSite=None` with `Secure` on HTTPS (or when `config.force_ssl` is on). Plain `http://localhost` keeps `SameSite=Lax` without `Secure` for top-level dev. Top-level login in the browser was only a workaround when the session stayed `Lax` and would not stick inside the iframe.
+
 ## Merchant path
 
 1. Install the Shopify plugin from Partner Dashboard or `shopify app dev`.
