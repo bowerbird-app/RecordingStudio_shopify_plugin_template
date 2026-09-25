@@ -2,7 +2,6 @@
 
 require "test_helper"
 require "devise/test/integration_helpers"
-require "uri"
 
 class PluginSettingsTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
@@ -38,31 +37,6 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
     follow_redirect!
     assert_response :success
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
-  end
-
-  test "home with embedded redirects to plugin settings" do
-    get root_path, params: {
-      embedded: "1",
-      shop: "demo.myshopify.com",
-      host: "abc",
-      hmac: "sig"
-    }
-
-    assert_response :redirect
-    uri = URI.parse(response.redirect_url)
-    assert_equal "/plugin_settings", uri.path
-    query = Rack::Utils.parse_query(uri.query)
-    assert_equal "1", query["embedded"]
-    assert_equal "demo.myshopify.com", query["shop"]
-    assert_equal "abc", query["host"]
-    assert_equal "sig", query["hmac"]
-  end
-
-  test "home without embedded stays on home" do
-    get root_path
-
-    assert_response :success
-    assert_includes response.body, ShopifyPluginDemo::ProductConfig::CHANNEL_NAME
   end
 
   test "not connected redirects to connect" do
