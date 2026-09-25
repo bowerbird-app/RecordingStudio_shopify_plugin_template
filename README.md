@@ -26,7 +26,8 @@ Open http://localhost:3000 and sign in at `/users/sign_in`.
 Useful routes:
 
 - `/` home
-- `/shopify_plugin_demo/connect` Connect and Connected (iframe target for App Home)
+- `/plugin_settings` App Home iframe target. Redirects to Connect when the shop is not Connected. Shows Disconnect when it is.
+- `/shopify_plugin_demo/connect` Connect and Connected
 - `/pages` page ids for the theme extension
 - `/shopify_plugin_demo/storefront/embed.js` scoped storefront browser-payload mount (HTML/JS, not an iframe)
 - `/recording_studio_api/apis/shopify_plugin_demo/v1/pages/:id/actions/embed` named API browser payload (bearer token, not the storefront)
@@ -47,8 +48,8 @@ Set `SHOPIFY_PLUGIN_REGISTERED_APP_CLIENT_ID` to the Connect Registered App id (
 BowerBird uses Shopify CLI. See `shopify/README.md`.
 
 1. Set `HOST_BASE_URL` to the dummy origin.
-2. Serve `shopify/app-home/` as the embedded App Home.
-3. App Home iframes `{HOST_BASE_URL}/shopify_plugin_demo/connect?shop=...`.
+2. Serve `shopify/app-home/` as the embedded App Home, or set Partner Dev Dashboard App URL and `shopify.app.toml` `application_url` to `https://<HOST>/plugin_settings`.
+3. App Home iframes `{HOST_BASE_URL}/plugin_settings?shop=...`. Not Connected redirects to Connect.
 4. App Bridge `idToken()` is appended as `shopify_session_token`. The host verifies HS256 through Oauth, then parses Shopify claims.
 5. Theme app extension `shopify/extensions/recording-studio-theme` sets host URL, page id, and storefront token. Shop comes from the storefront.
 

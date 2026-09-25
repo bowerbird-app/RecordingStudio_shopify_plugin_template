@@ -6,22 +6,22 @@ BowerBird uses Shopify CLI for this channel. This folder is the thin app: TOML, 
 
 1. Boot the dummy host (`cd test/dummy && bin/dev`).
 2. Set `HOST_BASE_URL` to that origin (for example `http://localhost:3000`).
-3. Put the same origin in `shopify.app.toml` `application_url` when you run `shopify app dev`.
-4. App Home (`app-home/index.html`) iframes `{HOST_BASE_URL}/shopify_plugin_demo/connect?shop=...`.
+3. Put `https://<HOST>/plugin_settings` in Partner Dev Dashboard App URL and in `shopify.app.toml` `application_url` when you run `shopify app dev`. The TOML in this repo uses the placeholder `https://example.com/plugin_settings`. Do not commit a live ngrok hostname.
+4. App Home (`app-home/index.html`) iframes `{HOST_BASE_URL}/plugin_settings?shop=...`. If the shop is not Connected, the dummy redirects to Connect. If it is Connected, App Home shows Shopify plugin settings with Disconnect only.
 5. App Bridge `idToken()` appends `shopify_session_token`. The dummy host verifies HS256 through Oauth, then the Shopify plugin parses `dest` / `iss` and records the install.
 
 Serve `app-home/` as the embedded application URL, or copy those two files behind the CLI web target you already use.
 
-### Session cookies in the Connect iframe
+### Session cookies in the App Home iframe
 
 App Home loads the dummy host in a cross-site iframe (`admin.shopify.com` → your tunnel or production origin). The dummy sets the Rails session cookie to `SameSite=None` with `Secure` on HTTPS (or when `config.force_ssl` is on). Plain `http://localhost` keeps `SameSite=Lax` without `Secure` for top-level dev. Top-level login in the browser was only a workaround when the session stayed `Lax` and would not stick inside the iframe.
 
 ## Merchant path
 
 1. Install the Shopify plugin from Partner Dashboard or `shopify app dev`.
-2. Open App Home. That is Installed, not Connected.
+2. Open App Home. That is Installed, not Connected. The iframe lands on `/plugin_settings` and redirects to Connect until you Connect.
 3. Sign in on the dummy host if asked (`admin@admin.com` / `Password`).
-4. Click Connect.
+4. Click Connect. App Home then shows Shopify plugin settings with Disconnect. Disconnect is a host soft disconnect. It does not uninstall the Shopify plugin.
 
 `app/uninstalled` posts to `{HOST_BASE_URL}/shopify_plugin_demo/uninstall`. The dummy checks `X-Shopify-Hmac-Sha256` against the raw body with the Registered App session token secret (the Partner API secret). A valid stamp then calls `ShopifyInstall.remove`. A missing or forged stamp returns 401 and leaves the install row.
 
@@ -59,8 +59,8 @@ Set these on the dummy host before you start.
 
 1. Boot the dummy (`cd test/dummy && bin/dev`).
 2. From `shopify/`, run `shopify app dev` and install on `development-store-kwcwfmcz`.
-3. Open App Home. You should see the dummy Connect iframe for that shop. Installed is not Connected.
-4. Sign in if asked (`admin@admin.com` / `Password`). Click Connect.
+3. Open App Home. You should see Connect after the `/plugin_settings` redirect. Installed is not Connected.
+4. Sign in if asked (`admin@admin.com` / `Password`). Click Connect. Open App Home again. You should see Shopify plugin settings and Disconnect.
 
 Pass. The Oauth external install row exists for that shop and Registered App, and Connect shows Connected.
 

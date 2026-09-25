@@ -19,6 +19,7 @@ module ShopifyPluginDemo
     TOKEN_PATH = "#{NAMED_PREFIX}/oauth/token".freeze
     AUTHORIZE_PATH = "/recording_studio_oauth/oauth/authorize"
     CONNECT_PATH = "/shopify_plugin_demo/connect"
+    PLUGIN_SETTINGS_PATH = "/plugin_settings"
     RELAY_CALLBACK_PATH = "/recording_studio_oauth/callback"
     CONNECT_TOKEN_PATH = TOKEN_PATH
     UNINSTALL_PATH = "/shopify_plugin_demo/uninstall"
