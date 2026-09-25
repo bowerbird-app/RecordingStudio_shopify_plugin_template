@@ -13,12 +13,14 @@ module ShopifyPluginDemo
       return if token.blank?
 
       RecordingStudioShopifyPluginTemplate::ShopifyShopMetafields.sync!(
-        shop_domain: shop_domain,
-        client: client,
-        session_token: session_token,
-        host_base_url: host_base_url,
-        storefront_token: token,
-        pages: pages_for(root_recording),
+        request: RecordingStudioShopifyPluginTemplate::ShopifyShopMetafields::Request.new(
+          shop_domain: shop_domain,
+          client: client,
+          session_token: session_token,
+          host_base_url: host_base_url,
+          storefront_token: token,
+          pages: pages_for(root_recording)
+        ),
         http: http
       )
     end

@@ -30,12 +30,14 @@ class ShopifyShopMetafieldsTest < Minitest::Test
     client = FakeClient.new("partner-app", "partner-secret")
 
     result = RecordingStudioShopifyPluginTemplate::ShopifyShopMetafields.sync!(
-      shop_domain: "demo.myshopify.com",
-      client: client,
-      session_token: "session-jwt",
-      host_base_url: "https://dummy.example",
-      storefront_token: "shop-token",
-      pages: [ { "id" => "page-1", "title" => "Getting Started" } ],
+      request: RecordingStudioShopifyPluginTemplate::ShopifyShopMetafields::Request.new(
+        shop_domain: "demo.myshopify.com",
+        client: client,
+        session_token: "session-jwt",
+        host_base_url: "https://dummy.example",
+        storefront_token: "shop-token",
+        pages: [ { "id" => "page-1", "title" => "Getting Started" } ]
+      ),
       http: http
     )
 
@@ -53,12 +55,14 @@ class ShopifyShopMetafieldsTest < Minitest::Test
     client = FakeClient.new("partner-app", "partner-secret")
 
     result = RecordingStudioShopifyPluginTemplate::ShopifyShopMetafields.sync!(
-      shop_domain: "demo.myshopify.com",
-      client: client,
-      session_token: "",
-      host_base_url: "https://dummy.example",
-      storefront_token: "shop-token",
-      pages: [],
+      request: RecordingStudioShopifyPluginTemplate::ShopifyShopMetafields::Request.new(
+        shop_domain: "demo.myshopify.com",
+        client: client,
+        session_token: "",
+        host_base_url: "https://dummy.example",
+        storefront_token: "shop-token",
+        pages: []
+      ),
       http: http
     )
 
