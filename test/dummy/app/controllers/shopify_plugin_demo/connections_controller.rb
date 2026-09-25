@@ -40,7 +40,8 @@ class ShopifyPluginDemo::ConnectionsController < ApplicationController
       return
     end
 
-    redirect_to plugin_settings_path(plugin_settings_return_params(shop_domain)),
+    query = plugin_settings_return_params(shop_domain).to_query
+    redirect_to "#{plugin_settings_path}?#{query}",
                 notice: "Connected. Installed is not the same as Connected."
   end
 

@@ -2,6 +2,7 @@
 
 require "test_helper"
 require "devise/test/integration_helpers"
+require "uri"
 
 class PluginSettingsTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
@@ -47,12 +48,14 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
       hmac: "sig"
     }
 
-    assert_redirected_to plugin_settings_path(
-      embedded: "1",
-      shop: "demo.myshopify.com",
-      host: "abc",
-      hmac: "sig"
-    )
+    assert_response :redirect
+    uri = URI.parse(response.redirect_url)
+    assert_equal "/plugin_settings", uri.path
+    query = Rack::Utils.parse_query(uri.query)
+    assert_equal "1", query["embedded"]
+    assert_equal "demo.myshopify.com", query["shop"]
+    assert_equal "abc", query["host"]
+    assert_equal "sig", query["hmac"]
   end
 
   test "home without embedded stays on home" do
