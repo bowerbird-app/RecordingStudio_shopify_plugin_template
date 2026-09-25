@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dummy App Home iframe lands on `/plugin_settings`. Not Connected redirects to Connect. Connected shows Disconnect only (host soft disconnect).
 - `shopify.app.toml` `application_url` documents `https://example.com/plugin_settings`. Partner Dev Dashboard App URL should use `https://<HOST>/plugin_settings`.
 
+### Fixed
+- `shopify.app.toml` `automatically_update_urls_on_dev` changed from `true` to `false`. The Shopify CLI strips the path from `application_url` when it auto-updates dev URLs, so a dev preview would override `/plugin_settings` to `/` and Admin would embed the host root instead of the settings page.
+
+### Upgrade notes
+- If you copied the TOML and have `automatically_update_urls_on_dev = true`, change it to `false`. Then set the Partner active version App URL to `https://<HOST>/plugin_settings` yourself, or pass `--no-update` to `shopify app dev`.
+
 ## [0.3.3] - 2026-09-24
 
 ### Added
@@ -151,7 +157,8 @@ New addons copied from this template are born on Recording Studio 4.x.
 - Comprehensive README and documentation
 - Basic test suite with Minitest
 
-[Unreleased]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/compare/v0.3.3...HEAD
+[Unreleased]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/compare/v0.3.4...HEAD
+[0.3.4]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.4
 [0.3.3]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.3
 [0.3.2]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.2
 [0.3.1]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.1

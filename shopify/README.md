@@ -7,6 +7,8 @@ BowerBird uses Shopify CLI for this channel. This folder is the thin app: TOML, 
 1. Boot the dummy host (`cd test/dummy && bin/dev`).
 2. Set `HOST_BASE_URL` to that origin (for example `http://localhost:3000`).
 3. Put `https://<HOST>/plugin_settings` in Partner Dev Dashboard App URL and in `shopify.app.toml` `application_url` when you run `shopify app dev`. The TOML in this repo uses the placeholder `https://example.com/plugin_settings`. Do not commit a live ngrok hostname. The Partner **active version** App URL must include `/plugin_settings`. Configuration alone is not enough if the active version still points at `/`.
+
+**`automatically_update_urls_on_dev` must stay `false`.** The Shopify CLI strips the path from `application_url` when it auto-updates dev URLs ([Shopify/cli#3464](https://github.com/Shopify/cli/issues/3464)). With `true`, a dev preview overrides `/plugin_settings` to `/` and Admin embeds the host root instead of the settings page. Keep it `false` and set the Partner active version URL yourself.
 4. App Home (`app-home/index.html`) iframes `{HOST_BASE_URL}/plugin_settings?shop=...`. If the shop is not Connected, the dummy redirects to Connect. If it is Connected, App Home shows Shopify plugin settings with Disconnect only.
 5. App Bridge `idToken()` appends `shopify_session_token`. The dummy host verifies HS256 through Oauth, then the Shopify plugin parses `dest` / `iss` and records the install.
 
@@ -58,7 +60,7 @@ Set these on the dummy host before you start.
 ### Install and Connect
 
 1. Boot the dummy (`cd test/dummy && bin/dev`).
-2. From `shopify/`, run `shopify app dev` and install on `development-store-kwcwfmcz`.
+2. From `shopify/`, run `shopify app dev --no-update` and install on `development-store-kwcwfmcz`.
 3. Open App Home. You should see Connect after the `/plugin_settings` redirect. Installed is not Connected.
 4. Sign in if asked (`admin@admin.com` / `Password`). Click Connect. After Connect, the dummy returns to `/plugin_settings` for that shop. You should see Shopify plugin settings and Disconnect.
 

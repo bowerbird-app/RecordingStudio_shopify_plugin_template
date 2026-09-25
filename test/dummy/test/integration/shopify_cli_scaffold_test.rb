@@ -19,6 +19,7 @@ class ShopifyCliScaffoldTest < ActiveSupport::TestCase
     assert_includes toml, "app/uninstalled"
     assert_includes toml, "/shopify_plugin_demo/uninstall"
     assert_includes toml, "embedded = true"
+    assert_includes toml, "automatically_update_urls_on_dev = false"
     assert_includes home, "Shopify plugin settings"
     assert_includes bridge, "/plugin_settings"
     assert_includes bridge, "shopify_session_token"
