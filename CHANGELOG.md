@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Shopify token exchange uses the IETF `grant_type` URN. `ShopifyAdminHttp` sends `Accept: application/json` and turns OAuth HTML or JSON failures into readable errors instead of JSON parse errors on `<!DOCTYPE`.
+
 ### Changed
 - Dummy App Home iframe lands on `/plugin_settings`. Not Connected redirects to Connect. Connected shows Disconnect only (host soft disconnect).
 - `shopify.app.toml` `application_url` documents `https://example.com/plugin_settings`. Partner Dev Dashboard App URL should use `https://<HOST>/plugin_settings`.

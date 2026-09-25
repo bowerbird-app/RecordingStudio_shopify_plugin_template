@@ -13,7 +13,7 @@ module RecordingStudioShopifyPluginTemplate
 
   class ShopifyShopMetafields
     API_VERSION = "2025-01"
-    TOKEN_GRANT = "urn:shopify:params:oauth:grant-type:token-exchange"
+    TOKEN_GRANT = "urn:ietf:params:oauth:grant-type:token-exchange"
     SUBJECT_TOKEN_TYPE = "urn:ietf:params:oauth:token-type:id_token"
     REQUESTED_TOKEN_TYPE = "urn:shopify:params:oauth:token-type:offline-access-token"
 
