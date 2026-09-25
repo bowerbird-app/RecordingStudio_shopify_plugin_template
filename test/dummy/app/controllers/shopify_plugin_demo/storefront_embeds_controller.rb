@@ -86,32 +86,63 @@ class ShopifyPluginDemo::StorefrontEmbedsController < ActionController::Base
     boot_src = "#{request.base_url}#{ShopifyPluginDemo::Contract.storefront_embed_boot_path}"
     <<~JS
       (function () {
-        var root = document.getElementById(#{mount_id.to_json});
-        if (!root) return;
-        root.setAttribute("data-theme", "rounded");
-        root.innerHTML = #{payload.html.to_json};
+        var mountId = #{mount_id.to_json};
+        var html = #{payload.html.to_json};
         var styles = #{stylesheet_urls.to_json};
-        styles.forEach(function (href) {
-          if (document.querySelector('link[href="' + href + '"]')) return;
-          var link = document.createElement("link");
-          link.rel = "stylesheet";
-          link.href = href;
-          document.head.appendChild(link);
-        });
-        if (!document.querySelector("script[data-shopify-plugin-demo-importmap]")) {
-          var map = document.createElement("script");
-          map.type = "importmap";
-          map.setAttribute("data-shopify-plugin-demo-importmap", "true");
-          map.textContent = #{importmap.to_json};
-          document.head.appendChild(map);
+        var importmapText = #{importmap.to_json};
+        var bootSrc = #{boot_src.to_json};
+
+        function paint() {
+          var root = document.getElementById(mountId);
+          if (!root) return false;
+          root.setAttribute("data-theme", "rounded");
+          root.innerHTML = html;
+          styles.forEach(function (href) {
+            if (document.querySelector('link[href="' + href + '"]')) return;
+            var link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = href;
+            document.head.appendChild(link);
+          });
+          if (!document.querySelector("script[data-shopify-plugin-demo-importmap]")) {
+            var map = document.createElement("script");
+            map.type = "importmap";
+            map.setAttribute("data-shopify-plugin-demo-importmap", "true");
+            map.textContent = importmapText;
+            document.head.appendChild(map);
+          }
+          if (!document.querySelector("script[data-shopify-plugin-demo-boot]")) {
+            var boot = document.createElement("script");
+            boot.type = "module";
+            boot.src = bootSrc;
+            boot.setAttribute("data-shopify-plugin-demo-boot", "true");
+            document.head.appendChild(boot);
+          }
+          return true;
         }
-        if (!document.querySelector("script[data-shopify-plugin-demo-boot]")) {
-          var boot = document.createElement("script");
-          boot.type = "module";
-          boot.src = #{boot_src.to_json};
-          boot.setAttribute("data-shopify-plugin-demo-boot", "true");
-          document.head.appendChild(boot);
+
+        function waitForMount() {
+          if (paint()) return;
+          var attempts = 0;
+          var maxAttempts = 120;
+          function tick() {
+            if (paint()) return;
+            attempts += 1;
+            if (attempts >= maxAttempts) return;
+            if (typeof requestAnimationFrame === "function") {
+              requestAnimationFrame(tick);
+            } else {
+              setTimeout(tick, 16);
+            }
+          }
+          if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", tick, { once: true });
+          } else {
+            tick();
+          }
         }
+
+        waitForMount();
       })();
     JS
   end

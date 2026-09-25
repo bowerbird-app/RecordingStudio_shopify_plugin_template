@@ -80,7 +80,9 @@ class ShopifyPluginDemoStorefrontEmbedTest < ActionDispatch::IntegrationTest
         params: scoped_params.merge(mount: "recording-studio-block")
 
     assert_response :ok
-    assert_includes response.body, "getElementById(\"recording-studio-block\")"
+    assert_includes response.body, "getElementById(mountId)"
+    assert_includes response.body, "waitForMount"
+    assert_includes response.body, "DOMContentLoaded"
     assert_includes response.body, "innerHTML"
     assert_includes response.body, "data-shopify-plugin-demo-embed"
     assert_includes response.body, "stylesheet"

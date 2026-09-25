@@ -40,5 +40,7 @@ class ShopifyCliScaffoldTest < ActiveSupport::TestCase
     assert_includes liquid, "Nothing to show here yet."
     refute_includes liquid, "<iframe"
     refute_includes liquid, "iframe"
+    assert_includes liquid, " defer"
+    refute_includes liquid, " async"
   end
 end

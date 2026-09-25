@@ -33,6 +33,8 @@ Connect writes those metafields on the **app installation** when the App Home se
 
 The theme block reads installation values with reserved-namespace Liquid syntax, for example `app.metafields["$app:recording_studio"]["host_base_url"].value`. Use bracket notation for both the `$app:recording_studio` namespace and the writer keys (`host_base_url`, `storefront_token`, `pages`). Dot notation on `recording_studio` or on the keys alone does not match what Connect writes. The block root includes `block.shopify_attributes` so the theme editor can select the app block.
 
+The block loads `embed.js` with `defer`. The host mount script polls for `#recording-studio-<block id>` before injecting HTML, FlatPack stylesheets, importmap, and `embed_boot.js`, because Shopify may run the script before the mount div exists.
+
 ## Partner smoke on development-store-kwcwfmcz
 
 Marikit runs this on the Partner store tomorrow. Do not run `shopify app deploy` from a Cloud Agent.
