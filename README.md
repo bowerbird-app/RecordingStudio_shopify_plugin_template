@@ -51,7 +51,7 @@ BowerBird uses Shopify CLI. See `shopify/README.md`.
 2. Serve `shopify/app-home/` as the embedded App Home, or set Partner Dev Dashboard App URL and `shopify.app.toml` `application_url` to `https://<HOST>/plugin_settings`.
 3. App Home iframes `{HOST_BASE_URL}/plugin_settings?shop=...`. Not Connected redirects to Connect.
 4. App Bridge `idToken()` is appended as `shopify_session_token`. The host verifies HS256 through Oauth, then parses Shopify claims.
-5. Theme app extension `shopify/extensions/recording-studio-theme` picks a page by title. Host URL and storefront token are written to app metafields on Connect. Shop comes from the storefront.
+5. Theme app extension `shopify/extensions/recording-studio-theme` picks a page by title. Host URL and storefront token are written to app metafields on Connect when the App Home session token is on that POST. Shop comes from the storefront.
 
 ```bash
 cd shopify

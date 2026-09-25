@@ -43,17 +43,23 @@ class ShopifyPluginDemo::ConnectionsController < ApplicationController
     end
 
     host_base_url = RecordingStudioShopifyPluginTemplate.configuration.host_base_url.presence || request.base_url
-    ShopifyPluginDemo::PublishStorefrontMetafields.call(
+    published = ShopifyPluginDemo::PublishStorefrontMetafields.call(
       shop_domain: shop_domain,
       client: client,
       root_recording: root_recording,
       session_token: shopify_session_token,
       host_base_url: host_base_url
     )
+    connect_url = shopify_plugin_demo_connect_path(shopify_embed_query.merge(shop: shop_domain))
+    unless published.ok?
+      redirect_to connect_url,
+                  alert: "#{ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_FAILED}#{published.error}"
+      return
+    end
 
     query = plugin_settings_return_params(shop_domain).to_query
     redirect_to "#{plugin_settings_path}?#{query}",
-                notice: "Connected. Installed is not the same as Connected."
+                notice: ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_SYNCED
   end
 
   def destroy

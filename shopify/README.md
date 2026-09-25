@@ -29,7 +29,7 @@ App Home loads the dummy host in a cross-site iframe (`admin.shopify.com` → yo
 
 `extensions/recording-studio-theme` is a Liquid block. Pick a page by title. Host URL and storefront token come from app metafields written on Connect. Shop comes from `shop.permanent_domain`. The block loads `{host}/shopify_plugin_demo/storefront/embed.js` and mounts Embeddable HTML plus FlatPack CSS and Stimulus. Do not iframe the host there.
 
-Connect writes those metafields when the App Home session token is present on the Connect POST. A shop that is only Installed, or a token for another shop, returns 404.
+Connect writes those metafields when the App Home session token is present on the Connect POST. Click Connect, not only Use this shop. If the POST has no session token, the shop can still bind. The host then stays on Connect with an alert that metafields did not sync. Open Connect from App Home so `id_token` is present, then Connect again. A shop that is only Installed, or a token for another shop, returns 404.
 
 ## Partner smoke on development-store-kwcwfmcz
 

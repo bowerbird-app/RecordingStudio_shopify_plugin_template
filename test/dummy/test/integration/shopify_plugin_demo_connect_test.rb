@@ -56,6 +56,39 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     assert_select "form[action=?] button[type=submit]", shopify_plugin_demo_connect_path(shop: "demo.myshopify.com")
   end
 
+  test "connect post without session token binds and alerts that metafields did not sync" do
+    token = session_token_for(shop: "demo.myshopify.com")
+    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", shopify_session_token: token }
+
+    post shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+
+    assert_redirected_to shopify_plugin_demo_connect_path(shop: "demo.myshopify.com")
+    follow_redirect!
+    assert_includes response.body, ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_FAILED
+    assert_includes response.body, "session token required"
+    install = RecordingStudioShopifyPluginTemplate::ShopifyInstall.find(
+      shop_domain: "demo.myshopify.com",
+      client: @client
+    )
+    assert install.connected?
+  end
+
+  test "connect post with session token and stubbed metafield sync notices settings" do
+    token = session_token_for(shop: "demo.myshopify.com")
+    stub_shopify_shop_metafields_ok
+
+    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", id_token: token }
+    post shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", id_token: token }
+
+    assert_redirected_to plugin_settings_path(shop: "demo.myshopify.com")
+    follow_redirect!
+    assert_response :success
+    assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
+    assert_includes response.body, ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_SYNCED
+  ensure
+    restore_shopify_shop_metafields
+  end
+
   test "connect post with id_token publishes storefront metafields" do
     token = session_token_for(shop: "demo.myshopify.com")
     captured = nil
@@ -64,7 +97,7 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     singleton.alias_method :__orig_call, :call
     singleton.define_method(:call) do |**kwargs|
       captured = kwargs
-      nil
+      RecordingStudioShopifyPluginTemplate::ShopifyShopMetafieldResult.new(success: true, error: nil)
     end
 
     get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", id_token: token }
@@ -73,6 +106,7 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     assert captured
     assert_equal token, captured.fetch(:session_token)
     assert_equal "demo.myshopify.com", captured.fetch(:shop_domain)
+    assert_redirected_to plugin_settings_path(shop: "demo.myshopify.com")
   ensure
     if defined?(singleton) && singleton.method_defined?(:__orig_call)
       singleton.alias_method :call, :__orig_call
@@ -94,6 +128,7 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     assert_response :success
     refute_includes response.body, "Installed is not Connected"
     assert_includes response.body, "This shop is Connected to Recording Studio."
+    assert_includes response.body, ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_MISSING_TOKEN
   end
 
   test "verified session token records install without connecting" do
@@ -286,6 +321,26 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
   end
 
   private
+
+  def stub_shopify_shop_metafields_ok
+    klass = RecordingStudioShopifyPluginTemplate::ShopifyShopMetafields
+    singleton = klass.singleton_class
+    return if singleton.method_defined?(:__orig_sync!)
+
+    singleton.alias_method :__orig_sync!, :sync!
+    singleton.define_method(:sync!) do |**|
+      RecordingStudioShopifyPluginTemplate::ShopifyShopMetafieldResult.new(success: true, error: nil)
+    end
+  end
+
+  def restore_shopify_shop_metafields
+    klass = RecordingStudioShopifyPluginTemplate::ShopifyShopMetafields
+    singleton = klass.singleton_class
+    return unless singleton.method_defined?(:__orig_sync!)
+
+    singleton.alias_method :sync!, :__orig_sync!
+    singleton.remove_method :__orig_sync!
+  end
 
   def create_registered_app(name: "Shopify plugin", audience: PARTNER_APP_ID, secret: SESSION_SECRET)
     result = RecordingStudioOauth::Services::CreateOauthClient.call(

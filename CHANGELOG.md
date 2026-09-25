@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dummy Pages table plus storefront preview. Getting Started renders a FlatPack card and tooltip. Carousel is a seeded page with FlatPack carousel slides.
 - Storefront `embed.js` injects FlatPack CSS, an import map, and `embed_boot.js` so Card, Tooltip, and Carousel run on Shopify.
 - After Connect, the host mints a shop-scoped storefront token and writes app metafields for host URL, token, and `{id, title}` pages.
+- Connect flash names a storefront metafield failure. Bind can succeed while metafields do not. Open Connect from App Home when the session token is missing.
 
 ### Changed
 - Theme block settings are Page titles only. Host URL and storefront token come from app metafields. Shop still comes from the store.
@@ -24,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Upgrade notes
 - Connect on the dummy host while App Home still has a session token so metafields can write. Merchants pick a page title in the theme editor. They do not paste host or token.
+- If Connect binds without a session token, the shop is Connected and metafields stay empty. The host shows an alert. Open Connect from App Home and click Connect again.
 - Theme schema page options match seeded titles (`Getting Started`, `Carousel`). Add an option when you seed another page.
 - Call `ShopifyStorefrontEmbed.mint(shop_domain:, secret:)` without a page id.
 

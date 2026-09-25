@@ -44,6 +44,12 @@
 
   <% if @connected %>
     <p class="text-sm leading-6">This shop is Connected to Recording Studio.</p>
+    <% if shopify_session_token.blank? %>
+      <%= render FlatPack::Alert::Component.new(
+        style: :warning,
+        title: ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_MISSING_TOKEN
+      ) %>
+    <% end %>
     <%= button_to shopify_plugin_demo_disconnect_path(shop: @shop_domain), method: :delete do %>
       <%= hidden_field_tag :shopify_session_token, shopify_session_token if shopify_session_token.present? %>
       <%= render FlatPack::Button::Component.new(
