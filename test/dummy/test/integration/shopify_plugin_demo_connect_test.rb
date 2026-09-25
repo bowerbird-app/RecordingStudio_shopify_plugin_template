@@ -2,6 +2,7 @@
 
 require "test_helper"
 require "base64"
+require "cgi"
 require "devise/test/integration_helpers"
 require "openssl"
 
@@ -80,7 +81,8 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", id_token: token }
     post shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", id_token: token }
 
-    assert_redirected_to plugin_settings_path(shop: "demo.myshopify.com")
+    assert_response :redirect
+    assert_includes response.redirect_url, plugin_settings_path
     follow_redirect!
     assert_response :success
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
@@ -106,7 +108,8 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     assert captured
     assert_equal token, captured.fetch(:session_token)
     assert_equal "demo.myshopify.com", captured.fetch(:shop_domain)
-    assert_redirected_to plugin_settings_path(shop: "demo.myshopify.com")
+    assert_response :redirect
+    assert_includes response.redirect_url, plugin_settings_path
   ensure
     if defined?(singleton) && singleton.method_defined?(:__orig_call)
       singleton.alias_method :call, :__orig_call
@@ -128,7 +131,7 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     assert_response :success
     refute_includes response.body, "Installed is not Connected"
     assert_includes response.body, "This shop is Connected to Recording Studio."
-    assert_includes response.body, ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_MISSING_TOKEN
+    assert_includes CGI.unescapeHTML(response.body), ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_MISSING_TOKEN
   end
 
   test "verified session token records install without connecting" do

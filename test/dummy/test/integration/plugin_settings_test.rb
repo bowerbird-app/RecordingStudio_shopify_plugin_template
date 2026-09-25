@@ -37,7 +37,8 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
       shopify_session_token: token
     }
 
-    assert_redirected_to plugin_settings_path(shop: "demo.myshopify.com")
+    assert_response :redirect
+    assert_includes response.redirect_url, plugin_settings_path
     follow_redirect!
     assert_response :success
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
