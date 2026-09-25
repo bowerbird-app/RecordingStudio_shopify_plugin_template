@@ -3,7 +3,9 @@
 <div class="flex w-full flex-col gap-6">
   <%= render FlatPack::PageTitle::Component.new(
     title: @page_recording.recordable.title,
-    subtitle: "Recording id #{@page_recording.id}",
+    subtitle: "Page id #{@page_recording.id}",
     variant: :h1
   ) %>
+
+  <%= render "pages/page_storefront_preview", page: @page %>
 </div>

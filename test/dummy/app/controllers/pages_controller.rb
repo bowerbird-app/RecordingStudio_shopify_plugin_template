@@ -7,6 +7,7 @@ class PagesController < ApplicationController
 
   def show
     @page_recording = find_page_recording
+    @page = @page_recording.recordable
   end
 
   def embed_preview
