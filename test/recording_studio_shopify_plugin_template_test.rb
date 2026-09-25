@@ -102,6 +102,16 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
     assert File.exist?(File.expand_path("dummy/app/views/layouts/host.html.erb", __dir__))
   end
 
+  def test_dummy_importmap_wires_turbo_and_admin_controllers_for_admin_screens
+    importmap_source = File.read(File.expand_path("dummy/config/importmap.rb", __dir__))
+    application_js = File.read(File.expand_path("dummy/app/javascript/application.js", __dir__))
+
+    assert_includes importmap_source, 'pin "@hotwired/turbo-rails", to: "turbo.min.js"'
+    assert_includes importmap_source, "RecordingStudioAdmin::Engine.root.join"
+    assert_includes importmap_source, "controllers/recording_studio_admin"
+    assert_includes application_js, 'import "@hotwired/turbo-rails"'
+  end
+
   def test_dummy_login_layout_keeps_flatpack_assets_without_tight_main_offset
     application_layout = File.read(File.expand_path("dummy/app/views/layouts/application.html.erb", __dir__))
 
