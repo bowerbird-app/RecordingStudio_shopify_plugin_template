@@ -40,6 +40,8 @@ class RecordingStudioTemplateTest < ActiveSupport::TestCase
     private_root_recording = RecordingStudio::Recording.find_by!(recordable: private_workspace)
     folder_recording = RecordingStudio::Recording.find_by!(recordable: folder)
     page_recording = RecordingStudio::Recording.find_by!(recordable: page)
+    carousel = Page.find_by!(title: "Carousel")
+    carousel_recording = RecordingStudio::Recording.find_by!(recordable: carousel)
 
     assert_nil Current.actor
     assert_nil root_recording.parent_recording_id
@@ -48,7 +50,9 @@ class RecordingStudioTemplateTest < ActiveSupport::TestCase
     assert_equal root_recording, folder_recording.parent_recording
     assert_equal root_recording, folder_recording.root_recording
     assert_equal folder_recording, page_recording.parent_recording
+    assert_equal folder_recording, carousel_recording.parent_recording
     assert_equal root_recording, page_recording.root_recording
+    assert_equal root_recording, carousel_recording.root_recording
     assert_equal 3, Workspace.count
 
     assert_no_difference -> { User.count } do

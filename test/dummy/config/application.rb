@@ -18,6 +18,8 @@ require "action_cable/engine"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+require_relative "../lib/shopify_plugin_demo/storefront_cors"
+
 module Dummy
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
@@ -45,5 +47,6 @@ module Dummy
     config.generators.system_tests = nil
 
     config.action_dispatch.default_headers.delete("X-Frame-Options")
+    config.middleware.insert_before 0, ShopifyPluginDemo::StorefrontCors
   end
 end

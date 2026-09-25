@@ -5,23 +5,21 @@ require "test_helper"
 class ShopifyStorefrontEmbedTest < Minitest::Test
   SECRET = "storefront-embed-secret"
 
-  def test_mint_round_trips_shop_and_page
+  def test_mint_round_trips_shop
     token = RecordingStudioShopifyPluginTemplate::ShopifyStorefrontEmbed.mint(
       shop_domain: "https://Demo.myshopify.com/admin",
-      page_recording_id: "page-1",
       secret: SECRET
     )
     parsed = RecordingStudioShopifyPluginTemplate::ShopifyStorefrontEmbed.parse(token, secret: SECRET)
 
     assert parsed.ok?
     assert_equal "demo.myshopify.com", parsed.shop_domain
-    assert_equal "page-1", parsed.page_recording_id
+    assert_nil parsed.page_recording_id
   end
 
   def test_tampered_token_fails_closed
     token = RecordingStudioShopifyPluginTemplate::ShopifyStorefrontEmbed.mint(
       shop_domain: "demo.myshopify.com",
-      page_recording_id: "page-1",
       secret: SECRET
     )
     parsed = RecordingStudioShopifyPluginTemplate::ShopifyStorefrontEmbed.parse("#{token}x", secret: SECRET)
@@ -33,7 +31,6 @@ class ShopifyStorefrontEmbedTest < Minitest::Test
   def test_wrong_secret_fails_closed
     token = RecordingStudioShopifyPluginTemplate::ShopifyStorefrontEmbed.mint(
       shop_domain: "demo.myshopify.com",
-      page_recording_id: "page-1",
       secret: SECRET
     )
     parsed = RecordingStudioShopifyPluginTemplate::ShopifyStorefrontEmbed.parse(token, secret: "other")
@@ -44,12 +41,10 @@ class ShopifyStorefrontEmbedTest < Minitest::Test
   def test_blank_inputs_do_not_mint
     assert_nil RecordingStudioShopifyPluginTemplate::ShopifyStorefrontEmbed.mint(
       shop_domain: "",
-      page_recording_id: "page-1",
       secret: SECRET
     )
     assert_nil RecordingStudioShopifyPluginTemplate::ShopifyStorefrontEmbed.mint(
       shop_domain: "demo.myshopify.com",
-      page_recording_id: "page-1",
       secret: ""
     )
   end

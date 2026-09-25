@@ -40,6 +40,7 @@
   <% if @connected %>
     <p class="text-sm leading-6">This shop is Connected to Recording Studio.</p>
     <%= button_to shopify_plugin_demo_disconnect_path(shop: @shop_domain), method: :delete do %>
+      <%= hidden_field_tag :shopify_session_token, params[:shopify_session_token] if params[:shopify_session_token].present? %>
       <%= render FlatPack::Button::Component.new(
         text: ShopifyPluginDemo::ProductConfig::DISCONNECT_BUTTON_TEXT,
         style: :secondary,
@@ -47,6 +48,7 @@
       ) %>
     <% end %>
     <%= button_to shopify_plugin_demo_connect_path(shop: @shop_domain), method: :post do %>
+      <%= hidden_field_tag :shopify_session_token, params[:shopify_session_token] if params[:shopify_session_token].present? %>
       <%= render FlatPack::Button::Component.new(
         text: ShopifyPluginDemo::ProductConfig::CONNECT_AGAIN_BUTTON_TEXT,
         style: :ghost,
@@ -56,6 +58,7 @@
   <% else %>
     <p class="text-sm leading-6">This shop is not Connected yet.</p>
     <%= button_to shopify_plugin_demo_connect_path(shop: @shop_domain), method: :post, disabled: @shop_domain.blank? do %>
+      <%= hidden_field_tag :shopify_session_token, params[:shopify_session_token] if params[:shopify_session_token].present? %>
       <%= render FlatPack::Button::Component.new(
         text: ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT,
         style: :primary,

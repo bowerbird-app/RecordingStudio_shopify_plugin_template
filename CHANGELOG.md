@@ -11,6 +11,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dummy App Home iframe lands on `/plugin_settings`. Not Connected redirects to Connect. Connected shows Disconnect only (host soft disconnect).
 - `shopify.app.toml` `application_url` documents `https://example.com/plugin_settings`. Partner Dev Dashboard App URL should use `https://<HOST>/plugin_settings`.
 
+## [0.3.4] - 2026-09-25
+
+### Added
+- Dummy Pages table plus storefront preview. Getting Started renders a FlatPack card and tooltip. Carousel is a seeded page with FlatPack carousel slides.
+- Storefront `embed.js` injects FlatPack CSS, an import map, and `embed_boot.js` so Card, Tooltip, and Carousel run on Shopify.
+- After Connect, the host mints a shop-scoped storefront token and writes app metafields for host URL, token, and `{id, title}` pages.
+
+### Changed
+- Theme block settings are Page titles only. Host URL and storefront token come from app metafields. Shop still comes from the store.
+- `ShopifyStorefrontEmbed.mint` is shop-scoped. Page is chosen in the theme block and sent as `page_id`.
+
+### Upgrade notes
+- Connect on the dummy host while App Home still has a session token so metafields can write. Merchants pick a page title in the theme editor. They do not paste host or token.
+- Theme schema page options match seeded titles (`Getting Started`, `Carousel`). Add an option when you seed another page.
+- Call `ShopifyStorefrontEmbed.mint(shop_domain:, secret:)` without a page id.
+
 ## [0.3.3] - 2026-09-24
 
 ### Added

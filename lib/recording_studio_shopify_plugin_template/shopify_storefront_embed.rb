@@ -21,13 +21,12 @@ module RecordingStudioShopifyPluginTemplate
       OpenSSL::HMAC.hexdigest("SHA256", raw, PURPOSE)
     end
 
-    def self.mint(shop_domain:, page_recording_id:, secret:)
+    def self.mint(shop_domain:, secret:)
       shop = ShopifySessionClaims.normalize_shop(shop_domain)
-      page_id = page_recording_id.to_s.strip
-      return if shop.blank? || page_id.blank? || secret.to_s.strip.blank?
+      return if shop.blank? || secret.to_s.strip.blank?
 
-      mac = signature(shop, page_id, secret)
-      Base64.urlsafe_encode64([shop, page_id, mac].join(SEPARATOR), padding: false)
+      mac = signature(shop, secret)
+      Base64.urlsafe_encode64([shop, mac].join(SEPARATOR), padding: false)
     end
 
     def self.authorize(token:, shop_domain:, client:, page_recording:)
@@ -38,12 +37,12 @@ module RecordingStudioShopifyPluginTemplate
     end
 
     def self.parse(token, secret:)
-      shop, page_id, mac = token_fields(token)
+      shop, mac = token_fields(token)
       return failure("token required") if secret.to_s.strip.blank?
-      return failure("token invalid") if shop.blank? || page_id.blank? || mac.blank?
-      return failure("token invalid") unless secure_compare(mac, signature(shop, page_id, secret))
+      return failure("token invalid") if shop.blank? || mac.blank?
+      return failure("token invalid") unless secure_compare(mac, signature(shop, secret))
 
-      Result.new(success: true, shop_domain: shop, page_recording_id: page_id, install: nil, error: nil)
+      Result.new(success: true, shop_domain: shop, page_recording_id: nil, install: nil, error: nil)
     rescue ArgumentError
       failure("token invalid")
     end
@@ -56,7 +55,7 @@ module RecordingStudioShopifyPluginTemplate
       return failure("not connected") unless install
       return failure("wrong shop") unless page_on_connected_root?(page_recording, install)
 
-      Result.new(success: true, shop_domain: parsed.shop_domain, page_recording_id: parsed.page_recording_id,
+      Result.new(success: true, shop_domain: parsed.shop_domain, page_recording_id: page_recording.id.to_s,
                  install: install, error: nil)
     end
     private_class_method :bind_connected_page
@@ -64,7 +63,7 @@ module RecordingStudioShopifyPluginTemplate
     def self.request_mismatch(parsed, shop_domain, page_recording)
       expected_shop = ShopifySessionClaims.normalize_shop(shop_domain)
       return failure("shop does not match") if expected_shop.blank? || expected_shop != parsed.shop_domain
-      return failure("page does not match") unless page_matches_token?(page_recording, parsed)
+      return failure("page required") if page_recording.blank?
 
       nil
     end
@@ -79,18 +78,13 @@ module RecordingStudioShopifyPluginTemplate
     private_class_method :connected_install
 
     def self.token_fields(token)
-      return [nil, nil, nil] if token.to_s.strip.blank?
+      return [nil, nil] if token.to_s.strip.blank?
 
       decoded = Base64.urlsafe_decode64(token.to_s)
-      shop, page_id, mac = decoded.split(SEPARATOR, 3)
-      [ShopifySessionClaims.normalize_shop(shop), page_id.to_s.strip, mac]
+      shop, mac = decoded.split(SEPARATOR, 2)
+      [ShopifySessionClaims.normalize_shop(shop), mac]
     end
     private_class_method :token_fields
-
-    def self.page_matches_token?(page_recording, parsed)
-      page_recording.present? && page_recording.id.to_s == parsed.page_recording_id
-    end
-    private_class_method :page_matches_token?
 
     def self.page_on_connected_root?(page_recording, install)
       root_id = page_recording.root_recording_id.presence || page_recording.id
@@ -98,8 +92,8 @@ module RecordingStudioShopifyPluginTemplate
     end
     private_class_method :page_on_connected_root?
 
-    def self.signature(shop, page_id, secret)
-      OpenSSL::HMAC.hexdigest("SHA256", secret, [shop, page_id].join(SEPARATOR))
+    def self.signature(shop, secret)
+      OpenSSL::HMAC.hexdigest("SHA256", secret, shop)
     end
     private_class_method :signature
 

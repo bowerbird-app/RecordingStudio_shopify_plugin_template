@@ -40,6 +40,15 @@ class ShopifyPluginDemo::ConnectionsController < ApplicationController
       return
     end
 
+    host_base_url = RecordingStudioShopifyPluginTemplate.configuration.host_base_url.presence || request.base_url
+    ShopifyPluginDemo::PublishStorefrontMetafields.call(
+      shop_domain: shop_domain,
+      client: client,
+      root_recording: root_recording,
+      session_token: params[:shopify_session_token],
+      host_base_url: host_base_url
+    )
+
     query = plugin_settings_return_params(shop_domain).to_query
     redirect_to "#{plugin_settings_path}?#{query}",
                 notice: "Connected. Installed is not the same as Connected."
