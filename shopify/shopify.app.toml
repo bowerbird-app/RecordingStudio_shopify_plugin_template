@@ -17,7 +17,7 @@ topics = [ "app/uninstalled" ]
 uri = "/shopify_plugin_demo/uninstall"
 
 [build]
-automatically_update_urls_on_dev = true
+automatically_update_urls_on_dev = false
 
 [app_proxy]
 url = ""
