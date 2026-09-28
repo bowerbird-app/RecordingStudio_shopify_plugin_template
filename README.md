@@ -40,7 +40,7 @@ Connect on this host calls RecordingStudio Oauth `verify_session_token`, then th
 
 White-label strings live in `test/dummy/lib/shopify_plugin_demo/product_config.rb` (`Shopify plugin` / `Shopify Template Demo`).
 
-Dummy gem pins match the WordPress dummy where they apply: RecordingStudio `v4.2.0`, Accessible `v0.9.1`, API `v0.5.6`, Embeddable `v0.2.1`, Oauth `v0.5.3`, Admin `v2.0.2`, Users `v0.11.0`, FlatPack `v0.1.190`.
+Dummy gem pins match the WordPress dummy where they apply: RecordingStudio `v4.2.0`, Accessible `v0.9.1`, API `v0.5.6`, Embeddable `v0.2.1`, Oauth pre-tag ref `ae4eda9…` (Oauth PR #16, version `0.5.4`; swap to tag `v0.5.4` after merge), Admin `v2.0.2`, Users `v0.11.0`, FlatPack `v0.1.190`.
 
 Set `SHOPIFY_PLUGIN_REGISTERED_APP_CLIENT_ID` to the Connect Registered App id (`rsoauth_oc_…`). The Partner app client id is JWT `aud` on Token verification, not that id.
 
