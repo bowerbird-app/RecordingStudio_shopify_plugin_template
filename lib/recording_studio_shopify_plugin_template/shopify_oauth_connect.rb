@@ -15,6 +15,15 @@ module RecordingStudioShopifyPluginTemplate
       root_recording = workspace_root_for(authorization)
       return failure("Pick a workspace before Connect.") if root_recording.blank?
 
+      bind_after_grant(
+        shop_domain: shop_domain,
+        client: client,
+        root_recording: root_recording,
+        connected_by: connected_by
+      )
+    end
+
+    def self.bind_after_grant(shop_domain:, client:, root_recording:, connected_by:)
       bind = ShopifyInstall.bind(
         shop_domain: shop_domain,
         client: client,
@@ -23,6 +32,11 @@ module RecordingStudioShopifyPluginTemplate
       )
       return failure(bind.error) unless bind.ok?
 
+      success_bind(bind, client: client, root_recording: root_recording)
+    end
+    private_class_method :bind_after_grant
+
+    def self.success_bind(bind, client:, root_recording:)
       Result.new(
         success: true,
         install: bind.install,
@@ -31,6 +45,7 @@ module RecordingStudioShopifyPluginTemplate
         root_recording: root_recording
       )
     end
+    private_class_method :success_bind
 
     def self.workspace_root_for(authorization)
       parent = authorization.manager_access_recording&.parent_recording
