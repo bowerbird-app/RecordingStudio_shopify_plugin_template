@@ -11,9 +11,11 @@ class ShopifyCliScaffoldTest < ActiveSupport::TestCase
     assert File.exist?(root.join("app-home/app-bridge.js"))
     assert File.exist?(root.join("extensions/recording-studio-theme/blocks/recording-studio.liquid"))
     toml = File.read(root.join("shopify.app.toml"))
+    extension_toml = File.read(root.join("extensions/recording-studio-theme/shopify.extension.toml"))
     liquid = File.read(root.join("extensions/recording-studio-theme/blocks/recording-studio.liquid"))
     home = File.read(root.join("app-home/index.html"))
     bridge = File.read(root.join("app-home/app-bridge.js"))
+    readme = File.read(root.join("README.md"))
 
     assert_includes toml, "application_url = \"https://example.com/plugin_settings\""
     assert_includes toml, "app/uninstalled"
@@ -21,6 +23,19 @@ class ShopifyCliScaffoldTest < ActiveSupport::TestCase
     assert_includes toml, "embedded = true"
     assert_includes toml, "automatically_update_urls_on_dev = false"
     assert_includes home, "Shopify plugin settings"
+    assert_includes extension_toml, "name = \"Recording Studio\""
+    assert_includes extension_toml, "type = \"theme\""
+    assert_includes extension_toml, "handle = \"recording-studio-theme\""
+    refute_includes extension_toml, "[[extensions]]"
+    refute_includes extension_toml, "uid = \"recording-studio-theme\""
+    refute_match(/^uid\s*=/m, extension_toml)
+    assert_includes readme, "Development store preview"
+    assert_includes readme, "shopify app dev --no-update"
+    assert_includes readme, "Add section → Apps"
+    assert_includes readme, "plugin-test-74hpuu5t"
+    assert_includes readme, "test-data"
+    assert_includes liquid, "\"name\": \"Shopify plugin\""
+    assert_includes liquid, "\"target\": \"section\""
     assert_includes bridge, "/plugin_settings"
     assert_includes bridge, "shopify_session_token"
     assert_includes bridge, "HOST_BASE_URL"

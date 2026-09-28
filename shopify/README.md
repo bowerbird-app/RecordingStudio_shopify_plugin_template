@@ -31,6 +31,20 @@ App Home loads the dummy host in a cross-site iframe (`admin.shopify.com` → yo
 
 `extensions/recording-studio-theme` is a Liquid block. Pick a page by title. Host URL and storefront token come from app metafields written on Connect. Shop comes from `shop.permanent_domain`. The block loads `{host}/shopify_plugin_demo/storefront/embed.js` and mounts Embeddable HTML plus FlatPack CSS and Stimulus. Do not iframe the host there.
 
+`shopify.extension.toml` stays in the [theme app extension](https://shopify.dev/docs/apps/build/online-store/theme-app-extensions/configuration) shape: top-level `name`, `type = "theme"`, and `handle`. Do not wrap it in `[[extensions]]`. Do not set `uid` to the handle slug. Shopify CLI writes a Dev Platform `uid` on generate or deploy. Leave that field out of git until the CLI writes a real one on your machine.
+
+### Show the block in Edit theme
+
+Do this on your Mac after you pull. Do not run `shopify app deploy` from a Cloud Agent. Do not change Partner live App URLs for this step.
+
+1. In Partner Dashboard or Dev Dashboard, turn on **Development store preview** for this app if that control is still there. You have to do this in Partner UI. The repo cannot.
+2. From `shopify/`, stop any running CLI, then start `shopify app dev --no-update` against store `plugin-test-74hpuu5t`.
+3. Wait until the CLI says the theme extension bundled and the theme extension server is ready.
+4. In Admin for that store, open **Online Store → Themes**, then **Edit theme** on the current theme `test-data`.
+5. Choose **Add section → Apps**. You should see **Shopify plugin** (block schema name) under the **Recording Studio** theme extension.
+
+If the CLI says it must assign a `uid`, run `shopify app deploy` once from `shopify/` on your Mac, then restart `shopify app dev --no-update`. If the CLI writes `uid = "<uuid>"` into `shopify.extension.toml`, commit that line. Do not invent a UUID. If Partner already shows an extension UUID, paste that value into `uid` instead of a slug.
+
 Connect writes those metafields on the **app installation** when the App Home session token is present on the Connect POST. Values must read back before the host shows “Storefront metafields synced.” Connect does not create metafield definitions with `APP_INSTALLATION` on Admin API 2025-01.
 
 The theme block reads installation values with reserved-namespace Liquid syntax, for example `app.metafields["$app:recording_studio"]["host_base_url"].value`. Use bracket notation for both the `$app:recording_studio` namespace and the writer keys (`host_base_url`, `storefront_token`, `pages`). Dot notation on `recording_studio` or on the keys alone does not match what Connect writes. The block root includes `block.shopify_attributes` so the theme editor can select the app block.
