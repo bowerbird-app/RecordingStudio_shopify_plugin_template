@@ -94,6 +94,7 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_SYNCED
+    assert_equal 1, response.body.scan(ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_SYNCED).size
   ensure
     restore_shopify_shop_metafields
   end

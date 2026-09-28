@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dummy App Home (`/plugin_settings` and Connect) uses a shared no-sidebar `app_home` layout. Forms sit in a centered `max-w-md` column with the dummy-route toast.
 
 ### Fixed
+- Dummy Connect and `/plugin_settings` show flash Alerts only in `layouts/app_home`. Views no longer render `notice` / `alert` a second time.
 - Dummy Connect and `/plugin_settings` Disconnect use `form_with` plus one Flatpack submit button. They no longer nest `FlatPack::Button` inside `button_to`, which blocked the form submit.
 - `shopify.app.toml` `automatically_update_urls_on_dev` changed from `true` to `false`. The Shopify CLI strips the path from `application_url` when it auto-updates dev URLs, so a dev preview would override `/plugin_settings` to `/` and Admin would embed the host root instead of the settings page.
 

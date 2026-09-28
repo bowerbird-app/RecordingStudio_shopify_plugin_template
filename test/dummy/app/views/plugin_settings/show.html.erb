@@ -7,13 +7,6 @@
     variant: :h1
   ) %>
 
-  <% if notice.present? %>
-    <%= render FlatPack::Alert::Component.new(style: :success, title: notice) %>
-  <% end %>
-  <% if alert.present? %>
-    <%= render FlatPack::Alert::Component.new(style: :danger, title: alert) %>
-  <% end %>
-
   <%= form_with url: shopify_plugin_demo_disconnect_path(shop: @shop_domain), method: :delete, local: true do %>
     <%= render FlatPack::Button::Component.new(
       text: ShopifyPluginDemo::ProductConfig::DISCONNECT_BUTTON_TEXT,

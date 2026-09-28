@@ -43,6 +43,7 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_SYNCED
+    assert_equal 1, response.body.scan(ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_SYNCED).size
   ensure
     restore_shopify_shop_metafields
   end
@@ -83,6 +84,7 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
     follow_redirect!
     assert_response :success
     assert_includes response.body, "Disconnected. The Shopify plugin can still be installed."
+    assert_equal 1, response.body.scan("Disconnected. The Shopify plugin can still be installed.").size
 
     install = RecordingStudioShopifyPluginTemplate::ShopifyInstall.find(
       shop_domain: "demo.myshopify.com",

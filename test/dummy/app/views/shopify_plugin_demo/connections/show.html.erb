@@ -7,13 +7,6 @@
     variant: :h1
   ) %>
 
-  <% if notice.present? %>
-    <%= render FlatPack::Alert::Component.new(style: :success, title: notice) %>
-  <% end %>
-  <% if alert.present? %>
-    <%= render FlatPack::Alert::Component.new(style: :danger, title: alert) %>
-  <% end %>
-
   <% unless @connected %>
     <%= render FlatPack::Alert::Component.new(
       style: :info,
