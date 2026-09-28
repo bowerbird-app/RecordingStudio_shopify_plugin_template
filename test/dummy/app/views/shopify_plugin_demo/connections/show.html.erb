@@ -15,26 +15,6 @@
     ) %>
   <% end %>
 
-  <%= form_with url: shopify_plugin_demo_connect_path, method: :get, local: true do %>
-    <% shopify_embed_query.except(:shop).each do |name, value| %>
-      <%= hidden_field_tag name, value %>
-    <% end %>
-    <div class="flex w-full flex-col gap-3">
-      <%= render FlatPack::TextInput::Component.new(
-        name: "shop",
-        label: "Shop domain",
-        value: @shop_domain,
-        placeholder: "example.myshopify.com"
-      ) %>
-      <%= render FlatPack::Button::Component.new(
-        text: "Use this shop",
-        style: :secondary,
-        size: :md,
-        type: :submit
-      ) %>
-    </div>
-  <% end %>
-
   <% if @connected %>
     <p class="text-sm leading-6">This shop is Connected to Recording Studio.</p>
     <% if shopify_session_token.blank? %>

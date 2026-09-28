@@ -41,7 +41,8 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
     assert_includes response.redirect_url, plugin_settings_path
     follow_redirect!
     assert_response :success
-    assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
+    assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_CONNECTED_STATUS
+    refute_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_SYNCED
     assert_equal 1, response.body.scan(ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_SYNCED).size
   ensure
@@ -60,8 +61,9 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
     get plugin_settings_path, params: { shop: "demo.myshopify.com" }
 
     assert_response :success
-    assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_CONNECTED_STATUS
+    refute_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
+    assert_select "h1", text: ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE, count: 0
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::DISCONNECT_BUTTON_TEXT
     disconnect_path = shopify_plugin_demo_disconnect_path(shop: "demo.myshopify.com")
     assert_select "form[action=?] input[name=_method][value=delete]", disconnect_path, count: 1

@@ -34,6 +34,8 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::NAME
     assert_includes response.body, "Installed is not Connected"
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT
+    refute_includes response.body, "Shop domain"
+    refute_includes response.body, "Use this shop"
     assert_select "body[data-dummy-host-layout='true']", count: 0
     refute_includes response.body, "flat-pack--sidebar-layout"
     refute_includes response.body, "shopify-plugin-demo-sidebar"
@@ -92,7 +94,7 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     assert_includes response.redirect_url, plugin_settings_path
     follow_redirect!
     assert_response :success
-    assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
+    assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_CONNECTED_STATUS
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_SYNCED
     assert_equal 1, response.body.scan(ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_SYNCED).size
   ensure
