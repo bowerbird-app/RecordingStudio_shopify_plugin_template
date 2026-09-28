@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Dummy App Home (`/plugin_settings` and Connect) uses a shared no-sidebar `app_home` layout. Forms sit in a centered `max-w-md` column with the dummy-route toast. Signed-in testers get a bottom-left Sign out.
-- Connected App Home shows “This shop is Connected.” plus Disconnect. It does not show a “Shopify plugin settings” heading. Connect does not show a Shop domain picker. Shop comes from the embed query.
+- Connected App Home shows “This shop is Connected.” plus Disconnect. It does not show a “Shopify plugin settings” heading. Connect does not show a Shop domain picker. Shop comes from the embed query. Connected Connect shows Disconnect only. It does not show Connect again.
 
 ### Fixed
 - Dummy Connect and `/plugin_settings` show flash Alerts only in `layouts/app_home`. Views no longer render `notice` / `alert` a second time.

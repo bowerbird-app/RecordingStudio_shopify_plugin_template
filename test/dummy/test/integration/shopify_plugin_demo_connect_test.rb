@@ -196,6 +196,7 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     assert_response :success
     refute_includes response.body, "Installed is not Connected"
     assert_includes response.body, "This shop is Connected to Recording Studio."
+    refute_includes response.body, "Connect again"
     assert_includes CGI.unescapeHTML(response.body), ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_MISSING_TOKEN
   end
 

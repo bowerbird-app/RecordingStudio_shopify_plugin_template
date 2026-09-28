@@ -6,7 +6,6 @@ module ShopifyPluginDemo
     NAME = "Shopify Template Demo"
     DESCRIPTION = "Shows a page from your studio."
     CONNECT_BUTTON_TEXT = "Connect"
-    CONNECT_AGAIN_BUTTON_TEXT = "Connect again"
     DISCONNECT_BUTTON_TEXT = "Disconnect"
     SETTINGS_TITLE = "Shopify plugin settings"
     SETTINGS_CONNECTED_STATUS = "This shop is Connected."
