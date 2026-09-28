@@ -29,7 +29,7 @@ class HomeStatusTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_includes response.body, "Partner install is not Connected"
-    assert_includes response.body, shopify_plugin_demo_connect_path
+    assert_includes response.body, plugin_settings_path
   end
 
   test "home shows connected copy when the shop is connected" do
@@ -57,8 +57,8 @@ class HomeStatusTest < ActionDispatch::IntegrationTest
 
   def connect_shop!(shop)
     token = session_token_for(shop: shop)
-    get shopify_plugin_demo_connect_path, params: { shop: shop, shopify_session_token: token }
-    post shopify_plugin_demo_connect_path, params: { shop: shop }
+    get plugin_settings_path, params: { shop: shop, shopify_session_token: token }
+    post plugin_settings_path, params: { shop: shop }
   end
 
   def create_registered_app

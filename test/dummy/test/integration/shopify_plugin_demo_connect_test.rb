@@ -28,7 +28,7 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
   end
 
   test "connect screen is reachable when signed in" do
-    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+    get plugin_settings_path, params: { shop: "demo.myshopify.com" }
 
     assert_response :success
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::NAME
@@ -48,7 +48,7 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
   end
 
   test "app home sign out returns to sign in" do
-    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+    get plugin_settings_path, params: { shop: "demo.myshopify.com" }
 
     assert_response :success
     delete destroy_user_session_path
@@ -57,40 +57,40 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_includes request.path, "sign_in"
-    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+    get plugin_settings_path, params: { shop: "demo.myshopify.com" }
 
     assert_redirected_to new_user_session_path
   end
 
   test "connect post form uses a submit button for app home" do
-    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+    get plugin_settings_path, params: { shop: "demo.myshopify.com" }
 
     assert_response :success
-    connect_path = shopify_plugin_demo_connect_path(shop: "demo.myshopify.com")
-    assert_select "form[action=?][method=post] button[type=submit]", connect_path, count: 1 do
+    settings_path = plugin_settings_path(shop: "demo.myshopify.com")
+    assert_select "form[action=?][method=post] button[type=submit]", settings_path, count: 1 do
       assert_select "button", text: ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT, count: 1
     end
-    assert_select "form[action=?] button button", connect_path, count: 0
+    assert_select "form[action=?] button button", settings_path, count: 0
     assert_select "form.button_to", count: 0
   end
 
   test "connect form keeps id_token as a hidden session token" do
     token = session_token_for(shop: "demo.myshopify.com")
 
-    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", id_token: token }
+    get plugin_settings_path, params: { shop: "demo.myshopify.com", id_token: token }
 
     assert_response :success
     assert_select "input[type=hidden][name=shopify_session_token][value=?]", token
-    assert_select "form[action=?] button[type=submit]", shopify_plugin_demo_connect_path(shop: "demo.myshopify.com")
+    assert_select "form[action=?] button[type=submit]", plugin_settings_path(shop: "demo.myshopify.com")
   end
 
   test "connect post without session token binds and alerts that metafields did not sync" do
     token = session_token_for(shop: "demo.myshopify.com")
-    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", shopify_session_token: token }
+    get plugin_settings_path, params: { shop: "demo.myshopify.com", shopify_session_token: token }
 
-    post shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+    post plugin_settings_path, params: { shop: "demo.myshopify.com" }
 
-    assert_redirected_to shopify_plugin_demo_connect_path(shop: "demo.myshopify.com")
+    assert_redirected_to plugin_settings_path(shop: "demo.myshopify.com")
     follow_redirect!
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_FAILED
     assert_includes response.body, "session token required"
@@ -105,8 +105,8 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     token = session_token_for(shop: "demo.myshopify.com")
     stub_shopify_shop_metafields_ok
 
-    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", id_token: token }
-    post shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", id_token: token }
+    get plugin_settings_path, params: { shop: "demo.myshopify.com", id_token: token }
+    post plugin_settings_path, params: { shop: "demo.myshopify.com", id_token: token }
 
     assert_response :redirect
     assert_includes response.redirect_url, plugin_settings_path
@@ -139,8 +139,8 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
       )
     end
     token = session_token_for(shop: "demo.myshopify.com")
-    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", shopify_session_token: token }
-    post shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+    get plugin_settings_path, params: { shop: "demo.myshopify.com", shopify_session_token: token }
+    post plugin_settings_path, params: { shop: "demo.myshopify.com" }
 
     assert_response :redirect
     refute configuration_called
@@ -167,8 +167,8 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
       RecordingStudioShopifyPluginTemplate::ShopifyShopMetafieldResult.new(success: true, error: nil)
     end
 
-    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", id_token: token }
-    post shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com", id_token: token }
+    get plugin_settings_path, params: { shop: "demo.myshopify.com", id_token: token }
+    post plugin_settings_path, params: { shop: "demo.myshopify.com", id_token: token }
 
     assert captured
     assert_equal token, captured.fetch(:session_token)
@@ -182,20 +182,20 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "connected connect screen hides installed is not connected" do
+  test "connected settings screen hides installed is not connected" do
     token = session_token_for(shop: "demo.myshopify.com")
-    get shopify_plugin_demo_connect_path, params: {
+    get plugin_settings_path, params: {
       shop: "demo.myshopify.com",
       shopify_session_token: token
     }
-    post shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+    post plugin_settings_path, params: { shop: "demo.myshopify.com" }
     follow_redirect!
 
-    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+    get plugin_settings_path, params: { shop: "demo.myshopify.com" }
 
     assert_response :success
     refute_includes response.body, "Installed is not Connected"
-    assert_includes response.body, "This shop is Connected to Recording Studio."
+    assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_CONNECTED_STATUS
     refute_includes response.body, "Connect again"
     assert_includes CGI.unescapeHTML(response.body), ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_MISSING_TOKEN
   end
@@ -203,7 +203,7 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
   test "verified session token records install without connecting" do
     token = session_token_for(shop: "demo.myshopify.com")
 
-    get shopify_plugin_demo_connect_path, params: {
+    get plugin_settings_path, params: {
       shop: "demo.myshopify.com",
       shopify_session_token: token
     }
@@ -222,7 +222,7 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
   test "mismatched shop claims fail in the shell and do not record an install" do
     token = session_token_for(shop: "demo.myshopify.com")
 
-    get shopify_plugin_demo_connect_path, params: {
+    get plugin_settings_path, params: {
       shop: "other.myshopify.com",
       shopify_session_token: token
     }
@@ -240,12 +240,12 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
   end
 
   test "connect then disconnect keeps the install row" do
-    get shopify_plugin_demo_connect_path, params: {
+    get plugin_settings_path, params: {
       shop: "demo.myshopify.com",
       shopify_session_token: session_token_for(shop: "demo.myshopify.com")
     }
 
-    post shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+    post plugin_settings_path, params: { shop: "demo.myshopify.com" }
     follow_redirect!
 
     install = RecordingStudioShopifyPluginTemplate::ShopifyInstall.find(
@@ -264,7 +264,7 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
   end
 
   test "bind without a prior install fails" do
-    post shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+    post plugin_settings_path, params: { shop: "demo.myshopify.com" }
     follow_redirect!
 
     assert_includes response.body, "install required"
@@ -372,7 +372,7 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
   end
 
   test "connect CSP allows Shopify admin frame ancestors" do
-    get shopify_plugin_demo_connect_path
+    get plugin_settings_path
 
     csp = response.headers["Content-Security-Policy"].to_s
     assert_includes csp, "https://admin.shopify.com"

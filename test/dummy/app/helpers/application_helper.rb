@@ -37,7 +37,7 @@ module ApplicationHelper
   end
 
   def shopify_plugin_demo_connect_url
-    main_app.shopify_plugin_demo_connect_path(shopify_embed_query)
+    main_app.plugin_settings_path(shopify_embed_query)
   end
 
   private
@@ -53,7 +53,7 @@ module ApplicationHelper
     when :pages
       main_app.pages_path
     when :connect
-      main_app.shopify_plugin_demo_connect_path(shopify_embed_query)
+      main_app.plugin_settings_path(shopify_embed_query)
     when :api_keys
       recording_studio_api.api_clients_path
     when :registered_apps
@@ -74,7 +74,7 @@ module ApplicationHelper
     when :pages
       request.path.start_with?("/pages")
     when :connect
-      request.path.start_with?(main_app.shopify_plugin_demo_connect_path)
+      request.path.start_with?(main_app.plugin_settings_path)
     when :api_keys
       request.path.start_with?(recording_studio_api.api_clients_path)
     when :registered_apps

@@ -36,7 +36,7 @@ class RootSwitchDropdownTest < ActionDispatch::IntegrationTest
     assert_includes response.body, workspace.name
     assert_select "body[data-dummy-host-layout='true']", count: 1
     assert_includes response.body, "flat-pack--sidebar-layout"
-    assert_includes response.body, shopify_plugin_demo_connect_path
+    assert_includes response.body, plugin_settings_path
     assert_includes response.body, "Connect"
     assert_includes response.body, "flat_pack/application"
   end
