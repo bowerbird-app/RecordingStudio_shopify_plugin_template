@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Unconnected App Home and `/plugin_settings` send the merchant through Recording Studio Oauth Connect first. That is the workspace list, then the access / permissions screen. Settings is not shown until that grant finishes.
-- After Oauth succeeds, the dummy binds the shop with `ShopifyInstall` and writes storefront metafields, then opens `/plugin_settings`. Already Connected App Home still opens `/plugin_settings` with Disconnect.
+- After Oauth succeeds, `/connect/callback` binds the shop with `ShopifyInstall.bind` (dummy `HostOauthConnect`) and writes storefront metafields, then opens `/plugin_settings`. Already Connected App Home still opens `/plugin_settings` with Disconnect.
 - Disconnect stays on `/plugin_settings`. The next App Home visit starts Oauth Connect again.
 - `GET /shopify_plugin_demo/connect` starts Oauth when the shop is not Connected. It still opens `/plugin_settings` when it is.
 

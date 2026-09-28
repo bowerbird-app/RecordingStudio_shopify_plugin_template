@@ -63,6 +63,50 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
     restore_shopify_shop_metafields
   end
 
+  test "oauth callback binds with ShopifyInstall then opens plugin settings" do
+    stub_shopify_shop_metafields_ok
+    token = session_token_for(shop: "demo.myshopify.com")
+    access = workspace_access_recording!
+
+    get plugin_settings_path, params: { shop: "demo.myshopify.com", shopify_session_token: token }
+    query = oauth_query_from(response.redirect_url)
+    get recording_studio_oauth.oauth_authorize_path(query.merge(access_recording_id: access.id))
+    post recording_studio_oauth.oauth_authorize_path, params: query.merge(
+      access_recording_id: access.id,
+      role: "admin",
+      decision: "connect"
+    )
+
+    assert_response :redirect
+    assert_includes response.redirect_url, "/connect/callback"
+    follow_redirect!
+    assert_response :redirect
+    assert_includes response.redirect_url, plugin_settings_path
+    follow_redirect!
+    assert_equal plugin_settings_path, request.path
+    install = RecordingStudioShopifyPluginTemplate::ShopifyInstall.find(
+      shop_domain: "demo.myshopify.com",
+      client: @client
+    )
+    assert install.connected?
+    refute RecordingStudioShopifyPluginTemplate.const_defined?(:ShopifyOauthConnect, false)
+  ensure
+    restore_shopify_shop_metafields
+  end
+
+  test "callback wiring uses ShopifyInstall not ShopifyOauthConnect" do
+    callback = File.read(Rails.root.join("app/controllers/connect_callbacks_controller.rb"))
+    concern = File.read(Rails.root.join("lib/shopify_plugin_demo/host_oauth_connect.rb"))
+
+    assert_includes callback, "bind_after_oauth"
+    refute_includes callback, "ShopifyOauthConnect"
+    assert_includes concern, "ShopifyInstall.bind"
+    refute_includes concern, "ShopifyOauthConnect"
+    refute File.exist?(RecordingStudioShopifyPluginTemplate::Engine.root.join(
+                         "lib/recording_studio_shopify_plugin_template/shopify_oauth_connect.rb"
+                       ))
+  end
+
   test "connected opens plugin settings without oauth" do
     stub_shopify_shop_metafields_ok
     complete_oauth_connect!("demo.myshopify.com")
