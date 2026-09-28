@@ -2,9 +2,11 @@
 
 require "test_helper"
 require "devise/test/integration_helpers"
+require_relative "../oauth_connect_test_helper"
 
 class HomeStatusTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
+  include OauthConnectTestHelper
 
   PARTNER_APP_ID = "shopify-partner-app-id"
   SESSION_SECRET = "shopify-session-token-secret"
@@ -18,6 +20,7 @@ class HomeStatusTest < ActionDispatch::IntegrationTest
     @client = create_registered_app
     RecordingStudioShopifyPluginTemplate.configuration.registered_app_client_id = @client.client_id
     sign_in @user
+    workspace_access_recording!
   end
 
   teardown do
@@ -56,9 +59,30 @@ class HomeStatusTest < ActionDispatch::IntegrationTest
   private
 
   def connect_shop!(shop)
-    token = session_token_for(shop: shop)
-    get plugin_settings_path, params: { shop: shop, shopify_session_token: token }
-    post plugin_settings_path, params: { shop: shop }
+    stub_shopify_shop_metafields_ok
+    complete_oauth_connect!(shop)
+  ensure
+    restore_shopify_shop_metafields
+  end
+
+  def stub_shopify_shop_metafields_ok
+    klass = RecordingStudioShopifyPluginTemplate::ShopifyShopMetafields
+    singleton = klass.singleton_class
+    return if singleton.method_defined?(:__orig_sync!)
+
+    singleton.alias_method :__orig_sync!, :sync!
+    singleton.define_method(:sync!) do |**|
+      RecordingStudioShopifyPluginTemplate::ShopifyShopMetafieldResult.new(success: true, error: nil)
+    end
+  end
+
+  def restore_shopify_shop_metafields
+    klass = RecordingStudioShopifyPluginTemplate::ShopifyShopMetafields
+    singleton = klass.singleton_class
+    return unless singleton.method_defined?(:__orig_sync!)
+
+    singleton.alias_method :sync!, :__orig_sync!
+    singleton.remove_method :__orig_sync!
   end
 
   def create_registered_app

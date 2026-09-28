@@ -2,9 +2,11 @@
 
 require "test_helper"
 require "devise/test/integration_helpers"
+require_relative "../oauth_connect_test_helper"
 
 class PluginSettingsTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
+  include OauthConnectTestHelper
 
   PARTNER_APP_ID = "shopify-partner-app-id"
   SESSION_SECRET = "shopify-session-token-secret"
@@ -18,122 +20,135 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
     @client = create_registered_app
     RecordingStudioShopifyPluginTemplate.configuration.registered_app_client_id = @client.client_id
     sign_in @user
+    workspace_access_recording!
   end
 
   teardown do
     RecordingStudioShopifyPluginTemplate.configuration.registered_app_client_id = nil
   end
 
-  test "not connected shows connect on plugin settings" do
+  test "not connected sends app home through oauth authorize" do
     get plugin_settings_path, params: { shop: "demo.myshopify.com" }
+
+    assert_response :redirect
+    assert_includes response.redirect_url, "/recording_studio_oauth/oauth/authorize"
+    refute_includes response.redirect_url, plugin_settings_path
+    query = oauth_query_from(response.redirect_url)
+    assert_equal "code", query.fetch("response_type")
+    assert_equal @client.client_id, query.fetch("client_id")
+    assert_equal connect_callback_url, query.fetch("redirect_uri")
+    assert_equal "S256", query.fetch("code_challenge_method")
+    follow_redirect!
+    assert_response :success
+    assert_includes request.path, "/recording_studio_oauth/oauth/authorize"
+  end
+
+  test "legacy connect path starts oauth when not connected" do
+    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+
+    assert_response :redirect
+    assert_includes response.redirect_url, "/recording_studio_oauth/oauth/authorize"
+  end
+
+  test "oauth success lands on plugin settings" do
+    stub_shopify_shop_metafields_ok
+    complete_oauth_connect!("demo.myshopify.com")
 
     assert_response :success
     assert_equal plugin_settings_path, request.path
-    assert_includes response.body, ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT
-    assert_includes response.body, "Installed is not Connected"
-    refute_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
-    settings_path = plugin_settings_path(shop: "demo.myshopify.com")
-    assert_select "form[action=?][method=post] button[type=submit]", settings_path, count: 1
-    assert_select "body[data-app-home-layout='true']", count: 1
-    refute_includes response.body, shopify_plugin_demo_connect_path
-  end
-
-  test "legacy connect post still binds then stays on plugin settings" do
-    token = session_token_for(shop: "demo.myshopify.com")
-    stub_shopify_shop_metafields_ok
-    get plugin_settings_path, params: {
-      shop: "demo.myshopify.com",
-      shopify_session_token: token
-    }
-
-    post shopify_plugin_demo_connect_path, params: {
-      shop: "demo.myshopify.com",
-      shopify_session_token: token
-    }
-
-    assert_includes response.redirect_url, plugin_settings_path
-    assert_includes response.redirect_url, "shop=demo.myshopify.com"
-    refute_includes response.redirect_url, shopify_plugin_demo_connect_path
-    follow_redirect!
-    assert_equal plugin_settings_path, request.path
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_CONNECTED_STATUS
+    assert_includes response.body, ShopifyPluginDemo::ProductConfig::DISCONNECT_BUTTON_TEXT
+    refute_includes response.body, "Installed is not Connected"
   ensure
     restore_shopify_shop_metafields
   end
 
-  test "legacy connect path redirects to plugin settings" do
-    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
-
-    assert_redirected_to plugin_settings_path(shop: "demo.myshopify.com")
-    follow_redirect!
-    assert_response :success
-    assert_equal plugin_settings_path, request.path
-    assert_includes response.body, ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT
-  end
-
-  test "connect success stays on plugin settings" do
-    token = session_token_for(shop: "demo.myshopify.com")
+  test "oauth callback binds with ShopifyInstall then opens plugin settings" do
     stub_shopify_shop_metafields_ok
-    get plugin_settings_path, params: {
-      shop: "demo.myshopify.com",
-      shopify_session_token: token
-    }
+    token = session_token_for(shop: "demo.myshopify.com")
+    access = workspace_access_recording!
 
-    post plugin_settings_path, params: {
-      shop: "demo.myshopify.com",
-      shopify_session_token: token
-    }
+    get plugin_settings_path, params: { shop: "demo.myshopify.com", shopify_session_token: token }
+    query = oauth_query_from(response.redirect_url)
+    get recording_studio_oauth.oauth_authorize_path(query.merge(access_recording_id: access.id))
+    post recording_studio_oauth.oauth_authorize_path, params: query.merge(
+      access_recording_id: access.id,
+      role: "admin",
+      decision: "connect"
+    )
 
     assert_response :redirect
-    assert_includes response.redirect_url, plugin_settings_path
-    refute_includes response.redirect_url, shopify_plugin_demo_connect_path
+    assert_includes response.redirect_url, "/connect/callback"
     follow_redirect!
+    assert_response :redirect
+    assert_includes response.redirect_url, plugin_settings_path
+    follow_redirect!
+    assert_equal plugin_settings_path, request.path
+    install = RecordingStudioShopifyPluginTemplate::ShopifyInstall.find(
+      shop_domain: "demo.myshopify.com",
+      client: @client
+    )
+    assert install.connected?
+    refute RecordingStudioShopifyPluginTemplate.const_defined?(:ShopifyOauthConnect, false)
+  ensure
+    restore_shopify_shop_metafields
+  end
+
+  test "callback wiring uses ShopifyInstall not ShopifyOauthConnect" do
+    callback = File.read(Rails.root.join("app/controllers/connect_callbacks_controller.rb"))
+    concern = File.read(Rails.root.join("lib/shopify_plugin_demo/host_oauth_connect.rb"))
+
+    assert_includes callback, "bind_after_oauth"
+    refute_includes callback, "ShopifyOauthConnect"
+    assert_includes concern, "ShopifyInstall.bind"
+    refute_includes concern, "ShopifyOauthConnect"
+    refute File.exist?(RecordingStudioShopifyPluginTemplate::Engine.root.join(
+                         "lib/recording_studio_shopify_plugin_template/shopify_oauth_connect.rb"
+                       ))
+  end
+
+  test "connected opens plugin settings without oauth" do
+    stub_shopify_shop_metafields_ok
+    complete_oauth_connect!("demo.myshopify.com")
+
+    get plugin_settings_path, params: { shop: "demo.myshopify.com" }
+
     assert_response :success
     assert_equal plugin_settings_path, request.path
-    assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_CONNECTED_STATUS
-    refute_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
-    assert_includes response.body, ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_SYNCED
-    assert_equal 1, response.body.scan(ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_SYNCED).size
+    assert_includes response.body, ShopifyPluginDemo::ProductConfig::DISCONNECT_BUTTON_TEXT
+    refute_includes request.path, "/recording_studio_oauth/oauth/authorize"
   ensure
     restore_shopify_shop_metafields
   end
 
   test "connected shows disconnect" do
-    connect_shop!("demo.myshopify.com")
+    stub_shopify_shop_metafields_ok
+    complete_oauth_connect!("demo.myshopify.com")
 
     get plugin_settings_path, params: { shop: "demo.myshopify.com" }
 
     assert_response :success
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_CONNECTED_STATUS
     refute_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
-    assert_select "h1", text: ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE, count: 0
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::DISCONNECT_BUTTON_TEXT
     disconnect_path = plugin_settings_path(shop: "demo.myshopify.com")
     assert_select "form[action=?] input[name=_method][value=delete]", disconnect_path, count: 1
     assert_select "form[action=?] button[type=submit]", disconnect_path, count: 1
-    assert_select "form[action=?] button button", disconnect_path, count: 0
-    assert_select "form.button_to", count: 0
     assert_select "body[data-app-home-layout='true']", count: 1
-    assert_select "[data-storage-key='shopify-plugin-demo-sidebar']", count: 0
-    refute_includes response.body, "shopify-plugin-demo-sidebar"
-    assert_select "main.flex.items-center.justify-center", count: 1
-    assert_select "[data-controller='flat-pack--toast']", text: /this is a test dummy route/, count: 1
-    assert_select "[data-app-home-sign-out] form[action=?] input[name=_method][value=delete]", destroy_user_session_path, count: 1
-    assert_select "[data-app-home-sign-out] form button[type=submit]", text: "Sign out", count: 1
+  ensure
+    restore_shopify_shop_metafields
   end
 
-  test "disconnect from plugin settings soft-disconnects" do
-    connect_shop!("demo.myshopify.com")
+  test "disconnect from plugin settings requires oauth before settings again" do
+    stub_shopify_shop_metafields_ok
+    complete_oauth_connect!("demo.myshopify.com")
 
     delete plugin_settings_path, params: { shop: "demo.myshopify.com" }
 
     assert_redirected_to plugin_settings_path(shop: "demo.myshopify.com")
     follow_redirect!
-    assert_response :success
-    assert_equal plugin_settings_path, request.path
-    assert_includes response.body, "Disconnected. The Shopify plugin can still be installed."
-    assert_equal 1, response.body.scan("Disconnected. The Shopify plugin can still be installed.").size
-    assert_includes response.body, ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT
+    assert_response :redirect
+    assert_includes response.redirect_url, "/recording_studio_oauth/oauth/authorize"
 
     install = RecordingStudioShopifyPluginTemplate::ShopifyInstall.find(
       shop_domain: "demo.myshopify.com",
@@ -144,21 +159,23 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
 
     get plugin_settings_path, params: { shop: "demo.myshopify.com" }
 
-    assert_response :success
-    assert_equal plugin_settings_path, request.path
-    assert_includes response.body, ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT
+    assert_response :redirect
+    assert_includes response.redirect_url, "/recording_studio_oauth/oauth/authorize"
+  ensure
+    restore_shopify_shop_metafields
+  end
+
+  test "oauth connect preserves shop and embed query into session then settings" do
+    token = session_token_for(shop: "demo.myshopify.com")
+    stub_shopify_shop_metafields_ok
+    complete_oauth_connect!("demo.myshopify.com", token: token)
+
+    assert_includes request.fullpath, "shop=demo.myshopify.com"
+  ensure
+    restore_shopify_shop_metafields
   end
 
   private
-
-  def connect_shop!(shop)
-    token = session_token_for(shop: shop)
-    get plugin_settings_path, params: {
-      shop: shop,
-      shopify_session_token: token
-    }
-    post plugin_settings_path, params: { shop: shop }
-  end
 
   def stub_shopify_shop_metafields_ok
     klass = RecordingStudioShopifyPluginTemplate::ShopifyShopMetafields

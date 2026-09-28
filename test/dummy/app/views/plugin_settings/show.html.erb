@@ -1,46 +1,20 @@
-<% dummy_page_nav(title: @connected ? ShopifyPluginDemo::ProductConfig::SETTINGS_CONNECTED_STATUS : ShopifyPluginDemo::ProductConfig::NAME) %>
+<% dummy_page_nav(title: ShopifyPluginDemo::ProductConfig::SETTINGS_CONNECTED_STATUS) %>
 
-<div class="flex w-full flex-col items-center gap-6 <%= @connected ? 'text-center' : '' %>">
-  <% unless @connected %>
-    <%= render FlatPack::PageTitle::Component.new(
-      title: ShopifyPluginDemo::ProductConfig::NAME,
-      subtitle: ShopifyPluginDemo::ProductConfig::DESCRIPTION,
-      variant: :h1
-    ) %>
-
+<div class="flex w-full flex-col items-center gap-6 text-center">
+  <p class="text-sm leading-6"><%= ShopifyPluginDemo::ProductConfig::SETTINGS_CONNECTED_STATUS %></p>
+  <% if shopify_session_token.blank? %>
     <%= render FlatPack::Alert::Component.new(
-      style: :info,
-      title: "Installed is not Connected",
-      description: "Shopify Partner install only means the Shopify plugin is on the shop. Connect here to link Recording Studio."
+      style: :warning,
+      title: ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_MISSING_TOKEN
     ) %>
-
-    <p class="text-sm leading-6">This shop is not Connected yet.</p>
-    <%= form_with url: plugin_settings_path(shop: @shop_domain), method: :post, local: true do %>
-      <%= hidden_field_tag :shopify_session_token, shopify_session_token if shopify_session_token.present? %>
-      <%= render FlatPack::Button::Component.new(
-        text: ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT,
-        style: :primary,
-        size: :md,
-        type: :submit,
-        disabled: @shop_domain.blank?
-      ) %>
-    <% end %>
-  <% else %>
-    <p class="text-sm leading-6"><%= ShopifyPluginDemo::ProductConfig::SETTINGS_CONNECTED_STATUS %></p>
-    <% if shopify_session_token.blank? %>
-      <%= render FlatPack::Alert::Component.new(
-        style: :warning,
-        title: ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_MISSING_TOKEN
-      ) %>
-    <% end %>
-    <%= form_with url: plugin_settings_path(shop: @shop_domain), method: :delete, local: true do %>
-      <%= hidden_field_tag :shopify_session_token, shopify_session_token if shopify_session_token.present? %>
-      <%= render FlatPack::Button::Component.new(
-        text: ShopifyPluginDemo::ProductConfig::DISCONNECT_BUTTON_TEXT,
-        style: :secondary,
-        size: :md,
-        type: :submit
-      ) %>
-    <% end %>
+  <% end %>
+  <%= form_with url: plugin_settings_path(shop: @shop_domain), method: :delete, local: true do %>
+    <%= hidden_field_tag :shopify_session_token, shopify_session_token if shopify_session_token.present? %>
+    <%= render FlatPack::Button::Component.new(
+      text: ShopifyPluginDemo::ProductConfig::DISCONNECT_BUTTON_TEXT,
+      style: :secondary,
+      size: :md,
+      type: :submit
+    ) %>
   <% end %>
 </div>

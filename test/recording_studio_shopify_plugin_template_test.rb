@@ -4,7 +4,7 @@ require "test_helper"
 
 class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
   def test_version_matches_release
-    assert_equal "0.3.6", ::RecordingStudioShopifyPluginTemplate::VERSION
+    assert_equal "0.3.7", ::RecordingStudioShopifyPluginTemplate::VERSION
   end
 
   def test_engine_exists
@@ -15,7 +15,7 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
     gemspec = File.read(File.expand_path("../recording_studio_shopify_plugin_template.gemspec", __dir__))
 
     assert_includes gemspec, 'spec.add_dependency "recording_studio", "~> 4.2"'
-    assert_includes gemspec, 'spec.add_dependency "recording_studio_oauth", "~> 0.5.3"'
+    assert_includes gemspec, 'spec.add_dependency "recording_studio_oauth", "~> 0.5.4"'
   end
 
   def test_gemspec_excludes_cursor_config
@@ -52,7 +52,8 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
     refute_includes gemfile, "recording_studio/v3.0.0"
     refute_includes gemfile, 'tag: "v0.1.133"'
     refute_includes gemfile, 'tag: "v0.6.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_Oauth", tag: "v0.5.3"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_Oauth"'
+    assert_includes gemfile, 'ref: "ae4eda9832762553c385274b4431e9d4a4530c81"'
   end
 
   def test_dummy_schema_includes_accessible_depends_on_recording_id
@@ -179,7 +180,7 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
     assert_includes readme, "v4.2.0"
     assert_includes readme, "v0.1.190"
     assert_includes readme, "v0.9.1"
-    assert_includes readme, "v0.5.3"
+    assert_includes readme, "0.5.4"
     refute_includes readme, "v0.1.133"
     refute_includes readme, "v3 declarations"
     refute_includes readme, "RecordingStudio v3"

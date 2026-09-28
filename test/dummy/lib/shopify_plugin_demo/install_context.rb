@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
+require_relative "host_oauth_connect"
+
 module ShopifyPluginDemo
   module InstallContext
+    include HostOauthConnect
+
     private
 
     def record_install_from_session_token

@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.7] - 2026-09-28
+
+### Changed
+- Unconnected App Home and `/plugin_settings` send the merchant through Recording Studio Oauth Connect first. That is the workspace list, then the access / permissions screen. Settings is not shown until that grant finishes.
+- After Oauth succeeds, `/connect/callback` binds the shop with `ShopifyInstall.bind` (dummy `HostOauthConnect`) and writes storefront metafields, then opens `/plugin_settings`. Already Connected App Home still opens `/plugin_settings` with Disconnect.
+- Disconnect stays on `/plugin_settings`. The next App Home visit starts Oauth Connect again.
+- `GET /shopify_plugin_demo/connect` starts Oauth when the shop is not Connected. It still opens `/plugin_settings` when it is.
+
+### Upgrade notes
+- Partner App URL stays `https://<HOST>/plugin_settings`. Unconnected merchants are redirected to `/recording_studio_oauth/oauth/authorize`, then back through `/connect/callback`.
+- Add `https://<HOST>/connect/callback` to the Registered App redirect URIs. The dummy also appends that URI on first Connect if it is missing.
+- Do not put Connect on `/plugin_settings`. That page is post-Connect settings and Disconnect only.
+
 ## [0.3.6] - 2026-09-28
 
 ### Changed
@@ -202,7 +215,8 @@ New addons copied from this template are born on Recording Studio 4.x.
 - Comprehensive README and documentation
 - Basic test suite with Minitest
 
-[Unreleased]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/compare/v0.3.6...HEAD
+[Unreleased]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/compare/v0.3.7...HEAD
+[0.3.7]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.7
 [0.3.6]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.6
 [0.3.5]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.5
 [0.3.4]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.4
