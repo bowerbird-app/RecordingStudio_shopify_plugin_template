@@ -64,6 +64,11 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::DISCONNECT_BUTTON_TEXT
     assert_select "form.button_to input[name=_method][value=delete]", count: 1
     assert_select "form.button_to[action=?]", shopify_plugin_demo_disconnect_path(shop: "demo.myshopify.com")
+    assert_select "body[data-plugin-settings-layout='true']", count: 1
+    assert_select "[data-storage-key='shopify-plugin-demo-sidebar']", count: 0
+    refute_includes response.body, "shopify-plugin-demo-sidebar"
+    assert_select "main.flex.items-center.justify-center", count: 1
+    assert_select "[data-controller='flat-pack--toast']", text: /this is a test dummy route/, count: 1
   end
 
   test "disconnect from plugin settings soft-disconnects" do

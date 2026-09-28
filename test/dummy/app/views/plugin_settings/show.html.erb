@@ -1,6 +1,6 @@
-<% dummy_page_nav(title: ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE, back_url: root_path) %>
+<% dummy_page_nav(title: ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE) %>
 
-<div class="flex w-full flex-col gap-6">
+<div class="flex w-full flex-col items-center gap-6 text-center">
   <%= render FlatPack::PageTitle::Component.new(
     title: ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE,
     subtitle: ShopifyPluginDemo::ProductConfig::SETTINGS_CONNECTED_STATUS,

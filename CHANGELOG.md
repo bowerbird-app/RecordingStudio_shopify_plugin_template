@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.3.5] - 2026-09-28
 
+### Changed
+- Dummy `/plugin_settings` drops the host sidebar, centers the settings block, and shows a Flatpack toast (`this is a test dummy route`).
+
 ### Fixed
 - `shopify.app.toml` `automatically_update_urls_on_dev` changed from `true` to `false`. The Shopify CLI strips the path from `application_url` when it auto-updates dev URLs, so a dev preview would override `/plugin_settings` to `/` and Admin would embed the host root instead of the settings page.
 

@@ -3,6 +3,8 @@
 class PluginSettingsController < ApplicationController
   include ShopifyPluginDemo::InstallContext
 
+  layout "plugin_settings"
+
   def show
     @shop_domain = resolved_shop_domain
     record_install_from_session_token
