@@ -14,11 +14,12 @@
     <%= render FlatPack::Alert::Component.new(style: :danger, title: alert) %>
   <% end %>
 
-  <%= button_to shopify_plugin_demo_disconnect_path(shop: @shop_domain), method: :delete do %>
+  <%= form_with url: shopify_plugin_demo_disconnect_path(shop: @shop_domain), method: :delete, local: true do %>
     <%= render FlatPack::Button::Component.new(
       text: ShopifyPluginDemo::ProductConfig::DISCONNECT_BUTTON_TEXT,
       style: :secondary,
-      size: :md
+      size: :md,
+      type: :submit
     ) %>
   <% end %>
 </div>

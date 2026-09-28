@@ -50,7 +50,7 @@
         title: ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_MISSING_TOKEN
       ) %>
     <% end %>
-    <%= button_to shopify_plugin_demo_disconnect_path(shop: @shop_domain), method: :delete do %>
+    <%= form_with url: shopify_plugin_demo_disconnect_path(shop: @shop_domain), method: :delete, local: true do %>
       <%= hidden_field_tag :shopify_session_token, shopify_session_token if shopify_session_token.present? %>
       <%= render FlatPack::Button::Component.new(
         text: ShopifyPluginDemo::ProductConfig::DISCONNECT_BUTTON_TEXT,
@@ -59,7 +59,7 @@
         type: :submit
       ) %>
     <% end %>
-    <%= button_to shopify_plugin_demo_connect_path(shop: @shop_domain), method: :post do %>
+    <%= form_with url: shopify_plugin_demo_connect_path(shop: @shop_domain), method: :post, local: true do %>
       <%= hidden_field_tag :shopify_session_token, shopify_session_token if shopify_session_token.present? %>
       <%= render FlatPack::Button::Component.new(
         text: ShopifyPluginDemo::ProductConfig::CONNECT_AGAIN_BUTTON_TEXT,
@@ -70,13 +70,14 @@
     <% end %>
   <% else %>
     <p class="text-sm leading-6">This shop is not Connected yet.</p>
-    <%= button_to shopify_plugin_demo_connect_path(shop: @shop_domain), method: :post, disabled: @shop_domain.blank? do %>
+    <%= form_with url: shopify_plugin_demo_connect_path(shop: @shop_domain), method: :post, local: true do %>
       <%= hidden_field_tag :shopify_session_token, shopify_session_token if shopify_session_token.present? %>
       <%= render FlatPack::Button::Component.new(
         text: ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT,
         style: :primary,
         size: :md,
-        type: :submit
+        type: :submit,
+        disabled: @shop_domain.blank?
       ) %>
     <% end %>
   <% end %>

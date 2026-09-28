@@ -62,8 +62,11 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_CONNECTED_STATUS
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::DISCONNECT_BUTTON_TEXT
-    assert_select "form.button_to input[name=_method][value=delete]", count: 1
-    assert_select "form.button_to[action=?]", shopify_plugin_demo_disconnect_path(shop: "demo.myshopify.com")
+    disconnect_path = shopify_plugin_demo_disconnect_path(shop: "demo.myshopify.com")
+    assert_select "form[action=?] input[name=_method][value=delete]", disconnect_path, count: 1
+    assert_select "form[action=?] button[type=submit]", disconnect_path, count: 1
+    assert_select "form[action=?] button button", disconnect_path, count: 0
+    assert_select "form.button_to", count: 0
     assert_select "body[data-plugin-settings-layout='true']", count: 1
     assert_select "[data-storage-key='shopify-plugin-demo-sidebar']", count: 0
     refute_includes response.body, "shopify-plugin-demo-sidebar"
@@ -74,8 +77,12 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
   test "disconnect from plugin settings soft-disconnects" do
     connect_shop!("demo.myshopify.com")
 
-    delete shopify_plugin_demo_disconnect_path, params: { shop: "demo.myshopify.com" }
+    delete shopify_plugin_demo_disconnect_path(shop: "demo.myshopify.com")
+
+    assert_redirected_to shopify_plugin_demo_connect_path(shop: "demo.myshopify.com")
     follow_redirect!
+    assert_response :success
+    assert_includes response.body, "Disconnected. The Shopify plugin can still be installed."
 
     install = RecordingStudioShopifyPluginTemplate::ShopifyInstall.find(
       shop_domain: "demo.myshopify.com",

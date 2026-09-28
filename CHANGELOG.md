@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dummy `/plugin_settings` drops the host sidebar, centers the settings block, and shows a Flatpack toast (`this is a test dummy route`).
 
 ### Fixed
+- Dummy Connect and `/plugin_settings` Disconnect use `form_with` plus one Flatpack submit button. They no longer nest `FlatPack::Button` inside `button_to`, which blocked the form submit.
 - `shopify.app.toml` `automatically_update_urls_on_dev` changed from `true` to `false`. The Shopify CLI strips the path from `application_url` when it auto-updates dev URLs, so a dev preview would override `/plugin_settings` to `/` and Admin would embed the host root instead of the settings page.
 
 ### Upgrade notes

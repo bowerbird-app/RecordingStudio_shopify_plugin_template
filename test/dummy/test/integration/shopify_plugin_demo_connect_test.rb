@@ -42,9 +42,12 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
 
     assert_response :success
-    assert_select "form[action=?] button[type=submit]", shopify_plugin_demo_connect_path(shop: "demo.myshopify.com") do
-      assert_select "button", text: ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT
+    connect_path = shopify_plugin_demo_connect_path(shop: "demo.myshopify.com")
+    assert_select "form[action=?][method=post] button[type=submit]", connect_path, count: 1 do
+      assert_select "button", text: ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT, count: 1
     end
+    assert_select "form[action=?] button button", connect_path, count: 0
+    assert_select "form.button_to", count: 0
   end
 
   test "connect form keeps id_token as a hidden session token" do
