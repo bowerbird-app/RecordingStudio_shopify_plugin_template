@@ -34,8 +34,12 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::NAME
     assert_includes response.body, "Installed is not Connected"
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT
-    assert_select "body[data-dummy-host-layout='true']", count: 1
-    assert_includes response.body, "flat-pack--sidebar-layout"
+    assert_select "body[data-dummy-host-layout='true']", count: 0
+    refute_includes response.body, "flat-pack--sidebar-layout"
+    refute_includes response.body, "shopify-plugin-demo-sidebar"
+    assert_select "body[data-app-home-layout='true']", count: 1
+    assert_select "main.flex.items-center.justify-center", count: 1
+    assert_select "[data-controller='flat-pack--toast']", text: /this is a test dummy route/, count: 1
   end
 
   test "connect post form uses a submit button for app home" do

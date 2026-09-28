@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.3.5] - 2026-09-28
 
 ### Changed
-- Dummy `/plugin_settings` drops the host sidebar, centers the settings block, and shows a Flatpack toast (`this is a test dummy route`).
+- Dummy App Home (`/plugin_settings` and Connect) uses a shared no-sidebar `app_home` layout. Forms sit in a centered `max-w-md` column with the dummy-route toast.
 
 ### Fixed
 - Dummy Connect and `/plugin_settings` Disconnect use `form_with` plus one Flatpack submit button. They no longer nest `FlatPack::Button` inside `button_to`, which blocked the form submit.

@@ -67,7 +67,7 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
     assert_select "form[action=?] button[type=submit]", disconnect_path, count: 1
     assert_select "form[action=?] button button", disconnect_path, count: 0
     assert_select "form.button_to", count: 0
-    assert_select "body[data-plugin-settings-layout='true']", count: 1
+    assert_select "body[data-app-home-layout='true']", count: 1
     assert_select "[data-storage-key='shopify-plugin-demo-sidebar']", count: 0
     refute_includes response.body, "shopify-plugin-demo-sidebar"
     assert_select "main.flex.items-center.justify-center", count: 1

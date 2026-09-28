@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="h-full" data-theme="rounded">
   <head>
-    <title><%= content_for(:title) || ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE %></title>
+    <title><%= content_for(:title) || ShopifyPluginDemo::ProductConfig::NAME %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="<%= ShopifyPluginDemo::ProductConfig::NAME %>">
@@ -23,7 +23,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="h-full bg-(--surface-page-background-color) text-(--surface-content-color)" data-plugin-settings-layout="true">
+  <body class="h-full bg-(--surface-page-background-color) text-(--surface-content-color)" data-app-home-layout="true">
     <div class="flex min-h-screen w-full flex-col items-center">
       <div class="flex w-full justify-center p-4">
         <%= render FlatPack::Toast::Component.new(

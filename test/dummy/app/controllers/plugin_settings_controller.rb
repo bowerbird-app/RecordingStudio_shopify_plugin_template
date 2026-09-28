@@ -3,7 +3,7 @@
 class PluginSettingsController < ApplicationController
   include ShopifyPluginDemo::InstallContext
 
-  layout "plugin_settings"
+  layout "app_home"
 
   def show
     @shop_domain = resolved_shop_domain

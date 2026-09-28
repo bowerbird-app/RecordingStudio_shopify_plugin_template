@@ -3,6 +3,8 @@
 class ShopifyPluginDemo::ConnectionsController < ApplicationController
   include ShopifyPluginDemo::InstallContext
 
+  layout "app_home"
+
   def show
     @shop_domain = resolved_shop_domain
     record_install_from_session_token
