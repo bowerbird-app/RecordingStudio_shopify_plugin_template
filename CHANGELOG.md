@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.6] - 2026-09-28
+
+### Changed
+- Dummy App Home `/plugin_settings` is the only Connect and Disconnect screen. Not Connected stays on that URL and shows Connect. Connected stays on that URL and shows Disconnect.
+- Connect and Disconnect POST and DELETE run on the settings controller. They call `ShopifyInstall.bind` / `unbind` and storefront metafields. The dummy no longer owns bind in a Shopify-named connections controller.
+- `GET /shopify_plugin_demo/connect` redirects to `/plugin_settings` with the same shop and embed query. `POST` and `DELETE` on the old path still bind and unbind.
+
+### Upgrade notes
+- Point App Home at `/plugin_settings` only. Do not send merchants to `/shopify_plugin_demo/connect`. Old Connect links still work. They redirect or reuse the settings actions.
+- After Disconnect, App Home stays on `/plugin_settings` and shows Connect again. It does not bounce to a Shopify-named path.
+
 ## [0.3.5] - 2026-09-28
 
 ### Changed
@@ -191,7 +202,8 @@ New addons copied from this template are born on Recording Studio 4.x.
 - Comprehensive README and documentation
 - Basic test suite with Minitest
 
-[Unreleased]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/compare/v0.3.5...HEAD
+[Unreleased]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/compare/v0.3.6...HEAD
+[0.3.6]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.6
 [0.3.5]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.5
 [0.3.4]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.4
 [0.3.3]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.3

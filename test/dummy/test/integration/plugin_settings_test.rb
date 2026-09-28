@@ -24,10 +24,24 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
     RecordingStudioShopifyPluginTemplate.configuration.registered_app_client_id = nil
   end
 
-  test "connect success lands on plugin settings" do
+  test "not connected shows connect on plugin settings" do
+    get plugin_settings_path, params: { shop: "demo.myshopify.com" }
+
+    assert_response :success
+    assert_equal plugin_settings_path, request.path
+    assert_includes response.body, ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT
+    assert_includes response.body, "Installed is not Connected"
+    refute_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
+    settings_path = plugin_settings_path(shop: "demo.myshopify.com")
+    assert_select "form[action=?][method=post] button[type=submit]", settings_path, count: 1
+    assert_select "body[data-app-home-layout='true']", count: 1
+    refute_includes response.body, shopify_plugin_demo_connect_path
+  end
+
+  test "legacy connect post still binds then stays on plugin settings" do
     token = session_token_for(shop: "demo.myshopify.com")
     stub_shopify_shop_metafields_ok
-    get shopify_plugin_demo_connect_path, params: {
+    get plugin_settings_path, params: {
       shop: "demo.myshopify.com",
       shopify_session_token: token
     }
@@ -37,22 +51,49 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
       shopify_session_token: token
     }
 
-    assert_response :redirect
-    assert_includes response.redirect_url, plugin_settings_path
+    assert_redirected_to plugin_settings_path(shop: "demo.myshopify.com")
+    follow_redirect!
+    assert_equal plugin_settings_path, request.path
+    assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_CONNECTED_STATUS
+  ensure
+    restore_shopify_shop_metafields
+  end
+
+  test "legacy connect path redirects to plugin settings" do
+    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+
+    assert_redirected_to plugin_settings_path(shop: "demo.myshopify.com")
     follow_redirect!
     assert_response :success
+    assert_equal plugin_settings_path, request.path
+    assert_includes response.body, ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT
+  end
+
+  test "connect success stays on plugin settings" do
+    token = session_token_for(shop: "demo.myshopify.com")
+    stub_shopify_shop_metafields_ok
+    get plugin_settings_path, params: {
+      shop: "demo.myshopify.com",
+      shopify_session_token: token
+    }
+
+    post plugin_settings_path, params: {
+      shop: "demo.myshopify.com",
+      shopify_session_token: token
+    }
+
+    assert_response :redirect
+    assert_includes response.redirect_url, plugin_settings_path
+    refute_includes response.redirect_url, shopify_plugin_demo_connect_path
+    follow_redirect!
+    assert_response :success
+    assert_equal plugin_settings_path, request.path
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_CONNECTED_STATUS
     refute_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_SYNCED
     assert_equal 1, response.body.scan(ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_SYNCED).size
   ensure
     restore_shopify_shop_metafields
-  end
-
-  test "not connected redirects to connect" do
-    get plugin_settings_path, params: { shop: "demo.myshopify.com" }
-
-    assert_redirected_to shopify_plugin_demo_connect_path(shop: "demo.myshopify.com")
   end
 
   test "connected shows disconnect" do
@@ -65,7 +106,7 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
     refute_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
     assert_select "h1", text: ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE, count: 0
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::DISCONNECT_BUTTON_TEXT
-    disconnect_path = shopify_plugin_demo_disconnect_path(shop: "demo.myshopify.com")
+    disconnect_path = plugin_settings_path(shop: "demo.myshopify.com")
     assert_select "form[action=?] input[name=_method][value=delete]", disconnect_path, count: 1
     assert_select "form[action=?] button[type=submit]", disconnect_path, count: 1
     assert_select "form[action=?] button button", disconnect_path, count: 0
@@ -82,13 +123,15 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
   test "disconnect from plugin settings soft-disconnects" do
     connect_shop!("demo.myshopify.com")
 
-    delete shopify_plugin_demo_disconnect_path(shop: "demo.myshopify.com")
+    delete plugin_settings_path, params: { shop: "demo.myshopify.com" }
 
-    assert_redirected_to shopify_plugin_demo_connect_path(shop: "demo.myshopify.com")
+    assert_redirected_to plugin_settings_path(shop: "demo.myshopify.com")
     follow_redirect!
     assert_response :success
+    assert_equal plugin_settings_path, request.path
     assert_includes response.body, "Disconnected. The Shopify plugin can still be installed."
     assert_equal 1, response.body.scan("Disconnected. The Shopify plugin can still be installed.").size
+    assert_includes response.body, ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT
 
     install = RecordingStudioShopifyPluginTemplate::ShopifyInstall.find(
       shop_domain: "demo.myshopify.com",
@@ -99,18 +142,20 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
 
     get plugin_settings_path, params: { shop: "demo.myshopify.com" }
 
-    assert_redirected_to shopify_plugin_demo_connect_path(shop: "demo.myshopify.com")
+    assert_response :success
+    assert_equal plugin_settings_path, request.path
+    assert_includes response.body, ShopifyPluginDemo::ProductConfig::CONNECT_BUTTON_TEXT
   end
 
   private
 
   def connect_shop!(shop)
     token = session_token_for(shop: shop)
-    get shopify_plugin_demo_connect_path, params: {
+    get plugin_settings_path, params: {
       shop: shop,
       shopify_session_token: token
     }
-    post shopify_plugin_demo_connect_path, params: { shop: shop }
+    post plugin_settings_path, params: { shop: shop }
   end
 
   def stub_shopify_shop_metafields_ok

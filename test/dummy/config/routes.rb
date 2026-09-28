@@ -42,9 +42,11 @@ Rails.application.routes.draw do
   end
 
   get "plugin_settings", to: "plugin_settings#show", as: :plugin_settings
+  post "plugin_settings", to: "plugin_settings#create"
+  delete "plugin_settings", to: "plugin_settings#destroy"
   get "shopify_plugin_demo/connect", to: "shopify_plugin_demo/connections#show", as: :shopify_plugin_demo_connect
-  post "shopify_plugin_demo/connect", to: "shopify_plugin_demo/connections#create"
-  delete "shopify_plugin_demo/connect", to: "shopify_plugin_demo/connections#destroy", as: :shopify_plugin_demo_disconnect
+  post "shopify_plugin_demo/connect", to: "plugin_settings#create"
+  delete "shopify_plugin_demo/connect", to: "plugin_settings#destroy", as: :shopify_plugin_demo_disconnect
   post "shopify_plugin_demo/uninstall", to: "shopify_plugin_demo/uninstalls#create"
   get "shopify_plugin_demo/storefront/embed.css",
       to: "shopify_plugin_demo/storefront_embeds#stylesheet",
