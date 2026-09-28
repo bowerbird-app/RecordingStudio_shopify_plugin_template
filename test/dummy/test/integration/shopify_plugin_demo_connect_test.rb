@@ -42,6 +42,24 @@ class ShopifyPluginDemoConnectTest < ActionDispatch::IntegrationTest
     assert_select "body[data-app-home-layout='true']", count: 1
     assert_select "main.flex.items-center.justify-center", count: 1
     assert_select "[data-controller='flat-pack--toast']", text: /this is a test dummy route/, count: 1
+    assert_select "[data-app-home-sign-out] form[action=?] input[name=_method][value=delete]", destroy_user_session_path, count: 1
+    assert_select "[data-app-home-sign-out] form button[type=submit]", text: "Sign out", count: 1
+    assert_select "[data-app-home-sign-out] form button button", count: 0
+  end
+
+  test "app home sign out returns to sign in" do
+    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+
+    assert_response :success
+    delete destroy_user_session_path
+    follow_redirect!
+    follow_redirect! if response.redirect?
+
+    assert_response :success
+    assert_includes request.path, "sign_in"
+    get shopify_plugin_demo_connect_path, params: { shop: "demo.myshopify.com" }
+
+    assert_redirected_to new_user_session_path
   end
 
   test "connect post form uses a submit button for app home" do

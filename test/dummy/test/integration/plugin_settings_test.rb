@@ -75,6 +75,8 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
     refute_includes response.body, "shopify-plugin-demo-sidebar"
     assert_select "main.flex.items-center.justify-center", count: 1
     assert_select "[data-controller='flat-pack--toast']", text: /this is a test dummy route/, count: 1
+    assert_select "[data-app-home-sign-out] form[action=?] input[name=_method][value=delete]", destroy_user_session_path, count: 1
+    assert_select "[data-app-home-sign-out] form button[type=submit]", text: "Sign out", count: 1
   end
 
   test "disconnect from plugin settings soft-disconnects" do

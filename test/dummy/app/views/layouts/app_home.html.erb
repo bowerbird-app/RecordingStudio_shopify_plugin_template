@@ -45,5 +45,17 @@
         </div>
       </main>
     </div>
+    <% if user_signed_in? %>
+      <div class="fixed bottom-4 left-4 z-50" data-app-home-sign-out="true">
+        <%= form_with url: main_app.destroy_user_session_path, method: :delete, local: true, data: { turbo: false } do %>
+          <%= render FlatPack::Button::Component.new(
+            text: "Sign out",
+            style: :ghost,
+            size: :md,
+            type: :submit
+          ) %>
+        <% end %>
+      </div>
+    <% end %>
   </body>
 </html>
