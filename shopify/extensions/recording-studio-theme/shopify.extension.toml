@@ -1,7 +1,4 @@
-api_version = "2025-01"
-
-[[extensions]]
 name = "Recording Studio"
-handle = "recording-studio-theme"
 type = "theme"
-uid = "recording-studio-theme"
+handle = "recording-studio-theme"
+uid = "81c9fe3d-05be-b07e-ea88-ffb54a87ed43140e385c"

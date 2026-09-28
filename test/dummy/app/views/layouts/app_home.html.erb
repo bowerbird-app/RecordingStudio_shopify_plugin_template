@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html class="h-full" data-theme="rounded">
+  <head>
+    <title><%= content_for(:title) || ShopifyPluginDemo::ProductConfig::NAME %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="<%= ShopifyPluginDemo::ProductConfig::NAME %>">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "flat_pack/application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="h-full bg-(--surface-page-background-color) text-(--surface-content-color)" data-app-home-layout="true">
+    <div class="flex min-h-screen w-full flex-col items-center">
+      <div class="flex w-full justify-center p-4">
+        <%= render FlatPack::Toast::Component.new(
+          text: "this is a test dummy route",
+          style: :info,
+          timeout: 0,
+          dismissible: true
+        ) %>
+      </div>
+      <main id="main" tabindex="-1" class="flex w-full flex-1 items-center justify-center p-6">
+        <div class="mx-auto w-full max-w-md">
+          <% if flash[:notice].present? %>
+            <%= render FlatPack::Alert::Component.new(description: flash[:notice], style: :success, class: "mb-6") %>
+          <% end %>
+          <% if flash[:alert].present? %>
+            <%= render FlatPack::Alert::Component.new(description: flash[:alert], style: :danger, class: "mb-6") %>
+          <% end %>
+          <%= yield %>
+        </div>
+      </main>
+    </div>
+    <% if user_signed_in? %>
+      <div class="fixed bottom-4 left-4 z-50" data-app-home-sign-out="true">
+        <%= form_with url: main_app.destroy_user_session_path, method: :delete, local: true, data: { turbo: false } do %>
+          <%= render FlatPack::Button::Component.new(
+            text: "Sign out",
+            style: :ghost,
+            size: :md,
+            type: :submit
+          ) %>
+        <% end %>
+      </div>
+    <% end %>
+  </body>
+</html>

@@ -7,6 +7,8 @@ BowerBird uses Shopify CLI for this channel. This folder is the thin app: TOML, 
 1. Boot the dummy host (`cd test/dummy && bin/dev`).
 2. Set `HOST_BASE_URL` to that origin (for example `http://localhost:3000`).
 3. Put `https://<HOST>/plugin_settings` in Partner Dev Dashboard App URL and in `shopify.app.toml` `application_url` when you run `shopify app dev`. The TOML in this repo uses the placeholder `https://example.com/plugin_settings`. Do not commit a live ngrok hostname. The Partner **active version** App URL must include `/plugin_settings`. Configuration alone is not enough if the active version still points at `/`.
+
+**`automatically_update_urls_on_dev` must stay `false`.** The Shopify CLI strips the path from `application_url` when it auto-updates dev URLs ([Shopify/cli#3464](https://github.com/Shopify/cli/issues/3464)). With `true`, a dev preview overrides `/plugin_settings` to `/` and Admin embeds the host root instead of the settings page. Keep it `false` and set the Partner active version URL yourself.
 4. App Home (`app-home/index.html`) iframes `{HOST_BASE_URL}/plugin_settings?shop=...`. If the shop is not Connected, the dummy redirects to Connect. If it is Connected, App Home shows Shopify plugin settings with Disconnect only.
 5. App Bridge `idToken()` appends `shopify_session_token`. The dummy host verifies HS256 through Oauth, then the Shopify plugin parses `dest` / `iss` and records the install.
 
@@ -29,6 +31,20 @@ App Home loads the dummy host in a cross-site iframe (`admin.shopify.com` → yo
 
 `extensions/recording-studio-theme` is a Liquid block. Pick a page by title. Host URL and storefront token come from app metafields written on Connect. Shop comes from `shop.permanent_domain`. The block loads `{host}/shopify_plugin_demo/storefront/embed.js` and mounts Embeddable HTML plus FlatPack CSS and Stimulus. Do not iframe the host there.
 
+`shopify.extension.toml` stays in the [theme app extension](https://shopify.dev/docs/apps/build/online-store/theme-app-extensions/configuration) shape: top-level `name`, `type = "theme"`, `handle`, and the Partner-assigned `uid`. Do not wrap it in `[[extensions]]`. Do not replace `uid` with the handle slug. The committed uid is `81c9fe3d-05be-b07e-ea88-ffb54a87ed43140e385c`. Keep it so the next checkout updates the same extension.
+
+### Show the block in Edit theme
+
+Do this on your Mac after you pull. Do not run `shopify app deploy` from a Cloud Agent. Do not change Partner live App URLs for this step.
+
+1. In Partner Dashboard or Dev Dashboard, turn on **Development store preview** for this app if that control is still there. You have to do this in Partner UI. The repo cannot.
+2. From `shopify/`, stop any running CLI, then start `shopify app dev --no-update` against store `plugin-test-74hpuu5t`.
+3. Wait until the CLI says the theme extension bundled and the theme extension server is ready.
+4. In Admin for that store, open **Online Store → Themes**, then **Edit theme** on the current theme `test-data`.
+5. Choose **Add section → Apps**. You should see **Shopify plugin** (block schema name) under the **Recording Studio** theme extension.
+
+A Partner deploy already assigned this extension uid. Do not run `shopify app deploy` from a Cloud Agent. After you pull, restart `shopify app dev --no-update` so the CLI reuses that uid.
+
 Connect writes those metafields on the **app installation** when the App Home session token is present on the Connect POST. Values must read back before the host shows “Storefront metafields synced.” Connect does not create metafield definitions with `APP_INSTALLATION` on Admin API 2025-01.
 
 The theme block reads installation values with reserved-namespace Liquid syntax, for example `app.metafields["$app:recording_studio"]["host_base_url"].value`. Use bracket notation for both the `$app:recording_studio` namespace and the writer keys (`host_base_url`, `storefront_token`, `pages`). Dot notation on `recording_studio` or on the keys alone does not match what Connect writes. The block root includes `block.shopify_attributes` so the theme editor can select the app block.
@@ -48,7 +64,7 @@ Set these on the dummy host before you start.
 ### Install and Connect
 
 1. Boot the dummy (`cd test/dummy && bin/dev`).
-2. From `shopify/`, run `shopify app dev` and install on `development-store-kwcwfmcz`.
+2. From `shopify/`, run `shopify app dev --no-update` and install on `development-store-kwcwfmcz`.
 3. Open App Home. You should see Connect after the `/plugin_settings` redirect. Installed is not Connected.
 4. Sign in if asked (`admin@admin.com` / `Password`). Click Connect. After Connect, the dummy returns to `/plugin_settings` for that shop. You should see Shopify plugin settings and Disconnect.
 

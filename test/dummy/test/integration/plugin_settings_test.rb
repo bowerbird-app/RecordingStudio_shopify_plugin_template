@@ -41,8 +41,10 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
     assert_includes response.redirect_url, plugin_settings_path
     follow_redirect!
     assert_response :success
-    assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
+    assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_CONNECTED_STATUS
+    refute_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_SYNCED
+    assert_equal 1, response.body.scan(ShopifyPluginDemo::ProductConfig::STOREFRONT_METAFIELDS_SYNCED).size
   ensure
     restore_shopify_shop_metafields
   end
@@ -59,18 +61,34 @@ class PluginSettingsTest < ActionDispatch::IntegrationTest
     get plugin_settings_path, params: { shop: "demo.myshopify.com" }
 
     assert_response :success
-    assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_CONNECTED_STATUS
+    refute_includes response.body, ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE
+    assert_select "h1", text: ShopifyPluginDemo::ProductConfig::SETTINGS_TITLE, count: 0
     assert_includes response.body, ShopifyPluginDemo::ProductConfig::DISCONNECT_BUTTON_TEXT
-    assert_select "form.button_to input[name=_method][value=delete]", count: 1
-    assert_select "form.button_to[action=?]", shopify_plugin_demo_disconnect_path(shop: "demo.myshopify.com")
+    disconnect_path = shopify_plugin_demo_disconnect_path(shop: "demo.myshopify.com")
+    assert_select "form[action=?] input[name=_method][value=delete]", disconnect_path, count: 1
+    assert_select "form[action=?] button[type=submit]", disconnect_path, count: 1
+    assert_select "form[action=?] button button", disconnect_path, count: 0
+    assert_select "form.button_to", count: 0
+    assert_select "body[data-app-home-layout='true']", count: 1
+    assert_select "[data-storage-key='shopify-plugin-demo-sidebar']", count: 0
+    refute_includes response.body, "shopify-plugin-demo-sidebar"
+    assert_select "main.flex.items-center.justify-center", count: 1
+    assert_select "[data-controller='flat-pack--toast']", text: /this is a test dummy route/, count: 1
+    assert_select "[data-app-home-sign-out] form[action=?] input[name=_method][value=delete]", destroy_user_session_path, count: 1
+    assert_select "[data-app-home-sign-out] form button[type=submit]", text: "Sign out", count: 1
   end
 
   test "disconnect from plugin settings soft-disconnects" do
     connect_shop!("demo.myshopify.com")
 
-    delete shopify_plugin_demo_disconnect_path, params: { shop: "demo.myshopify.com" }
+    delete shopify_plugin_demo_disconnect_path(shop: "demo.myshopify.com")
+
+    assert_redirected_to shopify_plugin_demo_connect_path(shop: "demo.myshopify.com")
     follow_redirect!
+    assert_response :success
+    assert_includes response.body, "Disconnected. The Shopify plugin can still be installed."
+    assert_equal 1, response.body.scan("Disconnected. The Shopify plugin can still be installed.").size
 
     install = RecordingStudioShopifyPluginTemplate::ShopifyInstall.find(
       shop_domain: "demo.myshopify.com",

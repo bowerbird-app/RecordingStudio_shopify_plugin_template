@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.5] - 2026-09-28
+
+### Changed
+- Dummy App Home (`/plugin_settings` and Connect) uses a shared no-sidebar `app_home` layout. Forms sit in a centered `max-w-md` column with the dummy-route toast. Signed-in testers get a bottom-left Sign out.
+- Connected App Home shows “This shop is Connected.” plus Disconnect. It does not show a “Shopify plugin settings” heading. Connect does not show a Shop domain picker. Shop comes from the embed query. Connected Connect shows Disconnect only. It does not show Connect again.
+
+### Fixed
+- Theme app extension `shopify.extension.toml` uses the CLI theme shape (`name`, `type = "theme"`, `handle`) with no `[[extensions]]` wrapper and no slug `uid`. A fake `uid` can bundle during `shopify app dev` while Edit theme → Apps still omits **Shopify plugin**.
+- Theme extension `uid` is the Partner-assigned value `81c9fe3d-05be-b07e-ea88-ffb54a87ed43140e385c`, so a later checkout updates the same extension.
+- Dummy Connect and `/plugin_settings` show flash Alerts only in `layouts/app_home`. Views no longer render `notice` / `alert` a second time.
+- Dummy Connect and `/plugin_settings` Disconnect use `form_with` plus one Flatpack submit button. They no longer nest `FlatPack::Button` inside `button_to`, which blocked the form submit.
+- `shopify.app.toml` `automatically_update_urls_on_dev` changed from `true` to `false`. The Shopify CLI strips the path from `application_url` when it auto-updates dev URLs, so a dev preview would override `/plugin_settings` to `/` and Admin would embed the host root instead of the settings page.
+
+### Upgrade notes
+- If you copied the TOML and have `automatically_update_urls_on_dev = true`, change it to `false`. Then set the Partner active version App URL to `https://<HOST>/plugin_settings` yourself, or pass `--no-update` to `shopify app dev`.
+- If your theme extension toml uses `[[extensions]]` or `uid = "recording-studio-theme"`, switch to top-level `name`, `type = "theme"`, `handle`, and the committed Partner `uid`. Restart `shopify app dev --no-update`.
+
 ## [0.3.4] - 2026-09-25
 
 ### Added
@@ -174,7 +191,8 @@ New addons copied from this template are born on Recording Studio 4.x.
 - Comprehensive README and documentation
 - Basic test suite with Minitest
 
-[Unreleased]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/compare/v0.3.4...HEAD
+[Unreleased]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/compare/v0.3.5...HEAD
+[0.3.5]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.5
 [0.3.4]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.4
 [0.3.3]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.3
 [0.3.2]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.2
