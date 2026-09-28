@@ -31,7 +31,7 @@ App Home loads the dummy host in a cross-site iframe (`admin.shopify.com` → yo
 
 `extensions/recording-studio-theme` is a Liquid block. Pick a page by title. Host URL and storefront token come from app metafields written on Connect. Shop comes from `shop.permanent_domain`. The block loads `{host}/shopify_plugin_demo/storefront/embed.js` and mounts Embeddable HTML plus FlatPack CSS and Stimulus. Do not iframe the host there.
 
-`shopify.extension.toml` stays in the [theme app extension](https://shopify.dev/docs/apps/build/online-store/theme-app-extensions/configuration) shape: top-level `name`, `type = "theme"`, and `handle`. Do not wrap it in `[[extensions]]`. Do not set `uid` to the handle slug. Shopify CLI writes a Dev Platform `uid` on generate or deploy. Leave that field out of git until the CLI writes a real one on your machine.
+`shopify.extension.toml` stays in the [theme app extension](https://shopify.dev/docs/apps/build/online-store/theme-app-extensions/configuration) shape: top-level `name`, `type = "theme"`, `handle`, and the Partner-assigned `uid`. Do not wrap it in `[[extensions]]`. Do not replace `uid` with the handle slug. The committed uid is `81c9fe3d-05be-b07e-ea88-ffb54a87ed43140e385c`. Keep it so the next checkout updates the same extension.
 
 ### Show the block in Edit theme
 
@@ -43,7 +43,7 @@ Do this on your Mac after you pull. Do not run `shopify app deploy` from a Cloud
 4. In Admin for that store, open **Online Store → Themes**, then **Edit theme** on the current theme `test-data`.
 5. Choose **Add section → Apps**. You should see **Shopify plugin** (block schema name) under the **Recording Studio** theme extension.
 
-If the CLI says it must assign a `uid`, run `shopify app deploy` once from `shopify/` on your Mac, then restart `shopify app dev --no-update`. If the CLI writes `uid = "<uuid>"` into `shopify.extension.toml`, commit that line. Do not invent a UUID. If Partner already shows an extension UUID, paste that value into `uid` instead of a slug.
+A Partner deploy already assigned this extension uid. Do not run `shopify app deploy` from a Cloud Agent. After you pull, restart `shopify app dev --no-update` so the CLI reuses that uid.
 
 Connect writes those metafields on the **app installation** when the App Home session token is present on the Connect POST. Values must read back before the host shows “Storefront metafields synced.” Connect does not create metafield definitions with `APP_INSTALLATION` on Admin API 2025-01.
 

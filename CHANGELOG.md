@@ -15,13 +15,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Theme app extension `shopify.extension.toml` uses the CLI theme shape (`name`, `type = "theme"`, `handle`) with no `[[extensions]]` wrapper and no slug `uid`. A fake `uid` can bundle during `shopify app dev` while Edit theme → Apps still omits **Shopify plugin**.
+- Theme extension `uid` is the Partner-assigned value `81c9fe3d-05be-b07e-ea88-ffb54a87ed43140e385c`, so a later checkout updates the same extension.
 - Dummy Connect and `/plugin_settings` show flash Alerts only in `layouts/app_home`. Views no longer render `notice` / `alert` a second time.
 - Dummy Connect and `/plugin_settings` Disconnect use `form_with` plus one Flatpack submit button. They no longer nest `FlatPack::Button` inside `button_to`, which blocked the form submit.
 - `shopify.app.toml` `automatically_update_urls_on_dev` changed from `true` to `false`. The Shopify CLI strips the path from `application_url` when it auto-updates dev URLs, so a dev preview would override `/plugin_settings` to `/` and Admin would embed the host root instead of the settings page.
 
 ### Upgrade notes
 - If you copied the TOML and have `automatically_update_urls_on_dev = true`, change it to `false`. Then set the Partner active version App URL to `https://<HOST>/plugin_settings` yourself, or pass `--no-update` to `shopify app dev`.
-- If your theme extension toml uses `[[extensions]]` or `uid = "recording-studio-theme"`, switch to top-level `name`, `type = "theme"`, and `handle`. Restart `shopify app dev --no-update`. If the CLI requires a uid, run `shopify app deploy` once from `shopify/` on your Mac and keep the uid it writes.
+- If your theme extension toml uses `[[extensions]]` or `uid = "recording-studio-theme"`, switch to top-level `name`, `type = "theme"`, `handle`, and the committed Partner `uid`. Restart `shopify app dev --no-update`.
 
 ## [0.3.4] - 2026-09-25
 
