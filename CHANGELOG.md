@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Dummy and root Gemfiles pin Recording Studio to GitHub tag `v4.2.2`.
 - Dummy and root Recording Studio addon pins climb as far as API `v0.5.6` allows. API still requires Accessible `~> 0.9`, so Accessible stays on `v0.9.1`. Admin is `v2.0.4`. Oauth is `v0.5.4` (not `v0.5.5`, which needs Accessible `~> 0.11`). Site Settings is `v0.1.2` (not `v0.1.3`). Dummy Embeddable is `v0.2.5`, Publishable `v0.4.2`, Users `v0.12.4` (not `v0.12.5`), Root Switchable `v0.5.2` (not `v0.5.3`). Root Attachable is `v0.7.1`; dummy Attachable stays `v0.5.1` because Users `v0.12.4` still requires `~> 0.5.0`.
+- Gem tests stub with a small `Object#stub` helper when Minitest 6 omits `minitest/mock`.
 
 ### Upgrade notes
 - Point host/dummy Gemfiles at the tags in `Gemfile` and `test/dummy/Gemfile`, then `bundle lock --update` those gems and `bin/rails db:prepare`. Dummy Users `v0.12.4` adds `registered_with`, Devise confirmable columns, OTP challenges, and nullable Profile last name / time zone.
