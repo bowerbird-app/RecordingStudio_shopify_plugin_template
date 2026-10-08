@@ -5,7 +5,7 @@ gem "recording_studio_shopify_plugin_template", path: "../.."
 
 # RecordingStudio engine
 gem "recording_studio", github: "bowerbird-app/RecordingStudio", tag: "v4.2.2"
-gem "recording_studio_accessible", github: "bowerbird-app/RecordingStudio_accessible", tag: "v0.9.1"
+gem "recording_studio_accessible", github: "bowerbird-app/RecordingStudio_accessible", tag: "v0.11.2"
 
 # Shopify plugin demo named API host (pins match WordPress dummy where sensible)
 gem "recording_studio_api", github: "bowerbird-app/RecordingStudio_api", tag: "v0.5.6"
@@ -14,10 +14,10 @@ gem "recording_studio_admin", github: "bowerbird-app/RecordingStudio_admin", tag
 gem "recording_studio_oauth", github: "bowerbird-app/RecordingStudio_Oauth", tag: "v0.5.4"
 gem "recording_studio_site_settings", github: "bowerbird-app/RecordingStudio_site_settings", tag: "v0.1.2"
 # Publishable is Embeddable's hard dep. Attachable is required to boot Publishable's model.
-# Users v0.12.4 still requires attachable ~> 0.5.0, so dummy cannot take attachable v0.7.1.
+# Users v0.15.0 requires attachable ~> 0.7 (and accessible ~> 0.11).
 gem "recording_studio_publishable", github: "bowerbird-app/RecordingStudio_publishable", tag: "v0.4.2"
-gem "recording_studio_attachable", github: "bowerbird-app/RecordingStudio_attachable", tag: "v0.5.1"
-gem "recording_studio_user", github: "bowerbird-app/RecordingStudio_users", tag: "v0.12.4"
+gem "recording_studio_attachable", github: "bowerbird-app/RecordingStudio_attachable", tag: "v0.7.4"
+gem "recording_studio_user", github: "bowerbird-app/RecordingStudio_users", tag: "v0.15.0"
 
 # Root switcher for the top nav
 gem "recording_studio_root_switchable", github: "bowerbird-app/RecordingStudio_root_switchable", tag: "v0.5.2"
