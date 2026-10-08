@@ -8,14 +8,15 @@ GIT
 
 GIT
   remote: https://github.com/bowerbird-app/RecordingStudio_Embeddable.git
-  revision: 078a0cff442b340e5c809f3fac39f539f4d008fa
-  tag: v0.2.5
+  revision: d2cba33d2ac229a84d329290c8ce60fb2ae5967e
+  tag: v0.4.0
   specs:
-    recording_studio_embeddable (0.2.1)
+    recording_studio_embeddable (0.4.0)
       flat_pack (~> 0.1.143)
       rails (~> 8.1.0)
       recording_studio (~> 4.2)
       recording_studio_accessible (~> 0.9)
+      recording_studio_artifacts (~> 0.4.0)
       recording_studio_publishable (~> 0.4)
 
 GIT
@@ -61,6 +62,16 @@ GIT
       recording_studio (~> 4.2)
       recording_studio_accessible (~> 0.9)
       redis (~> 5.3)
+
+GIT
+  remote: https://github.com/bowerbird-app/RecordingStudio_artifacts.git
+  revision: 4747d1935f3924f9b515f7224142d7ab12cd52c9
+  tag: v0.4.0
+  specs:
+    recording_studio_artifacts (0.4.0)
+      aws-sdk-s3 (~> 1)
+      rails (~> 8.1.0)
+      recording_studio (~> 4.2)
 
 GIT
   remote: https://github.com/bowerbird-app/RecordingStudio_attachable.git
@@ -229,6 +240,26 @@ GEM
     ast (2.4.3)
     auth-sanitizer (0.2.3)
       version_gem (~> 1.1, >= 1.1.14)
+    aws-eventstream (1.4.0)
+    aws-partitions (1.1293.0)
+    aws-sdk-core (3.257.0)
+      aws-eventstream (~> 1, >= 1.3.0)
+      aws-partitions (~> 1, >= 1.992.0)
+      aws-sigv4 (~> 1.9)
+      base64
+      bigdecimal
+      jmespath (~> 1, >= 1.6.1)
+      logger
+      rexml (~> 3.4, >= 3.4.2)
+    aws-sdk-kms (1.132.0)
+      aws-sdk-core (~> 3, >= 3.256.0)
+      aws-sigv4 (~> 1.5)
+    aws-sdk-s3 (1.233.2)
+      aws-sdk-core (~> 3, >= 3.256.0)
+      aws-sdk-kms (~> 1)
+      aws-sigv4 (~> 1.5)
+    aws-sigv4 (1.12.1)
+      aws-eventstream (~> 1, >= 1.0.2)
     base64 (0.3.0)
     bcrypt (3.1.22)
     bcrypt_pbkdf (1.1.1)
@@ -306,6 +337,7 @@ GEM
     jbuilder (2.14.1)
       actionview (>= 7.0.0)
       activesupport (>= 7.0.0)
+    jmespath (1.6.2)
     json (2.21.2)
     json-jwt (1.17.2)
       activesupport (>= 4.2)
@@ -512,6 +544,7 @@ GEM
     responders (3.2.1)
       actionpack (>= 7.0)
       railties (>= 7.0)
+    rexml (3.4.4)
     rubocop (1.81.7)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
@@ -652,6 +685,7 @@ DEPENDENCIES
   recording_studio_accessible!
   recording_studio_admin!
   recording_studio_api!
+  recording_studio_artifacts!
   recording_studio_attachable!
   recording_studio_embeddable!
   recording_studio_oauth!
@@ -688,6 +722,12 @@ CHECKSUMS
   anonymous_loader (0.1.3) sha256=084a18e2439144d955447dc11dfc982f41fcd1583ad32d4d55151325dc44cb55
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
   auth-sanitizer (0.2.3) sha256=db10aac92cfbe4c64ab637eebcbe1d67395d1694798041362173370f59933e3c
+  aws-eventstream (1.4.0) sha256=116bf85c436200d1060811e6f5d2d40c88f65448f2125bc77ffce5121e6e183b
+  aws-partitions (1.1293.0) sha256=d53c028087a7c75b435afb35b310a315a64268e6fb5ecd5d44d8e4f210ce725c
+  aws-sdk-core (3.257.0) sha256=a92ad19c7ff668cec6688ee3200ee562da80647a3bbeed9fda02e8b0ca6492c6
+  aws-sdk-kms (1.132.0) sha256=094b0097bb3be9d5c1ac87e971ca7f5aebb746801dfb5f0f576480bf98dca69c
+  aws-sdk-s3 (1.233.2) sha256=b138737a0de8b02f163ae47a9fc184ac98fc9b90926237c7d7af716a14ea1221
+  aws-sigv4 (1.12.1) sha256=6973ff95cb0fd0dc58ba26e90e9510a2219525d07620c8babeb70ef831826c00
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
   bcrypt (3.1.22) sha256=1f0072e88c2d705d94aff7f2c5cb02eb3f1ec4b8368671e19112527489f29032
   bcrypt_pbkdf (1.1.1) sha256=2f9077dde837d1f0dd2eb0f9e5327c6871c68ebc8eba88870fb6b7956e1e2b13
@@ -733,6 +773,7 @@ CHECKSUMS
   io-console (0.9.4) sha256=a403304f32928ee85e56d457b4612ca43f2703b561a3258844992bd24085fbb1
   irb (1.18.0) sha256=de9454a0703a54704b9811a5ef31a60c86949fbf4013fcf244fabc7c775248e3
   jbuilder (2.14.1) sha256=4eb26376ff60ef100cb4fd6fd7533cd271f9998327e86adf20fd8c0e69fabb42
+  jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
   json (2.21.2) sha256=1f1d3b7cf2b3ba1a69beca0bb6db13d5438b80bff3cd54cdaaa620b9b07c1c6a
   json-jwt (1.17.2) sha256=97e37c1c3e22e9e1d74a1c0d77319c5cdc8a636226e5dbb1664b0b34eddcf1c9
   jwt (3.3.0) sha256=44cc34fbc341c148233cf66641522b4bce0dfb1ce55e8073f05c56f44f4ee546
@@ -810,8 +851,9 @@ CHECKSUMS
   recording_studio_accessible (0.11.0)
   recording_studio_admin (2.0.2)
   recording_studio_api (0.5.6)
+  recording_studio_artifacts (0.4.0)
   recording_studio_attachable (0.7.3)
-  recording_studio_embeddable (0.2.1)
+  recording_studio_embeddable (0.4.0)
   recording_studio_oauth (0.5.3)
   recording_studio_publishable (0.4.0)
   recording_studio_root_switchable (0.5.1)
@@ -823,6 +865,7 @@ CHECKSUMS
   regexp_parser (2.11.3) sha256=ca13f381a173b7a93450e53459075c9b76a10433caadcb2f1180f2c741fc55a4
   reline (0.7.0) sha256=5b012d8e55dbf9d450f12bde2cf7d15ff546ae80b3f8f3b30e570d431815583d
   responders (3.2.1) sha256=c2772970cbda654c0e772d852e5a851e82cd8e96f5fa958650861ba75b8ffa84
+  rexml (3.4.4) sha256=19e0a2c3425dfbf2d4fc1189747bdb2f849b6c5e74180401b15734bc97b5d142
   rubocop (1.81.7) sha256=6fb5cc298c731691e2a414fe0041a13eb1beed7bab23aec131da1bcc527af094
   rubocop-ast (1.48.0) sha256=22df9bbf3f7a6eccde0fad54e68547ae1e2a704bf8719e7c83813a99c05d2e76
   rubocop-performance (1.26.1) sha256=cd19b936ff196df85829d264b522fd4f98b6c89ad271fa52744a8c11b8f71834
