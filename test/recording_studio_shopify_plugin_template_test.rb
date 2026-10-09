@@ -56,7 +56,7 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_artifacts", tag: "v0.4.0"'
     refute_includes gemfile, "recording_studio/v3.0.0"
     refute_includes gemfile, 'tag: "v0.1.133"'
-    refute_includes gemfile, 'tag: "v0.6.0"'
+    refute_includes gemfile, 'github: "bowerbird-app/RecordingStudio_accessible", tag: "v0.6.0"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_Oauth", tag: "v0.5.4"'
   end
 
