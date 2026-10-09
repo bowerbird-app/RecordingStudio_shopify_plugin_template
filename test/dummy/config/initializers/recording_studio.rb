@@ -13,6 +13,8 @@ RecordingStudio.configure do |config|
     "RecordingStudioEmbeddable::Embed",
     "RecordingStudioPublishable::Publishable",
     "RecordingStudioAttachable::Attachment",
+    "RecordingStudioAttachable::Library",
+    "RecordingStudioAttachable::Placement",
     "RecordingStudioSiteSettings::SiteSetting",
     "RecordingStudio::Access",
     "RecordingStudioApi::ApiClient",

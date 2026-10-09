@@ -5,7 +5,7 @@ gem "recording_studio_shopify_plugin_template", path: "../.."
 
 # RecordingStudio engine
 gem "recording_studio", github: "bowerbird-app/RecordingStudio", tag: "v4.4.0"
-gem "recording_studio_accessible", github: "bowerbird-app/RecordingStudio_accessible", tag: "v0.11.2"
+gem "recording_studio_accessible", github: "bowerbird-app/RecordingStudio_accessible", tag: "v0.13.0"
 
 # Shopify plugin demo named API host (pins match WordPress dummy where sensible)
 gem "recording_studio_api", github: "bowerbird-app/RecordingStudio_api", tag: "v0.5.6"
@@ -14,11 +14,11 @@ gem "recording_studio_admin", github: "bowerbird-app/RecordingStudio_admin", tag
 gem "recording_studio_oauth", github: "bowerbird-app/RecordingStudio_Oauth", tag: "v0.5.4"
 gem "recording_studio_site_settings", github: "bowerbird-app/RecordingStudio_site_settings", tag: "v0.1.2"
 # Publishable and Artifacts are Embeddable's hard deps. Attachable boots Publishable's model.
-# Users v0.16.0 requires attachable ~> 0.7 (and accessible ~> 0.11).
+# Users v0.16.0 requires attachable ~> 0.7 (and accessible ~> 0.11); 0.13 satisfies both.
 # Artifacts v0.4.0 is the smallest tag that satisfies Embeddable ~> 0.4.0.
 gem "recording_studio_artifacts", github: "bowerbird-app/RecordingStudio_artifacts", tag: "v0.4.0"
 gem "recording_studio_publishable", github: "bowerbird-app/RecordingStudio_publishable", tag: "v0.4.2"
-gem "recording_studio_attachable", github: "bowerbird-app/RecordingStudio_attachable", tag: "v0.7.4"
+gem "recording_studio_attachable", github: "bowerbird-app/RecordingStudio_attachable", tag: "v0.13.0"
 gem "recording_studio_user", github: "bowerbird-app/RecordingStudio_users", tag: "v0.16.0"
 
 # Root switcher for the top nav
@@ -48,7 +48,7 @@ gem "jbuilder"
 gem "tailwindcss-rails"
 
 # FlatPack UI component library [https://github.com/bowerbird-app/flatpack]
-gem "flat_pack", github: "bowerbird-app/flatpack", tag: "v0.1.207"
+gem "flat_pack", github: "bowerbird-app/flatpack", tag: "v0.1.213"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"

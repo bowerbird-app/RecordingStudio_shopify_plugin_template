@@ -46,11 +46,11 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
     gemfile = File.read(File.expand_path("dummy/Gemfile", __dir__))
 
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio", tag: "v4.4.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_accessible", tag: "v0.11.2"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_attachable", tag: "v0.7.4"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_accessible", tag: "v0.13.0"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_attachable", tag: "v0.13.0"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_users", tag: "v0.16.0"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_root_switchable", tag: "v0.5.2"'
-    assert_includes gemfile, 'github: "bowerbird-app/flatpack", tag: "v0.1.207"'
+    assert_includes gemfile, 'github: "bowerbird-app/flatpack", tag: "v0.1.213"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_admin", tag: "v2.0.7"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_Embeddable", tag: "v0.4.0"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_artifacts", tag: "v0.4.0"'
@@ -72,6 +72,14 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
     assert_includes schema, 't.uuid "depends_on_recording_id"'
     assert_includes schema, "index_recording_studio_accesses_on_depends_on_recording_id"
     assert_includes migration, "add_column :recording_studio_accesses, :depends_on_recording_id, :uuid"
+  end
+
+  def test_dummy_schema_includes_attachable_libraries_and_placements
+    schema = File.read(File.expand_path("dummy/db/schema.rb", __dir__))
+
+    assert_includes schema, 'create_table "recording_studio_attachable_libraries"'
+    assert_includes schema, 'create_table "recording_studio_attachable_placements"'
+    assert_includes schema, 't.uuid "attachment_recording_id", null: false'
   end
 
   def test_template_does_not_ship_copied_core_hooks_or_base_service
@@ -182,11 +190,10 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
 
     assert_includes readme, "RecordingStudio"
     assert_includes readme, "v4.4.0"
-    assert_includes readme, "v0.1.207"
+    assert_includes readme, "v0.1.213"
     assert_includes readme, "v2.0.7"
-    assert_includes readme, "v0.11.2"
+    assert_includes readme, "v0.13.0"
     assert_includes readme, "v0.16.0"
-    assert_includes readme, "v0.7.4"
     assert_includes readme, "v0.5.4"
     refute_includes readme, "v0.1.133"
     refute_includes readme, "v3 declarations"
