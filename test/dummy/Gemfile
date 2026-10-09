@@ -17,7 +17,7 @@ gem "recording_studio_site_settings", github: "bowerbird-app/RecordingStudio_sit
 # Users v0.16.0 requires attachable ~> 0.7 (and accessible ~> 0.11); 0.13 satisfies both.
 # Artifacts v0.4.0 is the smallest tag that satisfies Embeddable ~> 0.4.0.
 gem "recording_studio_artifacts", github: "bowerbird-app/RecordingStudio_artifacts", tag: "v0.4.0"
-gem "recording_studio_publishable", github: "bowerbird-app/RecordingStudio_publishable", tag: "v0.4.2"
+gem "recording_studio_publishable", github: "bowerbird-app/RecordingStudio_publishable", tag: "v0.6.0"
 gem "recording_studio_attachable", github: "bowerbird-app/RecordingStudio_attachable", tag: "v0.13.0"
 gem "recording_studio_user", github: "bowerbird-app/RecordingStudio_users", tag: "v0.16.0"
 
