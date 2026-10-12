@@ -46,7 +46,7 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
     gemfile = File.read(File.expand_path("dummy/Gemfile", __dir__))
 
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio", tag: "v4.5.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_accessible", tag: "v0.13.0"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_accessible", tag: "v0.15.0"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_attachable", tag: "v0.13.0"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_users", tag: "v0.16.0"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_root_switchable", tag: "v0.8.0"'
@@ -82,6 +82,15 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
     assert_includes schema, 'create_table "recording_studio_attachable_libraries"'
     assert_includes schema, 'create_table "recording_studio_attachable_placements"'
     assert_includes schema, 't.uuid "attachment_recording_id", null: false'
+  end
+
+  def test_dummy_schema_includes_accessible_audience_tables
+    schema = File.read(File.expand_path("dummy/db/schema.rb", __dir__))
+
+    assert_includes schema, 'create_table "recording_studio_access_constraints"'
+    assert_includes schema, 'create_table "recording_studio_access_rules"'
+    assert_includes schema, "index_recording_studio_access_constraints_on_action"
+    assert_includes schema, "index_recording_studio_access_rules_on_action"
   end
 
   def test_template_does_not_ship_copied_core_hooks_or_base_service
@@ -194,6 +203,7 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
     assert_includes readme, "v4.5.0"
     assert_includes readme, "v0.1.213"
     assert_includes readme, "v2.1.0"
+    assert_includes readme, "v0.15.0"
     assert_includes readme, "v0.13.0"
     assert_includes readme, "v0.16.0"
     assert_includes readme, "v0.5.4"
