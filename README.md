@@ -41,7 +41,7 @@ Connect on this host calls RecordingStudio Oauth `verify_session_token`, then th
 
 White-label strings live in `test/dummy/lib/shopify_plugin_demo/product_config.rb` (`Shopify plugin` / `Shopify Template Demo`).
 
-Dummy gem pins match the WordPress dummy where they apply: RecordingStudio `v4.5.0`, Accessible `v0.15.0`, API `v0.5.6`, Embeddable `v0.4.0`, Artifacts `v0.4.0`, Oauth `v0.5.4`, Admin `v2.1.0`, Users `v0.16.0`, Attachable `v0.13.0`, Root Switchable `v0.8.0`, Metrics `v0.2.0`, FlatPack `v0.1.213`. Users `v0.16.0` requires Accessible `~> 0.11` and Attachable `~> 0.7`; Root Switchable `v0.8.0` requires Accessible `~> 0.13` and Metrics `~> 0.2`; API `v0.5.6` allows Accessible `0.15` under `~> 0.9`. Attachable `v0.12+` needs FlatPack `>= 0.1.213`. Embeddable `v0.4.0` requires Artifacts `~> 0.4.0` (left `artifacts_enabled` off).
+Dummy gem pins match the WordPress dummy where they apply: RecordingStudio `v4.5.0`, Accessible `v0.15.0`, API `v0.5.6`, Embeddable `v0.4.0`, Artifacts `v0.4.0`, Oauth `v0.5.4`, Admin `v2.1.0`, Users `v0.16.0`, Attachable `v0.15.0`, Root Switchable `v0.8.0`, Metrics `v0.2.0`, FlatPack `v0.1.213`. Users `v0.16.0` requires Accessible `~> 0.11` and Attachable `~> 0.7`; Root Switchable `v0.8.0` requires Accessible `~> 0.13` and Metrics `~> 0.2`; API `v0.5.6` allows Accessible `0.15` under `~> 0.9`. Attachable `v0.12+` needs FlatPack `>= 0.1.213`; Attachable `0.14+` needs Metrics `~> 0.2`. Embeddable `v0.4.0` requires Artifacts `~> 0.4.0` (left `artifacts_enabled` off).
 
 Set `SHOPIFY_PLUGIN_REGISTERED_APP_CLIENT_ID` to the Connect Registered App id (`rsoauth_oc_…`). The Partner app client id is JWT `aud` on Token verification, not that id.
 

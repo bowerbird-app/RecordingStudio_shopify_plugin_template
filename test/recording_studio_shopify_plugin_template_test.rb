@@ -47,7 +47,7 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
 
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio", tag: "v4.5.0"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_accessible", tag: "v0.15.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_attachable", tag: "v0.13.0"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_attachable", tag: "v0.15.0"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_users", tag: "v0.16.0"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_root_switchable", tag: "v0.8.0"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_metrics", tag: "v0.2.0"'
@@ -204,7 +204,6 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
     assert_includes readme, "v0.1.213"
     assert_includes readme, "v2.1.0"
     assert_includes readme, "v0.15.0"
-    assert_includes readme, "v0.13.0"
     assert_includes readme, "v0.16.0"
     assert_includes readme, "v0.5.4"
     refute_includes readme, "v0.1.133"
