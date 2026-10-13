@@ -19,7 +19,7 @@ gem "recording_studio_metrics", github: "bowerbird-app/RecordingStudio_metrics",
 gem "recording_studio_oauth", github: "bowerbird-app/RecordingStudio_Oauth", tag: "v0.10.1"
 # Oauth 0.9+ / Users 0.21+ / Root Switchable 0.9+ require cache ~> 0.5 (not on RubyGems)
 gem "recording_studio_cache", github: "bowerbird-app/RecordingStudio_cache", tag: "v0.5.0"
-gem "recording_studio_site_settings", github: "bowerbird-app/RecordingStudio_site_settings", tag: "v0.1.2"
+gem "recording_studio_site_settings", github: "bowerbird-app/RecordingStudio_site_settings", tag: "v0.2.0"
 gem "recording_studio_trashable", github: "bowerbird-app/RecordingStudio_trashable", tag: "v0.10.0", require: false
 
 gem "devise"
