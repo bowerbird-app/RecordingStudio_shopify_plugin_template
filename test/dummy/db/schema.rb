@@ -404,6 +404,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_12_044331) do
     t.text "session_token_secret_ciphertext"
     t.datetime "updated_at", null: false
     t.boolean "use_central_relay", default: false, null: false
+    t.boolean "self_registered", default: false, null: false
+    t.string "token_endpoint_auth_method", null: false
     t.index ["api_key"], name: "index_recording_studio_oauth_clients_on_api_key"
     t.index ["client_id"], name: "index_recording_studio_oauth_clients_on_client_id", unique: true
   end

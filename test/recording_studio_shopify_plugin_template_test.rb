@@ -15,7 +15,7 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
     gemspec = File.read(File.expand_path("../recording_studio_shopify_plugin_template.gemspec", __dir__))
 
     assert_includes gemspec, 'spec.add_dependency "recording_studio", "~> 4.2"'
-    assert_includes gemspec, 'spec.add_dependency "recording_studio_oauth", "~> 0.5.3"'
+    assert_includes gemspec, 'spec.add_dependency "recording_studio_oauth", "~> 0.9"'
   end
 
   def test_gemspec_excludes_cursor_config
