@@ -8,16 +8,18 @@ GIT
 
 GIT
   remote: https://github.com/bowerbird-app/RecordingStudio_Oauth.git
-  revision: cc8e0208e613ef1d2e4d09959fb2498375241516
-  tag: v0.5.4
+  revision: aa7a008f3dc316d96c721773c43fc386d5ba5729
+  tag: v0.9.0
   specs:
-    recording_studio_oauth (0.5.3)
-      flat_pack (~> 0.1.144)
+    recording_studio_oauth (0.9.0)
+      flat_pack (~> 0.1.198)
       rails (~> 8.1.0)
       recording_studio (~> 4.2)
-      recording_studio_accessible (~> 0.9)
+      recording_studio_accessible (~> 0.11)
       recording_studio_admin (~> 2.0)
-      recording_studio_api (~> 0.5.2)
+      recording_studio_api (>= 0.5.2, < 0.7)
+      recording_studio_cache (~> 0.5)
+      recording_studio_metrics (~> 0.2)
       recording_studio_site_settings (~> 0.1)
 
 GIT
@@ -62,6 +64,15 @@ GIT
       recording_studio_metrics (~> 0.2)
 
 GIT
+  remote: https://github.com/bowerbird-app/RecordingStudio_cache.git
+  revision: ffadfbd2a804104e1146c835aaf1bdb8068596ff
+  tag: v0.5.0
+  specs:
+    recording_studio_cache (0.5.0)
+      rails (~> 8.1.0)
+      recording_studio (~> 4.2)
+
+GIT
   remote: https://github.com/bowerbird-app/RecordingStudio_metrics.git
   revision: 6e02b6b75a8a9dad2bd80c6ba2d30f7444e67b9e
   tag: v0.2.0
@@ -100,7 +111,7 @@ PATH
     recording_studio_shopify_plugin_template (0.3.6)
       rails (~> 8.1.0)
       recording_studio (~> 4.2)
-      recording_studio_oauth (~> 0.5.3)
+      recording_studio_oauth (~> 0.9)
 
 GEM
   remote: https://rubygems.org/
@@ -408,6 +419,7 @@ DEPENDENCIES
   recording_studio_admin!
   recording_studio_api!
   recording_studio_attachable!
+  recording_studio_cache!
   recording_studio_metrics!
   recording_studio_oauth!
   recording_studio_shopify_plugin_template!
@@ -498,8 +510,9 @@ CHECKSUMS
   recording_studio_admin (2.2.0)
   recording_studio_api (0.5.6)
   recording_studio_attachable (0.15.0)
+  recording_studio_cache (0.5.0)
   recording_studio_metrics (0.2.0)
-  recording_studio_oauth (0.5.3)
+  recording_studio_oauth (0.9.0)
   recording_studio_shopify_plugin_template (0.3.6)
   recording_studio_site_settings (0.1.0)
   redis (5.4.1) sha256=b5e675b57ad22b15c9bcc765d5ac26f60b675408af916d31527af9bd5a81faae
