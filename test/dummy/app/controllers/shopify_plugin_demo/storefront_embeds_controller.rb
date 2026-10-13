@@ -53,7 +53,9 @@ class ShopifyPluginDemo::StorefrontEmbedsController < ActionController::Base
   def find_page_recording(page_id)
     return if page_id.blank?
 
-    RecordingStudio::Recording.find_by(id: page_id, recordable_type: "Page", trashed_at: nil)
+    RecordingStudio::Recording.where(
+      RecordingStudio::Recording.recording_studio_trashable_kept_sql
+    ).find_by(id: page_id, recordable_type: "Page")
   end
 
   def registered_app
