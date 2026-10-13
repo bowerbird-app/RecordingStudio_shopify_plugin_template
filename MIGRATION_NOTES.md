@@ -10,6 +10,7 @@
 - API dummy tag `v0.7.0` and Oauth dummy tag `v0.10.1` (Oauth allows API `< 0.8`)
 - Trashable dummy tag `v0.10.0` with `require: false` (Accessible `0.17+` / Admin `2.3+` / Oauth `0.10+` / API `0.7+` query helpers only)
 - Attachable dummy tag `v0.15.0` (libraries/placements migrations already installed in `test/dummy`; i18n wave 2 has no new migration)
+- Site Settings dummy tag `v0.2.0` (English I18n keys for flashes and logo helper alts; no Site Settings migration; Accessible `~> 0.11` already satisfied)
 - FlatPack dummy tag `v0.1.213` (required by Attachable `v0.12+`)
 - Public RubyGems and GitHub access for dependency installation
 
