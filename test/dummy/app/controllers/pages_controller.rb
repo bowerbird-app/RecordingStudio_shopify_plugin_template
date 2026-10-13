@@ -23,7 +23,8 @@ class PagesController < ApplicationController
   def page_recordings_scope
     RecordingStudio::Recording
       .includes(:recordable)
-      .where(recordable_type: "Page", trashed_at: nil)
+      .where(RecordingStudio::Recording.recording_studio_trashable_kept_sql)
+      .where(recordable_type: "Page")
       .order(:created_at, :id)
   end
 

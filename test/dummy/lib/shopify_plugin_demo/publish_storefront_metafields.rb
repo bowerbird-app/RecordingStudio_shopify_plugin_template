@@ -32,7 +32,8 @@ module ShopifyPluginDemo
     def pages_for(root_recording)
       RecordingStudio::Recording
         .includes(:recordable)
-        .where(recordable_type: "Page", trashed_at: nil, root_recording_id: root_recording.id)
+        .where(RecordingStudio::Recording.recording_studio_trashable_kept_sql)
+        .where(recordable_type: "Page", root_recording_id: root_recording.id)
         .order(:created_at, :id)
         .map { |recording| { "id" => recording.id, "title" => recording.recordable.title } }
     end
