@@ -11,8 +11,6 @@ gem "flat_pack", github: "bowerbird-app/flatpack", tag: "v0.1.213"
 gem "recording_studio", github: "bowerbird-app/RecordingStudio", tag: "v4.5.0"
 gem "recording_studio_accessible", github: "bowerbird-app/RecordingStudio_accessible", tag: "v0.15.0"
 gem "recording_studio_admin", github: "bowerbird-app/RecordingStudio_admin", tag: "v2.3.0"
-# Admin 2.3+ loads Trashable query helpers only (require: false; no Trashable engine).
-gem "recording_studio_trashable", github: "bowerbird-app/RecordingStudio_trashable", tag: "v0.10.0", require: false
 gem "recording_studio_api", github: "bowerbird-app/RecordingStudio_api", tag: "v0.5.6"
 gem "recording_studio_attachable", github: "bowerbird-app/RecordingStudio_attachable", tag: "v0.15.0"
 # Attachable 0.14+ / Admin 2.3+ Trashable gemspec require metrics ~> 0.2; smallest tag v0.2.0
@@ -21,6 +19,8 @@ gem "recording_studio_oauth", github: "bowerbird-app/RecordingStudio_Oauth", tag
 # Oauth 0.9+ / Users 0.21+ / Root Switchable 0.9+ require cache ~> 0.5 (not on RubyGems)
 gem "recording_studio_cache", github: "bowerbird-app/RecordingStudio_cache", tag: "v0.5.0"
 gem "recording_studio_site_settings", github: "bowerbird-app/RecordingStudio_site_settings", tag: "v0.1.2"
+# Admin 2.3+ loads Trashable query helpers only (require: false; no Trashable engine).
+gem "recording_studio_trashable", github: "bowerbird-app/RecordingStudio_trashable", tag: "v0.10.0", require: false
 
 gem "devise"
 gem "puma"
