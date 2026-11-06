@@ -13,8 +13,6 @@ RecordingStudio.configure do |config|
     "RecordingStudioEmbeddable::Embed",
     "RecordingStudioPublishable::Publishable",
     "RecordingStudioAttachable::Attachment",
-    "RecordingStudioAttachable::Library",
-    "RecordingStudioAttachable::Placement",
     "RecordingStudioSiteSettings::SiteSetting",
     "RecordingStudio::Access",
     "RecordingStudioApi::ApiClient",
@@ -28,6 +26,7 @@ RecordingStudio.configure do |config|
   config.app_name = ShopifyPluginDemo::ProductConfig::NAME if config.respond_to?(:app_name=)
 
   config.actor = -> { Current.actor }
+  config.allow_unauthorized_writes = true if config.respond_to?(:allow_unauthorized_writes=)
 
   config.event_notifications_enabled = true
 

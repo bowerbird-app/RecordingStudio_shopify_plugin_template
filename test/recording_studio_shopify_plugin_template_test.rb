@@ -40,8 +40,8 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
   def test_gemspec_pins_recording_studio_and_oauth
     gemspec = File.read(File.expand_path("../recording_studio_shopify_plugin_template.gemspec", __dir__))
 
-    assert_includes gemspec, 'spec.add_dependency "recording_studio", "~> 4.2"'
-    assert_includes gemspec, 'spec.add_dependency "recording_studio_oauth", "~> 0.9"'
+    assert_includes gemspec, 'spec.add_dependency "recording_studio", "~> 6.3"'
+    assert_includes gemspec, 'spec.add_dependency "recording_studio_oauth", "~> 0.21"'
   end
 
   def test_gemspec_excludes_cursor_config
@@ -68,28 +68,29 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
     assert_includes install_script, "fetch-skills.sh"
   end
 
-  def test_dummy_gemfile_pins_verified_4x_github_tags
+  def test_dummy_gemfile_pins_verified_6x_github_tags
     gemfile = File.read(File.expand_path("dummy/Gemfile", __dir__))
 
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio", tag: "v4.7.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_accessible", tag: "v0.18.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_attachable", tag: "v0.15.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_users", tag: "v0.21.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_root_switchable", tag: "v0.9.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_metrics", tag: "v0.2.3"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_cache", tag: "v0.5.0"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio", tag: "v6.5.0"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_accessible", tag: "v0.24.2"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_attachable", tag: "v0.22.1"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_users", tag: "v0.27.1"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_root_switchable", tag: "v0.11.7"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_metrics", tag: "v0.7.3"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_cache", tag: "v0.6.3"'
     assert_includes gemfile, 'github: "bowerbird-app/flatpack", tag: "v0.1.341"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_admin", tag: "v2.3.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_trashable", tag: "v0.11.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_Embeddable", tag: "v0.6.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_artifacts", tag: "v0.4.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_publishable", tag: "v0.8.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_api", tag: "v0.7.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_site_settings", tag: "v0.2.0"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_admin", tag: "v2.9.3"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_trashable", tag: "v0.12.3"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_Embeddable", tag: "v0.15.3"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_artifacts", tag: "v0.4.7"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_publishable", tag: "v0.13.2"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_api", tag: "v0.17.1"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_site_settings", tag: "v0.5.5"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_logs", tag: "v0.7.4"'
     refute_includes gemfile, "recording_studio/v3.0.0"
     refute_includes gemfile, 'tag: "v0.1.133"'
     refute_includes gemfile, 'github: "bowerbird-app/RecordingStudio_accessible", tag: "v0.6.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_Oauth", tag: "v0.10.1"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_Oauth", tag: "v0.21.3"'
   end
 
   def test_dummy_schema_includes_accessible_depends_on_recording_id
@@ -148,8 +149,9 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
     application_controller_path = File.expand_path("dummy/app/controllers/application_controller.rb", __dir__)
     controller_source = File.read(application_controller_path)
 
-    assert_includes controller_source, "include RecordingStudio::UsesDefaultLayout"
+    assert_includes controller_source, "recording_studio_layout { application_layout }"
     assert_includes controller_source, "devise_controller? ? \"application\" : \"host\""
+    refute_includes controller_source, "UsesDefaultLayout"
     refute_includes controller_source, '"recording_studio/default_layout"'
     refute File.exist?(File.expand_path("dummy/app/views/layouts/flat_pack_sidebar.html.erb", __dir__))
     assert File.exist?(File.expand_path("dummy/app/views/layouts/flat_pack/_sidebar.html.erb", __dir__))
@@ -232,19 +234,20 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
     readme = File.read(File.expand_path("../README.md", __dir__))
 
     assert_includes readme, "RecordingStudio"
-    assert_includes readme, "v4.7.0"
+    assert_includes readme, "v6.5.0"
     assert_includes readme, "v0.1.341"
-    assert_includes readme, "v2.3.0"
-    assert_includes readme, "v0.18.0"
-    assert_includes readme, "v0.15.0"
-    assert_includes readme, "v0.21.0"
-    assert_includes readme, "v0.10.1"
-    assert_includes readme, "v0.11.0"
-    assert_includes readme, "v0.7.0"
-    assert_includes readme, "v0.2.3"
-    assert_includes readme, "v0.2.0"
-    assert_includes readme, "v0.9.0"
-    assert_includes readme, "v0.5.0"
+    assert_includes readme, "v2.9.3"
+    assert_includes readme, "v0.24.2"
+    assert_includes readme, "v0.22.1"
+    assert_includes readme, "v0.27.1"
+    assert_includes readme, "v0.21.3"
+    assert_includes readme, "v0.12.3"
+    assert_includes readme, "v0.17.1"
+    assert_includes readme, "v0.7.3"
+    assert_includes readme, "v0.5.5"
+    assert_includes readme, "v0.11.7"
+    assert_includes readme, "v0.6.3"
+    assert_includes readme, "v0.7.4"
     refute_includes readme, "v0.1.133"
     refute_includes readme, "v3 declarations"
     refute_includes readme, "RecordingStudio v3"
@@ -319,6 +322,9 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
     schema = File.read(File.expand_path("dummy/db/schema.rb", __dir__))
     refute_includes schema, "shopify_plugin_demo_connections"
     assert_includes schema, "recording_studio_oauth_external_installs"
+    assert_includes schema, "recording_studio_oauth_outbound_connections"
+    assert_includes schema, "recording_studio_oauth_outbound_handshakes"
+    assert_includes schema, 't.string "plugin_key"'
     migrate_path = File.expand_path(
       "dummy/db/migrate/20260924040000_add_oauth_session_token_verify_and_drop_stub_connections.rb",
       __dir__

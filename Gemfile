@@ -6,21 +6,21 @@ source "https://rubygems.org"
 gemspec
 
 # recording_studio is not published to RubyGems; resolve the gemspec pin from GitHub.
-# recording_studio is not published to RubyGems; resolve the gemspec pin from GitHub.
 gem "flat_pack", github: "bowerbird-app/flatpack", tag: "v0.1.341"
-gem "recording_studio", github: "bowerbird-app/RecordingStudio", tag: "v4.7.0"
-gem "recording_studio_accessible", github: "bowerbird-app/RecordingStudio_accessible", tag: "v0.18.0"
-gem "recording_studio_admin", github: "bowerbird-app/RecordingStudio_admin", tag: "v2.3.0"
-gem "recording_studio_api", github: "bowerbird-app/RecordingStudio_api", tag: "v0.7.0"
-gem "recording_studio_attachable", github: "bowerbird-app/RecordingStudio_attachable", tag: "v0.15.0"
-# API 0.7+ / Oauth 0.10.1+ require metrics ~> 0.2, >= 0.2.2; pin v0.2.3.
-# Accessible 0.17+ / Admin 2.3+ / Oauth 0.10+ / API 0.7+ use Trashable query helpers; pin with require: false.
-gem "recording_studio_metrics", github: "bowerbird-app/RecordingStudio_metrics", tag: "v0.2.3", require: false
-gem "recording_studio_oauth", github: "bowerbird-app/RecordingStudio_Oauth", tag: "v0.10.1"
-# Oauth 0.9+ / Users 0.21+ / Root Switchable 0.9+ require cache ~> 0.5 (not on RubyGems)
-gem "recording_studio_cache", github: "bowerbird-app/RecordingStudio_cache", tag: "v0.5.0"
-gem "recording_studio_site_settings", github: "bowerbird-app/RecordingStudio_site_settings", tag: "v0.2.0"
-gem "recording_studio_trashable", github: "bowerbird-app/RecordingStudio_trashable", tag: "v0.11.0", require: false
+gem "recording_studio", github: "bowerbird-app/RecordingStudio", tag: "v6.5.0"
+gem "recording_studio_accessible", github: "bowerbird-app/RecordingStudio_accessible", tag: "v0.24.2"
+gem "recording_studio_admin", github: "bowerbird-app/RecordingStudio_admin", tag: "v2.9.3"
+gem "recording_studio_api", github: "bowerbird-app/RecordingStudio_api", tag: "v0.17.1"
+gem "recording_studio_attachable", github: "bowerbird-app/RecordingStudio_attachable", tag: "v0.22.1"
+# Oauth 0.21.3 requires metrics >= 0.3; Logs 0.7.4 requires metrics >= 0.6.1.
+gem "recording_studio_metrics", github: "bowerbird-app/RecordingStudio_metrics", tag: "v0.7.3", require: false
+gem "recording_studio_oauth", github: "bowerbird-app/RecordingStudio_Oauth", tag: "v0.21.3"
+# Oauth 0.21.3 / Root Switchable 0.11.7 require cache ~> 0.5; Embeddable 0.15.3 needs ~> 0.6.
+gem "recording_studio_cache", github: "bowerbird-app/RecordingStudio_cache", tag: "v0.6.3"
+gem "recording_studio_site_settings", github: "bowerbird-app/RecordingStudio_site_settings", tag: "v0.5.5"
+gem "recording_studio_trashable", github: "bowerbird-app/RecordingStudio_trashable", tag: "v0.12.3", require: false
+# Admin 2.9.3 / API 0.17.1 require Logs.
+gem "recording_studio_logs", github: "bowerbird-app/RecordingStudio_logs", tag: "v0.7.4"
 
 gem "devise"
 gem "puma"

@@ -7,28 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
-- Dummy and root Gemfiles pin Recording Studio to GitHub tag `v4.2.2`.
-- Dummy and root Recording Studio addon pins climb as far as API `v0.5.6` allows. API still requires Accessible `~> 0.9`, so Accessible stays on `v0.9.1`. Admin is `v2.0.4`. Oauth is `v0.5.4` (not `v0.5.5`, which needs Accessible `~> 0.11`). Site Settings is `v0.1.2` (not `v0.1.3`). Dummy Embeddable is `v0.2.5`, Publishable `v0.4.2`, Users `v0.12.4` (not `v0.12.5`), Root Switchable `v0.5.2` (not `v0.5.3`). Root Attachable is `v0.7.1`; dummy Attachable stays `v0.5.1` because Users `v0.12.4` still requires `~> 0.5.0`.
-- Gem tests stub with a small `Object#stub` helper when Minitest 6 omits `minitest/mock`.
-
-### Upgrade notes
-- Point host/dummy Gemfiles at the tags in `Gemfile` and `test/dummy/Gemfile`, then `bundle lock --update` those gems and `bin/rails db:prepare`. Dummy Users `v0.12.4` adds `registered_with`, Devise confirmable columns, OTP challenges, and nullable Profile last name / time zone.
-- Keep RecordingStudio API on `v0.5.6` until that gem accepts Accessible `0.11`. Do not bump Accessible, Oauth, Users, Site Settings, or Root Switchable past the tags those gemspecs can resolve with API `v0.5.6`.
-
 ## [0.3.22] - 2026-11-06
 
 ### Security
-- Root and dummy lockfiles use Rails 8.1.4.1, rack 3.2.8, nokogiri 1.19.7, loofah 2.25.3, and rails-html-sanitizer 1.7.2. Dummy net-ssh is 7.3.8. view_component is 4.23.0 (GHSA-8qw7-6phv-7q6p). FlatPack is `v0.1.341` so it can resolve that view_component.
+- Root and dummy lockfiles use Rails 8.1.4.1, rack 3.2.8, nokogiri 1.19.7, loofah 2.25.3, and rails-html-sanitizer 1.7.2. Dummy net-ssh is 7.3.8. Locked `view_component` is `4.23.0` (GHSA-8qw7-6phv-7q6p). FlatPack is `v0.1.341` so it can resolve that view_component.
 
 ### Changed
 - `.ruby-version` and `test/dummy/.ruby-version` pin 3.3.13 so GitHub-hosted `ubuntu-26.04` can install Ruby for lint and security jobs.
 - Dummy Card calls use `background:`, `border:`, and `hover:` instead of `style:`. Dummy does not prepend FlatPack Card or PageNav.
+- Gemspec Recording Studio floor is `~> 6.3`. Dummy and root pin Recording Studio `v6.5.0`, Oauth `v0.21.3`, Root Switchable `v0.11.7`, Admin `v2.9.3`, and FlatPack `v0.1.341`. Oauth `v0.21.3` keeps API on `v0.17.1` (`< 0.18`). Dummy Users is `v0.27.1`, Accessible `v0.24.2`, Attachable `v0.22.1`, Embeddable `v0.15.3`, Publishable `v0.13.2`, Trashable `v0.12.3`, Metrics `v0.7.3`, Cache `v0.6.3`, Site Settings `v0.5.5`, Logs `v0.7.4`, Artifacts `v0.4.7`. Dummy uses `recording_studio_layout` instead of `UsesDefaultLayout`.
 
 ### Upgrade notes
-- No API or migration change. `bundle update` rails, rack, nokogiri, loofah, rails-html-sanitizer, dummy net-ssh, FlatPack to `v0.1.341`, and view_component to `>= 4.14.0`, then keep those floors.
+- Point host Gemfiles at Recording Studio `v6.5.0` (or another 6.3+ tag) and the addon tags in `Gemfile` / `test/dummy/Gemfile`, then `bundle install` and `bin/rails db:prepare`. Oauth `v0.21.3` cannot take API `0.18+`. Dummy copies Oauth outbound connection and `plugin_key` migrations.
+- Keep Rails 8.1.4.1, rack 3.2.8, nokogiri 1.19.7, loofah 2.25.3, rails-html-sanitizer 1.7.2, dummy net-ssh 7.3.8, FlatPack `v0.1.341`, and locked `view_component` `4.23.0`.
 - Use Ruby 3.3.13 locally if you follow `.ruby-version`. Gemspec still allows `>= 3.3.0`.
-- Dummy Card `style:` is gone. Do not add a host prepend for old Card or PageNav kwargs.
+- Dummy Card `style:` is gone. Do not add a host prepend for old Card or PageNav kwargs. Replace `include RecordingStudio::UsesDefaultLayout` with `recording_studio_layout`.
 
 ## [0.3.6] - 2026-09-28
 
