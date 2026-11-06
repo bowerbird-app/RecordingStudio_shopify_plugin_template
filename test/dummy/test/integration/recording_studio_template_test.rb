@@ -5,9 +5,9 @@ require "test_helper"
 class RecordingStudioTemplateTest < ActiveSupport::TestCase
   test "dummy app loads root switchable config and controller support" do
     assert_equal [ "all_workspaces" ], RecordingStudioRootSwitchable.configuration.scopes.keys
-    assert_equal :application_layout, RecordingStudioRootSwitchable.configuration.layout
+    assert_equal "host", RecordingStudioRootSwitchable.configuration.layout
     assert_includes ApplicationController.ancestors, RecordingStudio::RootSwitchable::ControllerSupport
-    assert_includes ApplicationController.ancestors, RecordingStudio::UsesDefaultLayout
+    assert_includes ApplicationController.ancestors, RecordingStudio::ControllerLayout
   end
 
   test "dummy app validates recordable declarations" do
@@ -56,6 +56,10 @@ class RecordingStudioTemplateTest < ActiveSupport::TestCase
     assert_equal root_recording, page_recording.root_recording
     assert_equal root_recording, carousel_recording.root_recording
     assert_equal 3, Workspace.count
+    admin = User.find_by!(email: "admin@admin.com")
+    assert RecordingStudioAccessible.authorized?(actor: admin, recording: root_recording, role: :admin)
+    assert RecordingStudioAccessible.authorized?(actor: admin, recording: accessible_root_recording, role: :admin)
+    assert RecordingStudioAccessible.authorized?(actor: admin, recording: private_root_recording, role: :admin)
 
     assert_no_difference -> { User.count } do
       assert_no_difference -> { RecordingStudio::Recording.count } do
@@ -84,6 +88,6 @@ class RecordingStudioTemplateTest < ActiveSupport::TestCase
     refute RecordingStudio.capability_enabled?(:example, for: Folder)
     refute RecordingStudio.capability_enabled?(:example, for: Page)
     assert_equal [ "Workspace" ], RecordingStudio.configuration.enabled_recordable_types_for(:example)
-    assert_includes ApplicationController.ancestors, RecordingStudio::UsesDefaultLayout
+    assert_includes ApplicationController.ancestors, RecordingStudio::ControllerLayout
   end
 end

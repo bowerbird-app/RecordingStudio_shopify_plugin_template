@@ -1,12 +1,10 @@
 class ApplicationController < ActionController::Base
   include RecordingStudio::RootSwitchable::ControllerSupport
-  include RecordingStudio::UsesDefaultLayout
+  recording_studio_layout { application_layout }
 
   allow_browser versions: :modern
 
   stale_when_importmap_changes
-
-  layout :application_layout
 
   before_action :authenticate_user!
   before_action :set_current_actor

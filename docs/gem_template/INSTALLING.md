@@ -1,6 +1,6 @@
 > **Architecture Documentation**
 > *   **Canonical Source:** [bowerbird-app/gem_template](https://github.com/bowerbird-app/gem_template/tree/main/docs/gem_template)
-> *   **Last Updated:** May 5, 2026
+> *   **Last Updated:** November 6, 2026
 >
 > *Maintainers: Please update the date above when modifying this file.*
 
@@ -196,14 +196,14 @@ The `gem_template` helper provides access to all engine routes.
 
 ## RecordingStudio Host-App Check
 
-This template's dummy app uses RecordingStudio `v4.5.0` (`~> 4.2` in the gemspec). Keep
+This template's dummy app uses RecordingStudio `v6.5.0` (`~> 6.3` in the gemspec). Keep
 `config.require_recordable_declarations = true`, declare every configured recordable with
 `recording_studio_recordable(...)`, and create roots with `RecordingStudio.root_recording_for(recordable)`.
 Child recordings must be created with an explicit `parent_recording`.
 
-When Accessible is bundled, pin the dummy or host Gemfile to `v0.15.0`, run
+When Accessible is bundled, pin the dummy or host Gemfile to `v0.24.2`, run
 `bin/rails generate recording_studio_accessible:migrations`, migrate, and rebuild Tailwind after
-bumping FlatPack (`v0.1.213` or newer; Attachable `v0.12+` requires `>= 0.1.213`).
+bumping FlatPack (`v0.1.341`; Attachable `v0.12+` requires `>= 0.1.213`; `v0.1.341` allows view_component `>= 4.14`).
 
 ---
 

@@ -1,6 +1,6 @@
 > **Architecture Documentation**
 > *   **Canonical Source:** [bowerbird-app/gem_template](https://github.com/bowerbird-app/gem_template/tree/main/docs/gem_template)
-> *   **Last Updated:** May 5, 2026
+> *   **Last Updated:** November 6, 2026
 >
 > *Maintainers: Please update the date above when modifying this file.*
 
@@ -38,7 +38,7 @@ This will:
 
 ### RecordingStudio Host-App Declarations
 
-The dummy host app pins RecordingStudio to GitHub tag `v4.5.0` (`~> 4.2` in the gemspec) and keeps strict recordable declarations enabled:
+The dummy host app pins RecordingStudio to GitHub tag `v6.5.0` (`~> 6.3` in the gemspec) and keeps strict recordable declarations enabled:
 
 ```ruby
 RecordingStudio.configure do |config|
@@ -54,6 +54,8 @@ class Folder < ApplicationRecord
   recording_studio_recordable label: "Folder", root: false, allowed_parent_types: ["Workspace", "Folder"]
 end
 ```
+
+Dummy `config.authorize_write` denies unless a persisted `User` is the write actor (the `record!` actor, or `Current.actor` when the event actor is an API client) and a `root_recording` is present. Access grant writes use `AccessCreationContext.allowed?` (the same path as `grant_access` / `bootstrap_owner_access!`), otherwise `:admin` on the root. Other writes use `RecordingStudioAccessible.authorized?(..., role: :edit)`. Do not set `allow_unauthorized_writes`, and do not treat `actor.present?` as a write policy.
 
 Use `RecordingStudio.validate_recordable_declarations!`, `RecordingStudio.root_recordable_types`, and
 `RecordingStudio.allowed_parent_types_for("Page")` to verify the host app wiring.

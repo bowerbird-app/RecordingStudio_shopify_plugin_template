@@ -11,7 +11,7 @@
     ) %>
   <% else %>
     <%= render FlatPack::Tooltip::Component.new(text: "Hover this card on the shop to peek at the widget.") do %>
-      <%= render FlatPack::Card::Component.new(style: :interactive) do |card| %>
+      <%= render FlatPack::Card::Component.new(hover: :subtle) do |card| %>
         <% card.header do %>
           <%= render FlatPack::PageTitle::Component.new(title: "test widget", variant: :h3, class: "mb-0 pb-0") %>
         <% end %>
