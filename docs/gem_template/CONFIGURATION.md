@@ -55,6 +55,8 @@ class Folder < ApplicationRecord
 end
 ```
 
+Dummy `config.authorize_write` denies unless a persisted `User` is the write actor (the `record!` actor, or `Current.actor` when the event actor is an API client) and a `root_recording` is present. Access grant writes use `AccessCreationContext.allowed?` (the same path as `grant_access` / `bootstrap_owner_access!`), otherwise `:admin` on the root. Other writes use `RecordingStudioAccessible.authorized?(..., role: :edit)`. Do not set `allow_unauthorized_writes`, and do not treat `actor.present?` as a write policy.
+
 Use `RecordingStudio.validate_recordable_declarations!`, `RecordingStudio.root_recordable_types`, and
 `RecordingStudio.allowed_parent_types_for("Page")` to verify the host app wiring.
 

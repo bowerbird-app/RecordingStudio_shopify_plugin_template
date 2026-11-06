@@ -12,7 +12,8 @@ find_or_record_child = lambda do |recordable, root_recording, parent_recording|
     action: "created",
     recordable: recordable,
     root_recording: root_recording,
-    parent_recording: parent_recording
+    parent_recording: parent_recording,
+    actor: Current.actor
   ).recording
 end
 
@@ -38,16 +39,22 @@ begin
   root_recording = RecordingStudio.root_recording_for(workspace)
   accessible_root_recording = RecordingStudio.root_recording_for(accessible_workspace)
   private_root_recording = RecordingStudio.root_recording_for(private_workspace)
+  admin_root = AdminRoot.find_or_create_by!(name: "Admin")
+  admin_root_recording = RecordingStudio.root_recording_for(admin_root)
+
+  [
+    root_recording,
+    accessible_root_recording,
+    private_root_recording,
+    admin_root_recording
+  ].each do |root|
+    ShopifyPluginDemo::Tree.grant_admin!(root_recording: root, actor: user)
+  end
 
   folder_recording = find_or_record_child.call(folder, root_recording, root_recording)
 
   find_or_record_child.call(page, root_recording, folder_recording)
   find_or_record_child.call(carousel_page, root_recording, folder_recording)
-
-  admin_root = AdminRoot.find_or_create_by!(name: "Admin")
-  admin_root_recording = RecordingStudio.root_recording_for(admin_root)
-  ShopifyPluginDemo::Tree.grant_admin!(root_recording: admin_root_recording, actor: user)
-  ShopifyPluginDemo::Tree.grant_admin!(root_recording: root_recording, actor: user)
   ShopifyPluginDemo::Tree.ensure_embed_on!(
     RecordingStudio::Recording.find_by!(recordable: page),
     actor: user

@@ -16,11 +16,13 @@ module ShopifyPluginDemo
     module_function
 
     def isolated_client!(name: "Shopify plugin demo client")
+      previous_actor = Current.actor
       actor = User.create!(
         email: "shopify-plugin-demo-#{SecureRandom.hex(8)}@example.com",
         password: "Password1!",
         password_confirmation: "Password1!"
       )
+      Current.actor = actor
       workspace = Workspace.create!(name: "Shopify plugin demo #{SecureRandom.hex(4)}")
       root_recording = RecordingStudio.root_recording_for(workspace)
       Tree.grant_admin!(root_recording: root_recording, actor: actor)
@@ -48,14 +50,18 @@ module ShopifyPluginDemo
         oauth_client_id: oauth_client_id,
         oauth_client_secret: oauth_client_secret
       )
+    ensure
+      Current.actor = previous_actor
     end
 
     def foreign_page!
+      previous_actor = Current.actor
       actor = User.create!(
         email: "shopify-plugin-demo-foreign-#{SecureRandom.hex(8)}@example.com",
         password: "Password1!",
         password_confirmation: "Password1!"
       )
+      Current.actor = actor
       workspace = Workspace.create!(name: "Foreign #{SecureRandom.hex(4)}")
       root_recording = RecordingStudio.root_recording_for(workspace)
       Tree.grant_admin!(root_recording: root_recording, actor: actor)
@@ -66,6 +72,8 @@ module ShopifyPluginDemo
       )
       Tree.ensure_embed_on!(page_recording, actor: actor)
       page_recording
+    ensure
+      Current.actor = previous_actor
     end
 
     def issue_named_credentials!(access_point_recording:, manager_actor:, name:)

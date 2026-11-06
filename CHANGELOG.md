@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Root and dummy lockfiles use Rails 8.1.4.1, rack 3.2.8, nokogiri 1.19.7, loofah 2.25.3, and rails-html-sanitizer 1.7.2. Dummy net-ssh is 7.3.8. Locked `view_component` is `4.23.0` (GHSA-8qw7-6phv-7q6p). FlatPack is `v0.1.341` so it can resolve that view_component.
 
 ### Changed
+- Dummy `authorize_write` goes through Recording Studio Accessible (`AccessCreationContext` for Access grants, `:edit` on the root otherwise). Dummy no longer sets `allow_unauthorized_writes`.
 - `.ruby-version` and `test/dummy/.ruby-version` pin 3.3.13 so GitHub-hosted `ubuntu-26.04` can install Ruby for lint and security jobs.
 - Dummy Card calls use `background:`, `border:`, and `hover:` instead of `style:`. Dummy does not prepend FlatPack Card or PageNav.
 - Dummy no longer copies Oauth engine migrations (`20261022000001` outbound connections, handshake FK, per-root user connections, `plugin_key`). Oauth appends those paths; copies at the same version broke `db:prepare`.
@@ -23,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Keep Rails 8.1.4.1, rack 3.2.8, nokogiri 1.19.7, loofah 2.25.3, rails-html-sanitizer 1.7.2, dummy net-ssh 7.3.8, FlatPack `v0.1.341`, and locked `view_component` `4.23.0`.
 - Use Ruby 3.3.13 locally if you follow `.ruby-version`. Gemspec still allows `>= 3.3.0`.
 - Dummy Card `style:` is gone. Do not add a host prepend for old Card or PageNav kwargs. Replace `include RecordingStudio::UsesDefaultLayout` with `recording_studio_layout`.
+- Set host `authorize_write` through Accessible. Do not set `allow_unauthorized_writes`. Seed and test writes need a persisted User plus `bootstrap_owner_access!` (or another real grant) before `record!`.
 
 ## [0.3.6] - 2026-09-28
 

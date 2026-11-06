@@ -109,6 +109,7 @@ class ShopifyPluginDemoStorefrontEmbedTest < ActionDispatch::IntegrationTest
   end
 
   test "storefront json for carousel page includes carousel markup" do
+    grant_admin!(@user, @page_recording.root_recording)
     carousel = ShopifyPluginDemo::Tree.record_page!(
       root_recording: @page_recording.root_recording,
       title: "Carousel",
