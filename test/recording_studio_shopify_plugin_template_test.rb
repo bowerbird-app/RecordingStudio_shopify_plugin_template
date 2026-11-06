@@ -154,6 +154,7 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
     refute File.exist?(File.expand_path("dummy/app/views/layouts/flat_pack_sidebar.html.erb", __dir__))
     assert File.exist?(File.expand_path("dummy/app/views/layouts/flat_pack/_sidebar.html.erb", __dir__))
     assert File.exist?(File.expand_path("dummy/app/views/layouts/host.html.erb", __dir__))
+    assert File.exist?(File.expand_path("dummy/config/initializers/flat_pack_removed_kwargs.rb", __dir__))
   end
 
   def test_dummy_importmap_wires_turbo_and_admin_controllers_for_admin_screens

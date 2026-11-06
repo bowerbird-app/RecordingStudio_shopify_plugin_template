@@ -23,10 +23,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - `.ruby-version` and `test/dummy/.ruby-version` pin 3.3.13 so GitHub-hosted `ubuntu-26.04` can install Ruby for lint and security jobs.
+- Dummy Card calls use `background:`, `border:`, and `hover:` instead of `style:`. An initializer remaps the old Card and PageNav kwargs for Recording Studio 4.7 addon views.
 
 ### Upgrade notes
 - No API or migration change. `bundle update` rails, rack, nokogiri, loofah, rails-html-sanitizer, dummy net-ssh, FlatPack to `v0.1.311`, and view_component to `>= 4.14.0`, then keep those floors.
 - Use Ruby 3.3.13 locally if you follow `.ruby-version`. Gemspec still allows `>= 3.3.0`.
+- Dummy Card `style:` is gone. Keep the dummy initializer until addon views stop sending `style:` and `anchor_label`.
 
 ## [0.3.6] - 2026-09-28
 
