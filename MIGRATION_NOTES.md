@@ -3,7 +3,7 @@
 ## Current Requirements
 
 - Ruby 3.3 or newer
-- Rails 8.1 or newer (root and dummy lockfiles pin 8.1.4.1; rack `>= 3.2.8`, nokogiri `>= 1.19.5`, loofah `>= 2.25.3`, rails-html-sanitizer `>= 1.7.2`; dummy net-ssh `>= 7.3.8`)
+- Rails 8.1 or newer (root and dummy lockfiles pin 8.1.4.1; rack `>= 3.2.8`, nokogiri `>= 1.19.5`, loofah `>= 2.25.3`, rails-html-sanitizer `>= 1.7.2`; dummy net-ssh `>= 7.3.8`; view_component `>= 4.14.0`)
 - Recording Studio 4.x (`~> 4.2` in the gemspec; dummy GitHub tag `v4.7.0`; English fallback via `RecordingStudio.t`, no host migration)
 - Accessible dummy tag `v0.18.0` (access constraint/rule migrations from `0.14.0` installed in `test/dummy`; `0.17+` is query-only Trashable; `0.18.0` adds ControllerAuth, no Accessible migration) and Root Switchable dummy tag `v0.9.0`
 - Metrics dummy tag `v0.2.3` (required by API `0.7+` / Oauth `0.10.1+` as `~> 0.2, >= 0.2.2`; also Root Switchable `v0.7+`, Admin `2.3+` Trashable, Accessible `0.17+`) and Cache dummy tag `v0.5.0` (required by Oauth `0.9+`, Users `0.21+`, Root Switchable `0.9+`)
@@ -11,7 +11,7 @@
 - Trashable dummy tag `v0.11.0` with `require: false` (Accessible `0.17+` / Admin `2.3+` / Oauth `0.10+` / API `0.7+` query helpers only; Trashable `0.11.0` requires Recording Studio `~> 4.7`)
 - Attachable dummy tag `v0.15.0` (libraries/placements migrations already installed in `test/dummy`; i18n wave 2 has no new migration)
 - Site Settings dummy tag `v0.2.0` (English I18n keys for flashes and logo helper alts; no Site Settings migration; Accessible `~> 0.11` already satisfied)
-- FlatPack dummy tag `v0.1.213` (required by Attachable `v0.12+`)
+- FlatPack dummy tag `v0.1.311` (first tag that allows view_component `>= 4.14`; Attachable `v0.12+` needs `>= 0.1.213`)
 - Public RubyGems and GitHub access for dependency installation
 
 ## Verification

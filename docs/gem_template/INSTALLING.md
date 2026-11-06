@@ -203,7 +203,7 @@ Child recordings must be created with an explicit `parent_recording`.
 
 When Accessible is bundled, pin the dummy or host Gemfile to `v0.15.0`, run
 `bin/rails generate recording_studio_accessible:migrations`, migrate, and rebuild Tailwind after
-bumping FlatPack (`v0.1.213` or newer; Attachable `v0.12+` requires `>= 0.1.213`).
+bumping FlatPack (`v0.1.311` or newer; Attachable `v0.12+` requires `>= 0.1.213`; `v0.1.311` is the first tag that allows view_component `>= 4.14`).
 
 ---
 
