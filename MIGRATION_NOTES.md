@@ -11,7 +11,7 @@
 - Trashable dummy tag `v0.11.0` with `require: false` (Accessible `0.17+` / Admin `2.3+` / Oauth `0.10+` / API `0.7+` query helpers only; Trashable `0.11.0` requires Recording Studio `~> 4.7`)
 - Attachable dummy tag `v0.15.0` (libraries/placements migrations already installed in `test/dummy`; i18n wave 2 has no new migration)
 - Site Settings dummy tag `v0.2.0` (English I18n keys for flashes and logo helper alts; no Site Settings migration; Accessible `~> 0.11` already satisfied)
-- FlatPack dummy tag `v0.1.311` (first tag that allows view_component `>= 4.14`; Attachable `v0.12+` needs `>= 0.1.213`)
+- FlatPack dummy tag `v0.1.341` (allows view_component `>= 4.14`; Attachable `v0.12+` needs `>= 0.1.213`)
 - Public RubyGems and GitHub access for dependency installation
 
 ## Verification
