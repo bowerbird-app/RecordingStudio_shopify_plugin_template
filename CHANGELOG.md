@@ -21,8 +21,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - Root and dummy lockfiles use Rails 8.1.4.1, rack 3.2.8, nokogiri 1.19.7, loofah 2.25.3, and rails-html-sanitizer 1.7.2. Dummy net-ssh is 7.3.8.
 
+### Changed
+- `.ruby-version` and `test/dummy/.ruby-version` pin 3.3.13 so GitHub-hosted `ubuntu-26.04` can install Ruby for lint and security jobs.
+
 ### Upgrade notes
 - No API or migration change. `bundle update` rails, rack, nokogiri, loofah, rails-html-sanitizer, and dummy net-ssh, then keep those floors.
+- Use Ruby 3.3.13 locally if you follow `.ruby-version`. Gemspec still allows `>= 3.3.0`.
 
 ## [0.3.6] - 2026-09-28
 

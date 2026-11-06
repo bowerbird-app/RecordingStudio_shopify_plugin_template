@@ -22,6 +22,14 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
     assert_lock_at_least dummy_lock, "net-ssh", "7.3.8"
   end
 
+  def test_ruby_version_files_pin_github_hosted_patch
+    root = File.read(File.expand_path("../.ruby-version", __dir__)).strip
+    dummy = File.read(File.expand_path("dummy/.ruby-version", __dir__)).strip
+
+    assert_equal "3.3.13", root
+    assert_equal root, dummy
+  end
+
   def test_engine_exists
     assert_kind_of Class, ::RecordingStudioShopifyPluginTemplate::Engine
   end
