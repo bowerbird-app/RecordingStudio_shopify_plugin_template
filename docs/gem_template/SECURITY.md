@@ -41,7 +41,8 @@ end
 
 ### Dependencies
 - **Status**: ✅ Current
-- Rails 8.1 (latest stable)
+- Rails 8.1 (lockfiles pin 8.1.4.1)
+- Lockfiles also keep rack `>= 3.2.8`, nokogiri `>= 1.19.5`, loofah `>= 2.25.3`, rails-html-sanitizer `>= 1.7.2`, and dummy net-ssh `>= 7.3.8`
 - All gems from trusted sources (rubygems.org)
 - Gemspec includes `rubygems_mfa_required = true` for publishing security
 
@@ -111,6 +112,7 @@ For security issues, please report via GitHub Issues or contact the maintainers 
 ## Updates
 
 - **2025-12-04**: Initial security review completed
+- **2026-11-06**: Root and dummy lockfiles pin Rails 8.1.4.1 plus rack, nokogiri, loofah, rails-html-sanitizer, and dummy net-ssh security floors
 - **2026-10-05**: Dummy credentials use the shared RecordingStudio_* development master key; `master.key` stays gitignored
 - No vulnerabilities identified in current scope
 - Development environment appropriately configured

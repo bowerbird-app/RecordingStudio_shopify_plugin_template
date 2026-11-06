@@ -4,7 +4,22 @@ require "test_helper"
 
 class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
   def test_version_matches_release
-    assert_equal "0.3.21", ::RecordingStudioShopifyPluginTemplate::VERSION
+    assert_equal "0.3.22", ::RecordingStudioShopifyPluginTemplate::VERSION
+  end
+
+  def test_lockfiles_meet_security_floors
+    root_lock = File.expand_path("../Gemfile.lock", __dir__)
+    dummy_lock = File.expand_path("dummy/Gemfile.lock", __dir__)
+
+    [root_lock, dummy_lock].each do |lockfile|
+      assert_lock_at_least lockfile, "rails", "8.1.4.1"
+      assert_lock_at_least lockfile, "rack", "3.2.8"
+      assert_lock_at_least lockfile, "nokogiri", "1.19.5"
+      assert_lock_at_least lockfile, "loofah", "2.25.3"
+      assert_lock_at_least lockfile, "rails-html-sanitizer", "1.7.2"
+    end
+
+    assert_lock_at_least dummy_lock, "net-ssh", "7.3.8"
   end
 
   def test_engine_exists
@@ -296,5 +311,21 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
       __dir__
     )
     assert_includes File.read(migrate_path), "shopify_plugin_demo_connections"
+  end
+
+  private
+
+  def assert_lock_at_least(lockfile, gem_name, minimum)
+    versions = File.readlines(lockfile).filter_map do |line|
+      next unless line =~ /^    #{Regexp.escape(gem_name)} \((\d+(?:\.\d+)*)/
+
+      Gem::Version.new(Regexp.last_match(1))
+    end
+
+    refute_empty versions, "#{gem_name} missing from #{lockfile}"
+    floor = Gem::Version.new(minimum)
+    versions.each do |version|
+      assert version >= floor, "#{gem_name} #{version} in #{lockfile} is below #{minimum}"
+    end
   end
 end

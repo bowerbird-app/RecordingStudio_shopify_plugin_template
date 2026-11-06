@@ -16,6 +16,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Point host/dummy Gemfiles at the tags in `Gemfile` and `test/dummy/Gemfile`, then `bundle lock --update` those gems and `bin/rails db:prepare`. Dummy Users `v0.12.4` adds `registered_with`, Devise confirmable columns, OTP challenges, and nullable Profile last name / time zone.
 - Keep RecordingStudio API on `v0.5.6` until that gem accepts Accessible `0.11`. Do not bump Accessible, Oauth, Users, Site Settings, or Root Switchable past the tags those gemspecs can resolve with API `v0.5.6`.
 
+## [0.3.22] - 2026-11-06
+
+### Security
+- Root and dummy lockfiles use Rails 8.1.4.1, rack 3.2.8, nokogiri 1.19.7, loofah 2.25.3, and rails-html-sanitizer 1.7.2. Dummy net-ssh is 7.3.8.
+
+### Upgrade notes
+- No API or migration change. `bundle update` rails, rack, nokogiri, loofah, rails-html-sanitizer, and dummy net-ssh, then keep those floors.
+
 ## [0.3.6] - 2026-09-28
 
 ### Changed
@@ -211,7 +219,8 @@ New addons copied from this template are born on Recording Studio 4.x.
 - Comprehensive README and documentation
 - Basic test suite with Minitest
 
-[Unreleased]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/compare/v0.3.6...HEAD
+[Unreleased]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/compare/v0.3.22...HEAD
+[0.3.22]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.22
 [0.3.6]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.6
 [0.3.5]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.5
 [0.3.4]: https://github.com/bowerbird-app/recording_studio_shopify_plugin_template/releases/tag/v0.3.4
