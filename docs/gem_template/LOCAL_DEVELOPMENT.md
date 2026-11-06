@@ -1,6 +1,6 @@
 > **Architecture Documentation**
 > *   **Canonical Source:** [bowerbird-app/gem_template](https://github.com/bowerbird-app/gem_template/tree/main/docs/gem_template)
-> *   **Last Updated:** October 5, 2026
+> *   **Last Updated:** November 6, 2026
 >
 > *Maintainers: Please update the date above when modifying this file.*
 
@@ -93,7 +93,7 @@ cd test/dummy
 bin/rails db:prepare
 ```
 
-This creates the database, runs migrations (including enabling `pgcrypto` for UUIDs), and seeds data.
+This creates the database, runs migrations (including enabling `pgcrypto` for UUIDs), and seeds data. Oauth appends its engine migrations; do not copy those files into `test/dummy/db/migrate` at the same timestamps or `db:prepare` raises a duplicate version error.
 
 ### 7. Build TailwindCSS
 

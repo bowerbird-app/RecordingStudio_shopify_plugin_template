@@ -15,10 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - `.ruby-version` and `test/dummy/.ruby-version` pin 3.3.13 so GitHub-hosted `ubuntu-26.04` can install Ruby for lint and security jobs.
 - Dummy Card calls use `background:`, `border:`, and `hover:` instead of `style:`. Dummy does not prepend FlatPack Card or PageNav.
+- Dummy no longer copies Oauth engine migrations (`20261022000001` outbound connections, handshake FK, per-root user connections, `plugin_key`). Oauth appends those paths; copies at the same version broke `db:prepare`.
 - Gemspec Recording Studio floor is `~> 6.3`. Dummy and root pin Recording Studio `v6.5.0`, Oauth `v0.21.3`, Root Switchable `v0.11.7`, Admin `v2.9.3`, and FlatPack `v0.1.341`. Oauth `v0.21.3` keeps API on `v0.17.1` (`< 0.18`). Dummy Users is `v0.27.1`, Accessible `v0.24.2`, Attachable `v0.22.1`, Embeddable `v0.15.3`, Publishable `v0.13.2`, Trashable `v0.12.3`, Metrics `v0.7.3`, Cache `v0.6.3`, Site Settings `v0.5.5`, Logs `v0.7.4`, Artifacts `v0.4.7`. Dummy uses `recording_studio_layout` instead of `UsesDefaultLayout`.
 
 ### Upgrade notes
-- Point host Gemfiles at Recording Studio `v6.5.0` (or another 6.3+ tag) and the addon tags in `Gemfile` / `test/dummy/Gemfile`, then `bundle install` and `bin/rails db:prepare`. Oauth `v0.21.3` cannot take API `0.18+`. Dummy copies Oauth outbound connection and `plugin_key` migrations.
+- Point host Gemfiles at Recording Studio `v6.5.0` (or another 6.3+ tag) and the addon tags in `Gemfile` / `test/dummy/Gemfile`, then `bundle install` and `bin/rails db:prepare`. Oauth `v0.21.3` cannot take API `0.18+`. Oauth appends outbound connection and `plugin_key` migrations; do not copy those files into `test/dummy/db/migrate` at the engine timestamps.
 - Keep Rails 8.1.4.1, rack 3.2.8, nokogiri 1.19.7, loofah 2.25.3, rails-html-sanitizer 1.7.2, dummy net-ssh 7.3.8, FlatPack `v0.1.341`, and locked `view_component` `4.23.0`.
 - Use Ruby 3.3.13 locally if you follow `.ruby-version`. Gemspec still allows `>= 3.3.0`.
 - Dummy Card `style:` is gone. Do not add a host prepend for old Card or PageNav kwargs. Replace `include RecordingStudio::UsesDefaultLayout` with `recording_studio_layout`.

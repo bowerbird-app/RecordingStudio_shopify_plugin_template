@@ -332,6 +332,23 @@ class RecordingStudioShopifyPluginTemplateTest < Minitest::Test
     assert_includes File.read(migrate_path), "shopify_plugin_demo_connections"
   end
 
+  def test_dummy_does_not_copy_oauth_engine_migration_versions
+    oauth_root = Gem.loaded_specs["recording_studio_oauth"]&.full_gem_path
+    assert oauth_root, "recording_studio_oauth must be bundled"
+
+    engine_versions = Dir[File.join(oauth_root, "db/migrate/*.rb")].map do |path|
+      File.basename(path)[/\A\d+/]
+    end
+    dummy_versions = Dir[File.expand_path("dummy/db/migrate/*.rb", __dir__)].map do |path|
+      File.basename(path)[/\A\d+/]
+    end
+    overlap = engine_versions & dummy_versions
+
+    assert_empty overlap,
+                 "dummy copies collide with Oauth engine versions #{overlap.join(', ')}; " \
+                 "Oauth appends its migrations, so dummy must not keep the same timestamps"
+  end
+
   private
 
   def assert_lock_at_least(lockfile, gem_name, minimum)
